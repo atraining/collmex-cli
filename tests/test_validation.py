@@ -1,4 +1,4 @@
-"""Tests fuer collmex.validation."""
+"""Tests für collmex.validation."""
 
 from __future__ import annotations
 
@@ -24,16 +24,16 @@ def _make_booking(
     positionen: list[BookingLine] | None = None,
     belegdatum: str = HEUTE,
 ) -> Booking:
-    """Hilfsfunktion: erzeugt einen gueltigen Buchungsbeleg."""
+    """Hilfsfunktion: erzeugt einen gültigen Buchungsbeleg."""
     if positionen is None:
         positionen = [
             BookingLine(
-                1, 4400, "Buerobedarf", "S", Decimal("500.00"), buchungstext="Bueromaterial"
+                1, 4400, "Bürobedarf", "S", Decimal("500.00"), buchungstext="Büromaterial"
             ),
             BookingLine(
-                2, 1576, "Vorsteuer 19%", "S", Decimal("95.00"), buchungstext="Bueromaterial"
+                2, 1576, "Vorsteuer 19%", "S", Decimal("95.00"), buchungstext="Büromaterial"
             ),
-            BookingLine(3, 1200, "Bank", "H", Decimal("595.00"), buchungstext="Bueromaterial"),
+            BookingLine(3, 1200, "Bank", "H", Decimal("595.00"), buchungstext="Büromaterial"),
         ]
     return Booking(
         beleg_nr=None,
@@ -49,10 +49,10 @@ def _make_booking(
 
 @patch("collmex.validation.is_valid_account", return_value=True)
 class TestValidateBooking:
-    """Tests fuer validate_booking()."""
+    """Tests für validate_booking()."""
 
-    def test_gueltige_buchung_keine_fehler(self, mock_account):
-        """Korrekte Buchung gibt leere Fehlerliste zurueck."""
+    def test_gültige_buchung_keine_fehler(self, mock_account):
+        """Korrekte Buchung gibt leere Fehlerliste zurück."""
         booking = _make_booking()
         fehler = validate_booking(booking)
         assert fehler == []
@@ -83,13 +83,13 @@ class TestValidateBooking:
         assert any("Zukunft" in f for f in fehler)
 
     def test_belegdatum_heute_ok(self, mock_account):
-        """Datum = heute ist gueltig."""
+        """Datum = heute ist gültig."""
         booking = _make_booking(belegdatum=HEUTE)
         fehler = validate_booking(booking)
         assert not any("Zukunft" in f for f in fehler)
 
     def test_belegdatum_gestern_ok(self, mock_account):
-        """Datum = gestern ist gueltig."""
+        """Datum = gestern ist gültig."""
         booking = _make_booking(belegdatum=GESTERN)
         fehler = validate_booking(booking)
         assert not any("Datum" in f or "Zukunft" in f for f in fehler)
@@ -117,17 +117,17 @@ class TestValidateBooking:
 
 @patch("collmex.validation.is_valid_account")
 class TestValidateBookingKonten:
-    """Tests fuer Kontovalidierung."""
+    """Tests für Kontovalidierung."""
 
-    def test_ungueltiges_konto(self, mock_account):
-        """Ungueltiges Konto erzeugt einen Fehler."""
+    def test_ungültiges_konto(self, mock_account):
+        """Ungültiges Konto erzeugt einen Fehler."""
         mock_account.return_value = False
         booking = _make_booking()
         fehler = validate_booking(booking)
         assert any("existiert nicht" in f for f in fehler)
 
-    def test_alle_konten_gueltig(self, mock_account):
-        """Alle gueltigen Konten erzeugen keinen Kontofehler."""
+    def test_alle_konten_gültig(self, mock_account):
+        """Alle gültigen Konten erzeugen keinen Kontofehler."""
         mock_account.return_value = True
         booking = _make_booking()
         fehler = validate_booking(booking)
@@ -140,7 +140,7 @@ class TestValidateBookingKonten:
 
 
 class TestValidateUst:
-    """Tests fuer validate_ust()."""
+    """Tests für validate_ust()."""
 
     def test_ust_19_prozent(self):
         """19% auf 100 EUR = 19 EUR."""
@@ -168,18 +168,18 @@ class TestValidateUst:
         result = validate_ust(Decimal("33.33"), 19)
         assert result == Decimal("6.33")
 
-    def test_ungueltiger_satz_5_prozent(self):
-        """5% ist kein gueltiger USt-Satz."""
-        with pytest.raises(ValidationError, match="Ungueltiger USt-Satz"):
+    def test_ungültiger_satz_5_prozent(self):
+        """5% ist kein gültiger USt-Satz."""
+        with pytest.raises(ValidationError, match="Ungültiger USt-Satz"):
             validate_ust(Decimal("100.00"), 5)
 
-    def test_ungueltiger_satz_16_prozent(self):
-        """16% ist kein gueltiger USt-Satz (alter Satz)."""
-        with pytest.raises(ValidationError, match="Ungueltiger USt-Satz"):
+    def test_ungültiger_satz_16_prozent(self):
+        """16% ist kein gültiger USt-Satz (alter Satz)."""
+        with pytest.raises(ValidationError, match="Ungültiger USt-Satz"):
             validate_ust(Decimal("100.00"), 16)
 
-    def test_ungueltiger_satz_negativ(self):
-        """Negativer Satz ist ungueltig."""
+    def test_ungültiger_satz_negativ(self):
+        """Negativer Satz ist ungültig."""
         with pytest.raises(ValidationError):
             validate_ust(Decimal("100.00"), -1)
 
@@ -190,10 +190,10 @@ class TestValidateUst:
 
 
 class TestCheckSollHaben:
-    """Tests fuer check_soll_haben()."""
+    """Tests für check_soll_haben()."""
 
     def test_ausgeglichen(self):
-        """Soll == Haben gibt True zurueck."""
+        """Soll == Haben gibt True zurück."""
         positionen = [
             BookingLine(1, 4400, "", "S", Decimal("500.00")),
             BookingLine(2, 1576, "", "S", Decimal("95.00")),
@@ -202,7 +202,7 @@ class TestCheckSollHaben:
         assert check_soll_haben(positionen) is True
 
     def test_nicht_ausgeglichen(self):
-        """Soll != Haben gibt False zurueck."""
+        """Soll != Haben gibt False zurück."""
         positionen = [
             BookingLine(1, 4400, "", "S", Decimal("500.00")),
             BookingLine(2, 1200, "", "H", Decimal("499.00")),

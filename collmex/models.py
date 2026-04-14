@@ -1,11 +1,11 @@
-"""Dataclasses fuer das collmex-Projekt.
+"""Dataclasses für das collmex-Projekt.
 
-Alle Geldbetraege verwenden Decimal fuer exakte kaufmaennische Arithmetik.
+Alle Geldbeträge verwenden Decimal für exakte kaufmännische Arithmetik.
 
 Collmex-API-Modelle:
 - CollmexEingangsrechnung -> CMXLRN (Lieferantenrechnung, 20 Felder)
-- CollmexAusgangsrechnung -> CMXUMS (Erloese/Umsaetze, 31 Felder)
-- BookingLine/Booking      -> Interne Repraesentation / ACCDOC_GET-Ergebnis
+- CollmexAusgangsrechnung -> CMXUMS (Erlöse/Umsätze, 31 Felder)
+- BookingLine/Booking      -> Interne Repräsentation / ACCDOC_GET-Ergebnis
   (ACCDOC kann NICHT importiert werden — nur lesen via ACCDOC_GET)
 """
 
@@ -54,7 +54,7 @@ class Account:
 class CollmexKunde:
     """Kundenstammsatz -> CMXKND (mind. 35 Felder).
 
-    Erzeugt eine CSV-Zeile fuer den Collmex-Import.
+    Erzeugt eine CSV-Zeile für den Collmex-Import.
     Bei kunde_nr=None vergibt Collmex automatisch ab 10001.
     """
 
@@ -62,7 +62,7 @@ class CollmexKunde:
     kunde_nr: int | None = None
     anrede: str = "Firma"
     name: str = ""  # Idx 7 — Firmenname (PFLICHT)
-    strasse: str = ""
+    straße: str = ""
     plz: str = ""
     ort: str = ""
     land: str = "DE"
@@ -80,7 +80,7 @@ class CollmexKunde:
         f[2] = str(self.firma_nr)
         f[3] = self.anrede
         f[7] = self.name
-        f[9] = self.strasse
+        f[9] = self.straße
         f[10] = self.plz
         f[11] = self.ort
         f[14] = self.land
@@ -95,7 +95,7 @@ class CollmexKunde:
 class CollmexLieferant:
     """Lieferantenstammsatz -> CMXLIF (41 Felder).
 
-    Erzeugt eine CSV-Zeile fuer den Collmex-Import.
+    Erzeugt eine CSV-Zeile für den Collmex-Import.
     Bei lieferant_nr=None vergibt Collmex automatisch ab 70001.
     """
 
@@ -103,7 +103,7 @@ class CollmexLieferant:
     lieferant_nr: int | None = None
     anrede: str = "Firma"
     name: str = ""  # Idx 7 — Firmenname (PFLICHT)
-    strasse: str = ""
+    straße: str = ""
     plz: str = ""
     ort: str = ""
     land: str = "DE"
@@ -123,7 +123,7 @@ class CollmexLieferant:
         f[2] = str(self.firma_nr)
         f[3] = self.anrede
         f[7] = self.name
-        f[9] = self.strasse
+        f[9] = self.straße
         f[10] = self.plz
         f[11] = self.ort
         f[14] = self.land
@@ -156,7 +156,7 @@ class BookingLine:
     bezeichnung: str
     soll_haben: str  # "S" | "H"
     betrag: Decimal
-    waehrung: str = "EUR"
+    währung: str = "EUR"
     steuersatz: str = ""
     buchungstext: str = ""
     kostenstelle: str = ""
@@ -172,9 +172,9 @@ class BookingLine:
 
 @dataclass
 class Booking:
-    """Ein vollstaendiger Buchungsbeleg mit mehreren Positionen.
+    """Ein vollständiger Buchungsbeleg mit mehreren Positionen.
 
-    Entspricht einem logischen Geschaeftsvorfall, der aus mehreren
+    Entspricht einem logischen Geschäftsvorfall, der aus mehreren
     ACCDOC-Zeilen mit gleicher Belegnummer besteht.
     """
 
@@ -207,7 +207,7 @@ class Booking:
         )
 
     def validate(self) -> None:
-        """Prueft ob Soll = Haben.  Wirft ValidationError wenn nicht."""
+        """Prüft ob Soll = Haben.  Wirft ValidationError wenn nicht."""
         if not self.positionen:
             raise ValidationError(
                 "Buchungsbeleg hat keine Positionen.",
@@ -229,7 +229,7 @@ class Booking:
             )
 
     def to_csv_lines(self) -> list[str]:
-        """Generiert ACCDOC-CSV-Zeilen fuer den Collmex-API-Import.
+        """Generiert ACCDOC-CSV-Zeilen für den Collmex-API-Import.
 
         Jede Position wird zu einer ACCDOC-Zeile.  Die Belegnummer wird
         leer gelassen wenn ``beleg_nr`` None ist (automatische Vergabe).
@@ -251,7 +251,7 @@ class Booking:
                 pos.bezeichnung,
                 pos.soll_haben,
                 betrag_str,
-                pos.waehrung,
+                pos.währung,
                 pos.steuersatz,
                 self.belegdatum,
                 pos.buchungstext,
@@ -311,8 +311,8 @@ class OpenItem:
     typ: str  # "debitor" | "kreditor"
     betrag: Decimal
     datum: str  # Format: YYYYMMDD
-    faellig_am: str  # Format: YYYYMMDD
-    tage_ueberfaellig: int
+    fällig_am: str  # Format: YYYYMMDD
+    tage_ueberfällig: int
 
     def __post_init__(self) -> None:
         if self.typ not in ("debitor", "kreditor"):
@@ -322,18 +322,18 @@ class OpenItem:
 
     @property
     def mahnstufe(self) -> int:
-        """Mahnstufe basierend auf Tagen ueberfaellig.
+        """Mahnstufe basierend auf Tagen überfällig.
 
-        0 = nicht faellig (0-30 Tage oder nicht ueberfaellig)
-        1 = 31-60 Tage ueberfaellig
-        2 = 61-90 Tage ueberfaellig
-        3 = >90 Tage ueberfaellig
+        0 = nicht fällig (0-30 Tage oder nicht überfällig)
+        1 = 31-60 Tage überfällig
+        2 = 61-90 Tage überfällig
+        3 = >90 Tage überfällig
         """
-        if self.tage_ueberfaellig <= 30:
+        if self.tage_ueberfällig <= 30:
             return 0
-        if self.tage_ueberfaellig <= 60:
+        if self.tage_ueberfällig <= 60:
             return 1
-        if self.tage_ueberfaellig <= 90:
+        if self.tage_ueberfällig <= 90:
             return 2
         return 3
 
@@ -356,8 +356,8 @@ def _fmt(value: Decimal | int | float | str) -> str:
 class CollmexEingangsrechnung:
     """Eingangsrechnung / Lieferantenrechnung -> CMXLRN (20 Felder).
 
-    Collmex erzeugt automatisch die doppelte Buchfuehrung:
-    - Aufwandskonto (Soll) gemaess konto_voll/konto_erm/sonstige_konto
+    Collmex erzeugt automatisch die doppelte Buchführung:
+    - Aufwandskonto (Soll) gemäß konto_voll/konto_erm/sonstige_konto
     - Vorsteuer (Soll) automatisch berechnet
     - Verbindlichkeiten ggue. Lieferant (Haben) oder Gegenkonto
 
@@ -371,15 +371,15 @@ class CollmexEingangsrechnung:
     7  Steuer voller USt  USt-Betrag 19% (leer = Collmex berechnet)
     8  Netto erm. USt     Nettobetrag 7%
     9  Steuer erm. USt    USt-Betrag 7% (leer = Collmex berechnet)
-    10 Sonstige: Konto    Aufwandskonto fuer steuerfreie Betraege
+    10 Sonstige: Konto    Aufwandskonto für steuerfreie Beträge
     11 Sonstige: Betrag   Betrag steuerfrei
-    12 Waehrung           ISO-Code (EUR)
+    12 Währung           ISO-Code (EUR)
     13 Gegenkonto         Alternativ zu Lieferantennummer (z.B. 1200 Bank)
     14 Gutschrift         1 = Gutschrift, sonst leer
     15 Buchungstext       Beschreibung
     16 Zahlungsbedingung  Collmex-Zahlungsbedingung-ID
-    17 Konto voller USt   Aufwandskonto fuer 19%-Anteil
-    18 Konto erm. USt     Aufwandskonto fuer 7%-Anteil
+    17 Konto voller USt   Aufwandskonto für 19%-Anteil
+    18 Konto erm. USt     Aufwandskonto für 7%-Anteil
     19 Storno             1 = Storno, sonst leer
     20 Kostenstelle       Kostenstelle
     """
@@ -394,13 +394,13 @@ class CollmexEingangsrechnung:
     steuer_erm: Decimal | None = None
     sonstige_konto: int | None = None
     sonstige_betrag: Decimal = field(default_factory=lambda: Decimal("0"))
-    waehrung: str = "EUR"
+    währung: str = "EUR"
     gegenkonto: int | None = None
     gutschrift: bool = False
     buchungstext: str = ""
     zahlungsbedingung: int | None = None
-    konto_voll: int | None = None  # Aufwandskonto fuer 19%-Anteil
-    konto_erm: int | None = None  # Aufwandskonto fuer 7%-Anteil
+    konto_voll: int | None = None  # Aufwandskonto für 19%-Anteil
+    konto_erm: int | None = None  # Aufwandskonto für 7%-Anteil
     storno: bool = False
     kostenstelle: str = ""
 
@@ -448,7 +448,7 @@ class CollmexEingangsrechnung:
             _fmt(self.steuer_erm) if self.steuer_erm is not None else "",
             str(self.sonstige_konto) if self.sonstige_konto else "",
             _fmt(self.sonstige_betrag) if self.sonstige_betrag else "",
-            self.waehrung,
+            self.währung,
             str(self.gegenkonto) if self.gegenkonto else "",
             "1" if self.gutschrift else "",
             self.buchungstext,
@@ -465,9 +465,9 @@ class CollmexEingangsrechnung:
 class CollmexAusgangsrechnung:
     """Ausgangsrechnung / Umsatz -> CMXUMS (31 Felder).
 
-    Collmex erzeugt automatisch die doppelte Buchfuehrung:
+    Collmex erzeugt automatisch die doppelte Buchführung:
     - Forderungen (Soll) oder Gegenkonto
-    - Erloeskonto (Haben) gemaess konto_voll/konto_erm
+    - Erlöskonto (Haben) gemäß konto_voll/konto_erm
     - Umsatzsteuer (Haben) automatisch berechnet
 
     Felder:
@@ -481,26 +481,26 @@ class CollmexAusgangsrechnung:
     8  Netto erm. USt     Nettobetrag 7%
     9  Steuer erm. USt    USt-Betrag 7%
     10 IG Lieferung       Innergemeinschaftliche Lieferung (Betrag)
-    11 Export             Exportumsaetze (Betrag)
-    12 Steuerfrei Konto   Erloeskonto fuer steuerfreie Betraege
+    11 Export             Exportumsätze (Betrag)
+    12 Steuerfrei Konto   Erlöskonto für steuerfreie Beträge
     13 Steuerfrei Betrag  Steuerfreier Betrag
-    14 Waehrung           ISO-Code (EUR)
+    14 Währung           ISO-Code (EUR)
     15 Gegenkonto         Alternativ zu Kundennummer (z.B. 1200 Bank)
     16 Rechnungsart       0=normal, 1=Sammelrechnung
     17 Buchungstext       Beschreibung
     18 Zahlungsbedingung  Collmex-Zahlungsbedingung-ID
-    19 Konto voller USt   Erloeskonto fuer 19%-Anteil (z.B. 8400)
-    20 Konto erm. USt     Erloeskonto fuer 7%-Anteil (z.B. 8300)
-    21 Verwendungszweck   Fuer Bankueberweisung
+    19 Konto voller USt   Erlöskonto für 19%-Anteil (z.B. 8400)
+    20 Konto erm. USt     Erlöskonto für 7%-Anteil (z.B. 8300)
+    21 Verwendungszweck   Für Banküberweisung
     22 Bestellnummer      Kundenbestellnummer
     23 Storno             1 = Storno
-    24 Schlussrechnung    Referenz fuer Schlussrechnung
+    24 Schlussrechnung    Referenz für Schlussrechnung
     25 Umsatzart          0=normal
     26 Systemname         Externes System
     27 Gutschrift Gegen   Gegenrechnungsnummer bei Gutschrift
     28 Kostenstelle       Kostenstelle
-    29 Lastschrift Datum  Ausfuehrungsdatum (YYYYMMDD)
-    30 Land               ISO-2 Laendercode
+    29 Lastschrift Datum  Ausführungsdatum (YYYYMMDD)
+    30 Land               ISO-2 Ländercode
     31 Produktart         Produkt- oder Dienstleistungskennzeichen
     """
 
@@ -513,16 +513,16 @@ class CollmexAusgangsrechnung:
     netto_erm: Decimal = field(default_factory=lambda: Decimal("0"))
     steuer_erm: Decimal | None = None
     ig_lieferung: Decimal = field(default_factory=lambda: Decimal("0"))
-    export_umsaetze: Decimal = field(default_factory=lambda: Decimal("0"))
+    export_umsätze: Decimal = field(default_factory=lambda: Decimal("0"))
     steuerfrei_konto: int | None = None
     steuerfrei_betrag: Decimal = field(default_factory=lambda: Decimal("0"))
-    waehrung: str = "EUR"
+    währung: str = "EUR"
     gegenkonto: int | None = None
     rechnungsart: int = 0
     buchungstext: str = ""
     zahlungsbedingung: int | None = None
-    konto_voll: int | None = None  # Erloeskonto fuer 19% (z.B. 8400)
-    konto_erm: int | None = None  # Erloeskonto fuer 7% (z.B. 8300)
+    konto_voll: int | None = None  # Erlöskonto für 19% (z.B. 8400)
+    konto_erm: int | None = None  # Erlöskonto für 7% (z.B. 8300)
     verwendungszweck: str = ""
     bestellnummer: str = ""
     storno: bool = False
@@ -540,7 +540,7 @@ class CollmexAusgangsrechnung:
             "netto_voll",
             "netto_erm",
             "ig_lieferung",
-            "export_umsaetze",
+            "export_umsätze",
             "steuerfrei_betrag",
         ):
             val = getattr(self, attr)
@@ -558,7 +558,7 @@ class CollmexAusgangsrechnung:
             self.netto_voll
             + self.netto_erm
             + self.ig_lieferung
-            + self.export_umsaetze
+            + self.export_umsätze
             + self.steuerfrei_betrag
         )
 
@@ -575,10 +575,10 @@ class CollmexAusgangsrechnung:
             _fmt(self.netto_erm) if self.netto_erm else "",
             _fmt(self.steuer_erm) if self.steuer_erm is not None else "",
             _fmt(self.ig_lieferung) if self.ig_lieferung else "",
-            _fmt(self.export_umsaetze) if self.export_umsaetze else "",
+            _fmt(self.export_umsätze) if self.export_umsätze else "",
             str(self.steuerfrei_konto) if self.steuerfrei_konto else "",
             _fmt(self.steuerfrei_betrag) if self.steuerfrei_betrag else "",
-            self.waehrung,
+            self.währung,
             str(self.gegenkonto) if self.gegenkonto else "",
             str(self.rechnungsart) if self.rechnungsart else "",
             self.buchungstext,

@@ -1,6 +1,6 @@
 """Collmex API-Referenz — alle Satzarten, Kategorien und Doku-Links.
 
-Dient als Nachschlagewerk fuer den `collmex api-help` CLI-Befehl.
+Dient als Nachschlagewerk für den `collmex api-help` CLI-Befehl.
 Quelle: https://www.collmex.de/c.cmx?1005,1,help,api
 """
 
@@ -32,11 +32,11 @@ SATZARTEN: list[dict] = [
     },
     {
         "satzart": "CMXUMS",
-        "name": "Umsaetze/Erloese",
+        "name": "Umsätze/Erlöse",
         "kategorie": "import",
         "felder": 31,
-        "beschreibung": "Ausgangsrechnungen/Erloese buchen (Ertrag, USt, Debitor)",
-        "doku": "daten_importieren_umsaetze",
+        "beschreibung": "Ausgangsrechnungen/Erlöse buchen (Ertrag, USt, Debitor)",
+        "doku": "daten_importieren_umsätze",
     },
     {
         "satzart": "CMXKND",
@@ -72,10 +72,10 @@ SATZARTEN: list[dict] = [
     },
     {
         "satzart": "CMXPRC",
-        "name": "Preisaenderungen",
+        "name": "Preisänderungen",
         "kategorie": "import",
-        "beschreibung": "Preisaenderungen importieren (prozentual/absolut)",
-        "doku": "daten_importieren_preisaenderung",
+        "beschreibung": "Preisänderungen importieren (prozentual/absolut)",
+        "doku": "daten_importieren_preisänderung",
     },
     {
         "satzart": "CMXPGR",
@@ -86,24 +86,24 @@ SATZARTEN: list[dict] = [
     },
     {
         "satzart": "CMXBOM",
-        "name": "Stuecklisten",
+        "name": "Stücklisten",
         "kategorie": "import",
-        "beschreibung": "Stuecklisten (Bill of Materials) importieren",
-        "doku": "daten_importieren_stuecklisten",
+        "beschreibung": "Stücklisten (Bill of Materials) importieren",
+        "doku": "daten_importieren_stücklisten",
     },
     {
         "satzart": "CMXSTK",
         "name": "Bestand",
         "kategorie": "import",
-        "beschreibung": "Lagerbestaende setzen/importieren",
+        "beschreibung": "Lagerbestände setzen/importieren",
         "doku": "daten_importieren_bestand",
     },
     {
         "satzart": "CMXSC",
-        "name": "Bestandsaenderungen",
+        "name": "Bestandsänderungen",
         "kategorie": "import",
-        "beschreibung": "Bestandsaenderungen (Zu-/Abgaenge) importieren",
-        "doku": "daten_importieren_bestandsaenderungen",
+        "beschreibung": "Bestandsänderungen (Zu-/Abgänge) importieren",
+        "doku": "daten_importieren_bestandsänderungen",
     },
     {
         "satzart": "CMXQTN",
@@ -114,10 +114,10 @@ SATZARTEN: list[dict] = [
     },
     {
         "satzart": "CMXORD",
-        "name": "Kundenauftraege",
+        "name": "Kundenaufträge",
         "kategorie": "import",
-        "beschreibung": "Kundenauftraege erstellen/importieren",
-        "doku": "daten_importieren_kundenauftraege",
+        "beschreibung": "Kundenaufträge erstellen/importieren",
+        "doku": "daten_importieren_kundenaufträge",
     },
     {
         "satzart": "CMXDLV",
@@ -128,10 +128,10 @@ SATZARTEN: list[dict] = [
     },
     {
         "satzart": "CMXPOD",
-        "name": "Lieferantenauftraege",
+        "name": "Lieferantenaufträge",
         "kategorie": "import",
-        "beschreibung": "Lieferantenauftraege (Bestellungen) importieren",
-        "doku": "daten_importieren_lieferantenauftraege",
+        "beschreibung": "Lieferantenaufträge (Bestellungen) importieren",
+        "doku": "daten_importieren_lieferantenaufträge",
     },
     {
         "satzart": "CMXVCR",
@@ -177,9 +177,9 @@ SATZARTEN: list[dict] = [
     },
     {
         "satzart": "CMXACT",
-        "name": "Taetigkeiten",
+        "name": "Tätigkeiten",
         "kategorie": "import",
-        "beschreibung": "Taetigkeiten (Zeiterfassung) importieren",
+        "beschreibung": "Tätigkeiten (Zeiterfassung) importieren",
         "doku": "daten_importieren_taetigkeiten",
     },
     {
@@ -235,7 +235,7 @@ SATZARTEN: list[dict] = [
         "satzart": "CMXPAY",
         "name": "Zahlung",
         "kategorie": "import",
-        "beschreibung": "Zahlungsbestaetigung importieren (z.B. PayPal, Stripe)",
+        "beschreibung": "Zahlungsbestätigung importieren (z.B. PayPal, Stripe)",
         "doku": "api_Payment",
     },
     # =======================================================================
@@ -245,7 +245,7 @@ SATZARTEN: list[dict] = [
         "satzart": "ACCDOC_GET",
         "name": "Buchungen abfragen",
         "kategorie": "abfrage",
-        "beschreibung": "Buchungsbelege lesen (nur lesend, kein Import moeglich)",
+        "beschreibung": "Buchungsbelege lesen (nur lesend, kein Import möglich)",
         "doku": "api_Buchungen",
         "antwort": "ACCDOC",
     },
@@ -281,24 +281,24 @@ SATZARTEN: list[dict] = [
     },
     {
         "satzart": "STOCK_AVAILABLE_GET",
-        "name": "Verfuegbarkeit",
+        "name": "Verfügbarkeit",
         "kategorie": "abfrage",
-        "beschreibung": "Verfuegbare Lagerbestaende abfragen",
-        "doku": "api_Verfuegbarkeit",
+        "beschreibung": "Verfügbare Lagerbestände abfragen",
+        "doku": "api_Verfügbarkeit",
     },
     {
         "satzart": "STOCK_GET",
         "name": "Bestand abfragen",
         "kategorie": "abfrage",
-        "beschreibung": "Lagerbestaende abfragen",
+        "beschreibung": "Lagerbestände abfragen",
         "doku": "api_Bestand",
     },
     {
         "satzart": "STOCK_CHANGE_GET",
-        "name": "Bestandsaenderungen",
+        "name": "Bestandsänderungen",
         "kategorie": "abfrage",
-        "beschreibung": "Bestandsaenderungen (Zu-/Abgaenge) abfragen",
-        "doku": "api_Bestandsaenderungen",
+        "beschreibung": "Bestandsänderungen (Zu-/Abgänge) abfragen",
+        "doku": "api_Bestandsänderungen",
     },
     {
         "satzart": "BATCH_GET",
@@ -317,10 +317,10 @@ SATZARTEN: list[dict] = [
     },
     {
         "satzart": "SALES_ORDER_GET",
-        "name": "Kundenauftraege abfragen",
+        "name": "Kundenaufträge abfragen",
         "kategorie": "abfrage",
-        "beschreibung": "Kundenauftraege abfragen",
-        "doku": "api_Kundenauftraege",
+        "beschreibung": "Kundenaufträge abfragen",
+        "doku": "api_Kundenaufträge",
         "antwort": "CMXORD-2",
     },
     {
@@ -341,10 +341,10 @@ SATZARTEN: list[dict] = [
     },
     {
         "satzart": "PURCHASE_ORDER_GET",
-        "name": "Lieferantenauftraege",
+        "name": "Lieferantenaufträge",
         "kategorie": "abfrage",
-        "beschreibung": "Lieferantenauftraege (Bestellungen) abfragen",
-        "doku": "api_Lieferantenauftraege",
+        "beschreibung": "Lieferantenaufträge (Bestellungen) abfragen",
+        "doku": "api_Lieferantenaufträge",
     },
     {
         "satzart": "CUSTOMER_GET",
@@ -374,15 +374,15 @@ SATZARTEN: list[dict] = [
         "satzart": "PAYMENT_GET",
         "name": "Zahlungen abfragen",
         "kategorie": "abfrage",
-        "beschreibung": "Zahlungseingaenge/-ausgaenge abfragen",
+        "beschreibung": "Zahlungseingänge/-ausgänge abfragen",
         "doku": "api_Zahlungen",
     },
     {
         "satzart": "PAYMENT_TO_ORDER_GET",
-        "name": "Zahlungen zu Auftraegen",
+        "name": "Zahlungen zu Aufträgen",
         "kategorie": "abfrage",
-        "beschreibung": "Zuordnung Zahlungen zu Auftraegen abfragen",
-        "doku": "api_Zahlungen_zu_Auftraegen",
+        "beschreibung": "Zuordnung Zahlungen zu Aufträgen abfragen",
+        "doku": "api_Zahlungen_zu_Aufträgen",
     },
     {
         "satzart": "PAYMENT_CONDITION_GET",
@@ -456,9 +456,9 @@ SATZARTEN: list[dict] = [
     },
     {
         "satzart": "ACTIVITIES_GET",
-        "name": "Taetigkeiten abfragen",
+        "name": "Tätigkeiten abfragen",
         "kategorie": "abfrage",
-        "beschreibung": "Taetigkeiten (Zeiterfassung) abfragen",
+        "beschreibung": "Tätigkeiten (Zeiterfassung) abfragen",
         "doku": "api_Taetigkeiten",
     },
     {
@@ -470,17 +470,17 @@ SATZARTEN: list[dict] = [
     },
     {
         "satzart": "PRODUCTION_ORDER_GET",
-        "name": "Produktionsauftraege",
+        "name": "Produktionsaufträge",
         "kategorie": "abfrage",
-        "beschreibung": "Produktionsauftraege abfragen",
-        "doku": "api_Produktionsauftraege",
+        "beschreibung": "Produktionsaufträge abfragen",
+        "doku": "api_Produktionsaufträge",
     },
     {
         "satzart": "BOM_GET",
-        "name": "Stuecklisten abfragen",
+        "name": "Stücklisten abfragen",
         "kategorie": "abfrage",
-        "beschreibung": "Stuecklisten (Bill of Materials) abfragen",
-        "doku": "api_Stuecklisten",
+        "beschreibung": "Stücklisten (Bill of Materials) abfragen",
+        "doku": "api_Stücklisten",
     },
     {
         "satzart": "PRICE_GROUP_GET",
@@ -507,7 +507,7 @@ SATZARTEN: list[dict] = [
         "satzart": "ORDER_BACKLOG_GET",
         "name": "Auftragsbestand",
         "kategorie": "abfrage",
-        "beschreibung": "Auftragsbestand (offene Auftraege) abfragen",
+        "beschreibung": "Auftragsbestand (offene Aufträge) abfragen",
         "doku": "api_Auftragsbestand",
     },
     {
@@ -531,7 +531,7 @@ SATZARTEN: list[dict] = [
         "satzart": "ABRECHNUNGSLAUF",
         "name": "Abrechnungslauf",
         "kategorie": "aktion",
-        "beschreibung": "Abrechnungslauf ausfuehren (wiederkehrende Rechnungen erstellen)",
+        "beschreibung": "Abrechnungslauf ausführen (wiederkehrende Rechnungen erstellen)",
         "doku": "api_Abrechnungslauf",
     },
     {
@@ -543,30 +543,30 @@ SATZARTEN: list[dict] = [
     },
     {
         "satzart": "DUE_DELIVERIES",
-        "name": "Faellige Lieferungen",
+        "name": "Fällige Lieferungen",
         "kategorie": "aktion",
-        "beschreibung": "Faellige Lieferungen ermitteln und ausloesen",
-        "doku": "api_Faellige_Lieferungen",
+        "beschreibung": "Fällige Lieferungen ermitteln und auslösen",
+        "doku": "api_Fällige_Lieferungen",
     },
     {
         "satzart": "DUE_PURCHASE_ORDERS",
-        "name": "Faellige Lieferantenauftraege",
+        "name": "Fällige Lieferantenaufträge",
         "kategorie": "aktion",
-        "beschreibung": "Faellige Lieferantenauftraege ermitteln",
-        "doku": "api_Faellige_Lieferantenauftraege",
+        "beschreibung": "Fällige Lieferantenaufträge ermitteln",
+        "doku": "api_Fällige_Lieferantenaufträge",
     },
     {
         "satzart": "PAYMENT_CONFIRMATION_MAIL",
         "name": "Zahlungseingangs-Mail",
         "kategorie": "aktion",
-        "beschreibung": "Zahlungseingangsbestaetigung per E-Mail senden",
+        "beschreibung": "Zahlungseingangsbestätigung per E-Mail senden",
         "doku": "api_Zahlungseingangs_Mail",
     },
     {
         "satzart": "SHIPPING_HANDOVER",
-        "name": "Versanduebergabe",
+        "name": "Versandübergabe",
         "kategorie": "aktion",
-        "beschreibung": "Versanduebergabe an Logistikdienstleister",
+        "beschreibung": "Versandübergabe an Logistikdienstleister",
         "doku": "api_Versanduebergabe",
     },
     {
@@ -578,10 +578,10 @@ SATZARTEN: list[dict] = [
     },
     {
         "satzart": "SHIPPING_CONFIRMATION",
-        "name": "Versandbestaetigung",
+        "name": "Versandbestätigung",
         "kategorie": "aktion",
-        "beschreibung": "Versandbestaetigung setzen",
-        "doku": "api_Versandbestaetigung",
+        "beschreibung": "Versandbestätigung setzen",
+        "doku": "api_Versandbestätigung",
     },
     {
         "satzart": "ADDRESS_ASSIGN",
@@ -602,7 +602,7 @@ SATZARTEN: list[dict] = [
 
 # ---- Hilfsfunktionen ----
 
-# Index fuer schnellen Zugriff (case-insensitive)
+# Index für schnellen Zugriff (case-insensitive)
 _INDEX: dict[str, dict] = {s["satzart"].upper(): s for s in SATZARTEN}
 
 KATEGORIE_LABELS = {
@@ -633,7 +633,7 @@ def suche(stichwort: str) -> list[dict]:
 
 
 def nach_kategorie() -> dict[str, list[dict]]:
-    """Satzarten gruppiert nach Kategorie zurueckgeben."""
+    """Satzarten gruppiert nach Kategorie zurückgeben."""
     result: dict[str, list[dict]] = {}
     for sa in SATZARTEN:
         kat = sa["kategorie"]
@@ -642,7 +642,7 @@ def nach_kategorie() -> dict[str, list[dict]]:
 
 
 def doku_url(sa: dict) -> str:
-    """Vollstaendige Doku-URL fuer eine Satzart."""
+    """Vollständige Doku-URL für eine Satzart."""
     return f"{DOKU_BASIS}{sa['doku']}"
 
 

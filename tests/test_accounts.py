@@ -1,4 +1,4 @@
-"""Tests fuer collmex.accounts — SKR03 Kontenrahmen."""
+"""Tests für collmex.accounts — SKR03 Kontenrahmen."""
 
 from __future__ import annotations
 
@@ -32,17 +32,17 @@ class TestAccountDataclass:
             acct.nr = 9999  # type: ignore[misc]
 
     def test_account_invalid_typ_raises(self) -> None:
-        with pytest.raises(ValueError, match="Ungueltiger Kontotyp"):
+        with pytest.raises(ValueError, match="Ungültiger Kontotyp"):
             Account(nr=9999, bezeichnung="Egal", typ="fantasy")
 
 
 # ---------------------------------------------------------------------------
-# 2. Vollstaendigkeit des Kontenrahmen
+# 2. Vollständigkeit des Kontenrahmen
 # ---------------------------------------------------------------------------
 
 
-class TestSKR03Vollstaendigkeit:
-    """Prueft, dass alle spezifizierten Konten vorhanden sind."""
+class TestSKR03Vollständigkeit:
+    """Prüft, dass alle spezifizierten Konten vorhanden sind."""
 
     EXPECTED_AKTIV = [400, 600, 1000, 1200, 1300, 1400, 1500, 1570, 1571, 1576, 1580, 1780]
     EXPECTED_PASSIV = [970, 1600, 1700, 1770, 1771, 1776, 1790, 1800, 1810, 1820, 1860]
@@ -181,12 +181,12 @@ class TestFindAccounts:
 
 
 class TestIsValidAccount:
-    def test_gueltige_konten(self) -> None:
+    def test_gültige_konten(self) -> None:
         assert is_valid_account(1200) is True
         assert is_valid_account(4400) is True
         assert is_valid_account(8400) is True
 
-    def test_ungueltige_konten(self) -> None:
+    def test_ungültige_konten(self) -> None:
         assert is_valid_account(9999) is False
         assert is_valid_account(0) is False
         assert is_valid_account(-1) is False
@@ -224,9 +224,9 @@ class TestGetAccountsByType:
             nummern = [a.nr for a in konten]
             assert nummern == sorted(nummern), f"{typ}-Konten nicht sortiert"
 
-    def test_ungueltiger_typ_raises(self) -> None:
-        with pytest.raises(ValueError, match="Ungueltiger Typ"):
-            get_accounts_by_type("ungueltig")
+    def test_ungültiger_typ_raises(self) -> None:
+        with pytest.raises(ValueError, match="Ungültiger Typ"):
+            get_accounts_by_type("ungültig")
 
 
 # ---------------------------------------------------------------------------
@@ -235,11 +235,11 @@ class TestGetAccountsByType:
 
 
 class TestSuggestAccount:
-    """Prueft alle Keyword-Mappings aus der Spezifikation."""
+    """Prüft alle Keyword-Mappings aus der Spezifikation."""
 
-    # Buerobedarf
-    @pytest.mark.parametrize("keyword", ["bueromaterial", "buero", "papier", "toner"])
-    def test_buerobedarf(self, keyword: str) -> None:
+    # Bürobedarf
+    @pytest.mark.parametrize("keyword", ["büromaterial", "büro", "papier", "toner"])
+    def test_bürobedarf(self, keyword: str) -> None:
         assert suggest_account(keyword) == 4400
 
     # Software / immat. VG
@@ -299,13 +299,13 @@ class TestSuggestAccount:
     def test_versicherung(self, keyword: str) -> None:
         assert suggest_account(keyword) == 4430
 
-    # Beitraege
+    # Beiträge
     @pytest.mark.parametrize("keyword", ["ihk", "beitrag", "mitgliedschaft"])
-    def test_beitraege(self, keyword: str) -> None:
+    def test_beiträge(self, keyword: str) -> None:
         assert suggest_account(keyword) == 4440
 
     # Bank
-    @pytest.mark.parametrize("keyword", ["bank", "kontofuehrung"])
+    @pytest.mark.parametrize("keyword", ["bank", "kontoführung"])
     def test_bank(self, keyword: str) -> None:
         assert suggest_account(keyword) == 4810
 
@@ -318,11 +318,11 @@ class TestSuggestAccount:
 
     # Case-insensitive
     def test_case_insensitive(self) -> None:
-        assert suggest_account("BUEROMATERIAL") == 4400
+        assert suggest_account("BÜROMATERIAL") == 4400
         assert suggest_account("Software-Lizenz") == 4830
 
-    # Keyword als Teil eines laengeren Satzes
+    # Keyword als Teil eines längeren Satzes
     def test_keyword_in_satz(self) -> None:
-        assert suggest_account("Rechnung fuer Bueromaterial Amazon") == 4400
+        assert suggest_account("Rechnung für Büromaterial Amazon") == 4400
         assert suggest_account("Monatsrechnung Hosting Hetzner") == 4830
         assert suggest_account("Tankstellenquittung Shell benzin") == 4510

@@ -1,4 +1,4 @@
-"""Tests fuer collmex.booking — CMXLRN/CMXUMS-basierte Buchungslogik."""
+"""Tests für collmex.booking — CMXLRN/CMXUMS-basierte Buchungslogik."""
 
 from __future__ import annotations
 
@@ -46,7 +46,7 @@ def _make_engine(success=True, new_ids=None) -> BookingEngine:
         response.messages = [msg]
     client.request.return_value = response
 
-    # post_booking: fuer post_stammdaten()
+    # post_booking: für post_stammdaten()
     booking_result = MagicMock()
     booking_result.success = success
     booking_result.booking_id = (new_ids[0] if new_ids else "12345") if success else None
@@ -63,7 +63,7 @@ def _make_engine(success=True, new_ids=None) -> BookingEngine:
 
 
 class TestFormatBetrag:
-    """Tests fuer format_betrag()."""
+    """Tests für format_betrag()."""
 
     def test_ganzzahl(self):
         """500 -> '500,00'"""
@@ -81,7 +81,7 @@ class TestFormatBetrag:
         """0 -> '0,00'"""
         assert format_betrag(Decimal("0")) == "0,00"
 
-    def test_grosser_betrag(self):
+    def test_großer_betrag(self):
         """12345.67 -> '12345,67'"""
         assert format_betrag(Decimal("12345.67")) == "12345,67"
 
@@ -96,7 +96,7 @@ class TestFormatBetrag:
 
 
 class TestParseBetrag:
-    """Tests fuer parse_betrag()."""
+    """Tests für parse_betrag()."""
 
     def test_einfach(self):
         """'500,00' -> Decimal('500.00')"""
@@ -114,8 +114,8 @@ class TestParseBetrag:
         """' 500,00 ' -> Decimal('500.00')"""
         assert parse_betrag(" 500,00 ") == Decimal("500.00")
 
-    def test_ungueltig(self):
-        """Ungueltiger String wirft ValueError."""
+    def test_ungültig(self):
+        """Ungültiger String wirft ValueError."""
         with pytest.raises(ValueError, match="Kann.*nicht.*parsen"):
             parse_betrag("abc")
 
@@ -126,7 +126,7 @@ class TestParseBetrag:
 
 
 class TestFormatDatum:
-    """Tests fuer format_datum()."""
+    """Tests für format_datum()."""
 
     def test_bereits_yyyymmdd(self):
         """'20260303' -> '20260303'"""
@@ -144,8 +144,8 @@ class TestFormatDatum:
         """' 20260303 ' -> '20260303'"""
         assert format_datum(" 20260303 ") == "20260303"
 
-    def test_ungueltig(self):
-        """Ungueltiges Format wirft ValueError."""
+    def test_ungültig(self):
+        """Ungültiges Format wirft ValueError."""
         with pytest.raises(ValueError, match="nicht erkannt"):
             format_datum("March 3, 2026")
 
@@ -156,7 +156,7 @@ class TestFormatDatum:
 
 
 class TestCreateEingangsrechnung:
-    """Tests fuer BookingEngine.create_eingangsrechnung() -> CMXLRN."""
+    """Tests für BookingEngine.create_eingangsrechnung() -> CMXLRN."""
 
     def test_erzeugt_cmxlrn(self):
         """Eingangsrechnung erzeugt ein CollmexEingangsrechnung-Objekt."""
@@ -165,7 +165,7 @@ class TestCreateEingangsrechnung:
             betrag_netto=Decimal("500.00"),
             ust_satz=19,
             aufwandskonto=4400,
-            buchungstext="Bueromaterial",
+            buchungstext="Büromaterial",
             belegdatum=HEUTE,
         )
         assert isinstance(rechnung, CollmexEingangsrechnung)
@@ -177,7 +177,7 @@ class TestCreateEingangsrechnung:
             betrag_netto=Decimal("500.00"),
             ust_satz=19,
             aufwandskonto=4400,
-            buchungstext="Bueromaterial",
+            buchungstext="Büromaterial",
             belegdatum=HEUTE,
         )
         assert rechnung.netto_voll == Decimal("500.00")
@@ -257,13 +257,13 @@ class TestCreateEingangsrechnung:
         assert rechnung.gegenkonto is None
 
     def test_csv_line_format(self):
-        """to_csv_line() erzeugt gueltige CMXLRN-Zeile."""
+        """to_csv_line() erzeugt gültige CMXLRN-Zeile."""
         engine = _make_engine()
         rechnung = engine.create_eingangsrechnung(
             betrag_netto=Decimal("500.00"),
             ust_satz=19,
             aufwandskonto=4400,
-            buchungstext="Bueromaterial",
+            buchungstext="Büromaterial",
             belegdatum=HEUTE,
         )
         csv = rechnung.to_csv_line()
@@ -291,7 +291,7 @@ class TestCreateEingangsrechnung:
 
 
 class TestCreateAusgangsrechnung:
-    """Tests fuer BookingEngine.create_ausgangsrechnung() -> CMXUMS."""
+    """Tests für BookingEngine.create_ausgangsrechnung() -> CMXUMS."""
 
     def test_erzeugt_cmxums(self):
         """Ausgangsrechnung erzeugt ein CollmexAusgangsrechnung-Objekt."""
@@ -326,7 +326,7 @@ class TestCreateAusgangsrechnung:
             betrag_netto=Decimal("200.00"),
             ust_satz=7,
             ertragskonto=8300,
-            buchungstext="Ermaessigter Erloes",
+            buchungstext="Ermäßigter Erlös",
             belegdatum=HEUTE,
         )
         assert rechnung.netto_erm == Decimal("200.00")
@@ -361,7 +361,7 @@ class TestCreateAusgangsrechnung:
         assert rechnung.gegenkonto is None
 
     def test_csv_line_format(self):
-        """to_csv_line() erzeugt gueltige CMXUMS-Zeile."""
+        """to_csv_line() erzeugt gültige CMXUMS-Zeile."""
         engine = _make_engine()
         rechnung = engine.create_ausgangsrechnung(
             betrag_netto=Decimal("1000.00"),
@@ -384,16 +384,16 @@ class TestCreateAusgangsrechnung:
 
 
 class TestCreateStorno:
-    """Tests fuer Storno-Rechnungen."""
+    """Tests für Storno-Rechnungen."""
 
     def test_storno_eingang(self):
-        """Storno setzt Flag und aendert Buchungstext."""
+        """Storno setzt Flag und ändert Buchungstext."""
         engine = _make_engine()
         original = engine.create_eingangsrechnung(
             betrag_netto=Decimal("500.00"),
             ust_satz=19,
             aufwandskonto=4400,
-            buchungstext="Bueromaterial",
+            buchungstext="Büromaterial",
             belegdatum=HEUTE,
         )
         storno = engine.create_storno_eingang(original)
@@ -432,13 +432,13 @@ class TestCreateStorno:
         assert felder[18] == "1"
 
     def test_storno_original_unveraendert(self):
-        """Storno aendert das Original nicht."""
+        """Storno ändert das Original nicht."""
         engine = _make_engine()
         original = engine.create_eingangsrechnung(
             betrag_netto=Decimal("500.00"),
             ust_satz=19,
             aufwandskonto=4400,
-            buchungstext="Bueromaterial",
+            buchungstext="Büromaterial",
             belegdatum=HEUTE,
         )
         engine.create_storno_eingang(original)
@@ -452,18 +452,18 @@ class TestCreateStorno:
 
 
 class TestSuggestBooking:
-    """Tests fuer BookingEngine.suggest_booking()."""
+    """Tests für BookingEngine.suggest_booking()."""
 
     @patch("collmex.booking.suggest_account", return_value=4400)
-    def test_keyword_bueromaterial(self, mock_suggest):
-        """'Bueromaterial' schlaegt Konto 4400 vor."""
+    def test_keyword_büromaterial(self, mock_suggest):
+        """'Büromaterial' schlaegt Konto 4400 vor."""
         engine = _make_engine()
         rechnung = engine.suggest_booking(
-            beschreibung="Bueromaterial Druckerpapier",
+            beschreibung="Büromaterial Druckerpapier",
             betrag=Decimal("100.00"),
             datum=HEUTE,
         )
-        mock_suggest.assert_called_once_with("Bueromaterial Druckerpapier")
+        mock_suggest.assert_called_once_with("Büromaterial Druckerpapier")
         assert isinstance(rechnung, CollmexEingangsrechnung)
         assert rechnung.konto_voll == 4400
 
@@ -485,7 +485,7 @@ class TestSuggestBooking:
 
 
 class TestPostAndValidate:
-    """Tests fuer BookingEngine.post_and_validate()."""
+    """Tests für BookingEngine.post_and_validate()."""
 
     def test_erfolgreiche_buchung(self):
         """Erfolgreiche Buchung liefert success=True."""
@@ -506,7 +506,7 @@ class TestPostAndValidate:
         """Bei Validierungsfehler wird nicht gesendet."""
         engine = _make_engine()
         rechnung = CollmexEingangsrechnung(
-            datum="UNGUELTIG",
+            datum="UNGÜLTIG",
             buchungstext="",
         )
         result = engine.post_and_validate(rechnung)
@@ -515,7 +515,7 @@ class TestPostAndValidate:
         engine.api_client.request.assert_not_called()
 
     def test_api_fehler(self):
-        """API-Exception fuehrt zu success=False."""
+        """API-Exception führt zu success=False."""
         engine = _make_engine()
         engine.api_client.request.side_effect = ConnectionError("Timeout")
         rechnung = engine.create_eingangsrechnung(
@@ -552,7 +552,7 @@ class TestPostAndValidate:
 
 
 class TestBookingResult:
-    """Tests fuer BookingResult."""
+    """Tests für BookingResult."""
 
     def test_ok_property_true(self):
         """ok ist True wenn success und keine Fehler."""
@@ -576,7 +576,7 @@ class TestBookingResult:
 
 
 class TestCollmexLieferant:
-    """Tests fuer CollmexLieferant.to_csv_line()."""
+    """Tests für CollmexLieferant.to_csv_line()."""
 
     def test_csv_starts_with_cmxlif(self):
         lif = CollmexLieferant(name="Test GmbH", ort="Berlin")
@@ -610,7 +610,7 @@ class TestCollmexLieferant:
 
 
 class TestCollmexKunde:
-    """Tests fuer CollmexKunde.to_csv_line()."""
+    """Tests für CollmexKunde.to_csv_line()."""
 
     def test_csv_starts_with_cmxknd(self):
         knd = CollmexKunde(name="Testkunde AG")
@@ -644,7 +644,7 @@ class TestCollmexKunde:
 
 
 class TestPostStammdaten:
-    """Tests fuer BookingEngine.post_stammdaten()."""
+    """Tests für BookingEngine.post_stammdaten()."""
 
     def test_lieferant_auto_nr(self):
         """Auto-Vergabe: ID kommt aus API-Response."""
@@ -654,14 +654,14 @@ class TestPostStammdaten:
         assert nr == 70001
 
     def test_lieferant_explizite_nr(self):
-        """Explizite Nr wird direkt zurueckgegeben."""
+        """Explizite Nr wird direkt zurückgegeben."""
         engine = _make_engine(success=True)
         lif = CollmexLieferant(name="Explizit", lieferant_nr=70042)
         nr = engine.post_stammdaten(lif)
         assert nr == 70042
 
     def test_kunde_auto_nr(self):
-        """Auto-Vergabe fuer Kunden."""
+        """Auto-Vergabe für Kunden."""
         engine = _make_engine(success=True, new_ids=["10001"])
         knd = CollmexKunde(name="Neukunde AG")
         nr = engine.post_stammdaten(knd)

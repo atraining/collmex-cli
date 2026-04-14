@@ -1,4 +1,4 @@
-"""DATEV Buchungsstapel Export fuer den Steuerberater.
+"""DATEV Buchungsstapel Export für den Steuerberater.
 
 Exportiert Buchungsbelege aus Collmex im DATEV-Format (EXTF CSV).
 Das Format wird vom Steuerberater in DATEV Kanzlei-Rechnungswesen
@@ -33,7 +33,7 @@ _ACCDOC_BU = 9
 _ACCDOC_DATUM = 10
 _ACCDOC_TEXT = 11
 
-# BU-Schluessel Mapping: USt-Satz -> DATEV BU-Key
+# BU-Schlüssel Mapping: USt-Satz -> DATEV BU-Key
 _BU_VORSTEUER = {19: "9", 7: "8"}
 _BU_UMSATZSTEUER = {19: "3", 7: "2"}
 
@@ -81,7 +81,7 @@ def _make_header(
         datum_von,  # 15: Datum vom
         datum_bis,  # 16: Datum bis
         f'"{bezeichnung}"' if bezeichnung else "",  # 17: Bezeichnung
-        "",  # 18: Diktatkuerzel
+        "",  # 18: Diktatkürzel
         "1",  # 19: Buchungstyp (FiBu)
         "0",  # 20: Rechnungslegungszweck
         "0",  # 21: Festschreibung
@@ -93,7 +93,7 @@ def _make_header(
     return ";".join(fields)
 
 
-# DATEV Spalten-Header (125 Felder), Zeile 2 — gekuerzt auf die wichtigsten
+# DATEV Spalten-Header (125 Felder), Zeile 2 — gekürzt auf die wichtigsten
 _COLUMN_HEADER = (
     "Umsatz (ohne Soll/Haben-Kz);Soll/Haben-Kennzeichen;"
     "WKZ Umsatz;Kurs;Basisumsatz;WKZ Basisumsatz;"
@@ -105,10 +105,10 @@ _COLUMN_HEADER = (
 def _make_column_header() -> str:
     """Erzeugt die DATEV Spalten-Header-Zeile (Zeile 2).
 
-    Enthaelt alle 125 Feldnamen, getrennt durch Semikolon.
+    Enthält alle 125 Feldnamen, getrennt durch Semikolon.
     """
     # Wir geben die ersten 14 wichtigen Felder aus,
-    # der Rest wird als leere Felder ergaenzt
+    # der Rest wird als leere Felder ergänzt
     base_fields = [
         "Umsatz (ohne Soll/Haben-Kz)",
         "Soll/Haben-Kennzeichen",
@@ -125,7 +125,7 @@ def _make_column_header() -> str:
         "Skonto",
         "Buchungstext",
     ]
-    # Felder 15-125: Weitere Felder (111 Stueck)
+    # Felder 15-125: Weitere Felder (111 Stück)
     remaining = [""] * (_NUM_FIELDS - len(base_fields))
     return ";".join(base_fields + remaining)
 
@@ -135,7 +135,7 @@ def _make_booking_line(
     soll_haben: str,
     konto: str,
     gegenkonto: str,
-    bu_schluessel: str,
+    bu_schlüssel: str,
     belegdatum: str,
     belegfeld1: str,
     buchungstext: str,
@@ -148,7 +148,7 @@ def _make_booking_line(
     # fields[2-5]: WKZ etc. leer (EUR ist Default im Header)
     fields[6] = f'"{konto}"'
     fields[7] = f'"{gegenkonto}"'
-    fields[8] = f'"{bu_schluessel}"' if bu_schluessel else ""
+    fields[8] = f'"{bu_schlüssel}"' if bu_schlüssel else ""
     fields[9] = belegdatum  # DDMM
     fields[10] = f'"{belegfeld1}"' if belegfeld1 else ""
     # fields[11]: Belegfeld 2 leer
@@ -184,7 +184,7 @@ class DatevExporter:
         Args:
             date_from: Startdatum YYYYMMDD.
             date_to: Enddatum YYYYMMDD.
-            bezeichnung: Optionale Beschreibung fuer den Header.
+            bezeichnung: Optionale Beschreibung für den Header.
 
         Returns:
             DATEV CSV als String (Windows-1252 Encoding, CRLF).
@@ -192,7 +192,7 @@ class DatevExporter:
         # Buchungen laden
         rows = self.api.get_bookings(date_from=date_from, date_to=date_to)
 
-        # Geschaeftsjahr-Beginn ableiten
+        # Geschäftsjahr-Beginn ableiten
         jahr = date_from[:4]
         wj_beginn = f"{jahr}0101"
 
@@ -236,7 +236,7 @@ class DatevExporter:
             beleg_nr = row[_ACCDOC_BELEG_NR]
             bu = row[_ACCDOC_BU] if len(row) > _ACCDOC_BU and row[_ACCDOC_BU] else ""
 
-            # Einfache 1:1 Uebertragung jeder ACCDOC-Position
+            # Einfache 1:1 Übertragung jeder ACCDOC-Position
             # Der Steuerberater kann in DATEV die Gegenkonto-Zuordnung machen
             # Hier verwenden wir die Belegzeilen direkt
             line = _make_booking_line(
@@ -244,7 +244,7 @@ class DatevExporter:
                 soll_haben=soll_haben,
                 konto=konto,
                 gegenkonto=gegenkonto,
-                bu_schluessel=bu,
+                bu_schlüssel=bu,
                 belegdatum=datum,
                 belegfeld1=beleg_nr,
                 buchungstext=text,
@@ -269,8 +269,8 @@ class DatevExporter:
     ) -> str:
         """Exportiert Buchungen gruppiert nach Beleg mit Gegenkonto.
 
-        Versucht, zusammengehoerige ACCDOC-Zeilen (gleiche Belegnummer)
-        zu einem DATEV-Satz mit Konto/Gegenkonto zusammenzufuehren.
+        Versucht, zusammengehörige ACCDOC-Zeilen (gleiche Belegnummer)
+        zu einem DATEV-Satz mit Konto/Gegenkonto zusammenzuführen.
 
         Args:
             date_from: Startdatum YYYYMMDD.
@@ -345,7 +345,7 @@ class DatevExporter:
                     soll_haben="S",
                     konto=konto,
                     gegenkonto=gegenkonto,
-                    bu_schluessel=bu,
+                    bu_schlüssel=bu,
                     belegdatum=datum,
                     belegfeld1=beleg_nr,
                     buchungstext=text,
@@ -367,7 +367,7 @@ class DatevExporter:
                     soll_haben="H",
                     konto=konto,
                     gegenkonto=gk,
-                    bu_schluessel=bu,
+                    bu_schlüssel=bu,
                     belegdatum=datum,
                     belegfeld1=beleg_nr,
                     buchungstext=text,

@@ -20,7 +20,7 @@ DOKU_BASIS = "https://www.collmex.de/c.cmx?1005,1,help,"
 
 
 # ---------------------------------------------------------------------------
-# HTML-Parser fuer Collmex-Hilfeseiten
+# HTML-Parser für Collmex-Hilfeseiten
 # ---------------------------------------------------------------------------
 
 
@@ -85,7 +85,7 @@ def fetch_help_table(doku_page: str) -> list[tuple[str, str, str, str, str]]:
 
 
 def get_field_names(doku_page: str) -> list[str]:
-    """Gibt Feldnamen als Liste zurueck (Index 0 = Feld 1 der Doku).
+    """Gibt Feldnamen als Liste zurück (Index 0 = Feld 1 der Doku).
 
     Bei Fehler: leere Liste.
     """
@@ -99,7 +99,7 @@ def get_field_names(doku_page: str) -> list[str]:
             nr = int(nr_str)
         except ValueError:
             continue
-        # Liste auf Index nr-1 auffuellen
+        # Liste auf Index nr-1 auffüllen
         while len(result) < nr:
             result.append(f"Feld {len(result) + 1}")
         result[nr - 1] = name
@@ -119,7 +119,7 @@ def render_stammdaten(
     error_console: Console | None = None,
     felder: tuple = (),
 ) -> None:
-    """Generische Abfrage + Pretty-Print fuer beliebige GET-Satzarten.
+    """Generische Abfrage + Pretty-Print für beliebige GET-Satzarten.
 
     1. Satzart in api_reference.py nachschlagen → name, antwort, doku
     2. ctx.client.query(get_satzart) aufrufen
@@ -169,7 +169,7 @@ def render_stammdaten(
         data_rows = []
 
     if not data_rows:
-        console.print(f"[yellow]Keine Daten fuer {get_satzart}.[/]")
+        console.print(f"[yellow]Keine Daten für {get_satzart}.[/]")
         return
 
     # 4. Feldnamen aus Doku holen
@@ -207,7 +207,7 @@ def render_stammdaten(
         data_rows = filtered
 
     if not data_rows:
-        console.print(f"[yellow]Keine Daten fuer '{suche}' gefunden.[/]")
+        console.print(f"[yellow]Keine Daten für '{suche}' gefunden.[/]")
         return
 
     # 7. Tabelle bauen
@@ -237,7 +237,7 @@ def render_stammdaten(
 
 HANDBUCH_URL = "https://www.collmex.de/handbuch_pro.html"
 
-# Kuratierte Sektionen fuer kaufmaennischen Leiter
+# Kuratierte Sektionen für kaufmännischen Leiter
 # Mapping: Kurzname → (Anker-ID, Titel)
 HANDBUCH_SEKTIONEN: dict[str, tuple[str, str]] = {
     "buchen": ("buchen", "Buchen"),
@@ -245,17 +245,17 @@ HANDBUCH_SEKTIONEN: dict[str, tuple[str, str]] = {
     "jahresabschluss": ("jahresabschluss", "Jahresabschluss"),
     "buchung-stornieren": ("buchung_stornieren", "Buchung stornieren"),
     "op": ("op_verwalten", "Offene Posten verwalten"),
-    "op-sonderfaelle": ("op_sonderfaelle", "OP Sonderfaelle"),
+    "op-sonderfälle": ("op_sonderfälle", "OP Sonderfälle"),
     "reverse-charge": ("umgekehrte_steuerschuld", "Umgekehrte Steuerschuld (§13b)"),
     "mahnung": ("mahnung_allgemein", "Mahnung"),
     "mahnung-anlegen": ("mahnung_anlegen", "Mahnungen anlegen"),
     "mahnung-einstellungen": ("einstellungen_mahnung", "Einstellungen Mahnung"),
     "banking": ("online_banking", "Online-Banking"),
-    "kontoauszug": ("kontoauszug", "Import von Kontoauszuegen"),
+    "kontoauszug": ("kontoauszug", "Import von Kontoauszügen"),
     "bankumsatz": ("bankumsatz_buchen", "Bankumsatz buchen"),
     "zahlung": ("zahlung_allgemein", "Zahlungsverkehr"),
     "anlagen": ("anlagen_allgemein", "Anlagen"),
-    "gwg": ("anlage_gwg", "Geringwertige Wirtschaftsgueter (GWG)"),
+    "gwg": ("anlage_gwg", "Geringwertige Wirtschaftsgüter (GWG)"),
     "abschreibung": ("abschreibungslauf", "Abschreibungslauf"),
     "ust": ("umsatzsteuer_allgemein", "Umsatzsteuer"),
     "ustva": ("umsatzsteuer_voranmeldung_anlegen", "USt-Voranmeldung anlegen"),
@@ -265,22 +265,22 @@ HANDBUCH_SEKTIONEN: dict[str, tuple[str, str]] = {
     "bwa": ("bwa", "BWA"),
     "susa": ("summen_und_salden", "Summen und Salden"),
     "datev": ("datev_export", "Datev-Export"),
-    "steuerpruefer": ("steuerpruefer_export", "Steuerpruefer-Export"),
+    "steuerprüfer": ("steuerprüfer_export", "Steuerprüfer-Export"),
     "rechnung": ("rechnung_allgemein", "Rechnungen und Gutschriften"),
     "rechnung-anlegen": ("rechnung_anlegen", "Rechnung anlegen"),
     "e-rechnung": ("rechnung_e_rechnung", "E-Rechnung"),
     "kunde": ("kunde_allgemein", "Kunden"),
     "lieferant": ("lieferant_allgemein", "Lieferanten"),
-    "produkt": ("produkt_einfuehrung", "Produkte"),
+    "produkt": ("produkt_einführung", "Produkte"),
     "buchungsvorlagen": ("buchungsvorlagen_allgemein", "Buchungsvorlagen"),
     "beleg": ("beleg_allgemein", "Belegverwaltung"),
     "kassenbuch": ("kassenbuch_allgemein", "Kassenbuch"),
     "konto": ("konto_allgemein", "Kontenrahmen"),
     "api": ("api", "Collmex API"),
-    "api-ueberblick": ("api_ueberblick", "API Ueberblick"),
+    "api-überblick": ("api_überblick", "API Überblick"),
     "daten-importieren": ("daten_importieren_allgemein", "Daten importieren"),
     "cmxlrn": ("daten_importieren_lieferantenrechnung", "Lieferantenrechnung (CMXLRN)"),
-    "cmxums": ("daten_importieren_umsaetze", "Erloese (CMXUMS)"),
+    "cmxums": ("daten_importieren_umsätze", "Erlöse (CMXUMS)"),
     "cmxinv": ("daten_importieren_rechnungen", "Rechnung (CMXINV)"),
 }
 
@@ -288,8 +288,8 @@ HANDBUCH_SEKTIONEN: dict[str, tuple[str, str]] = {
 def fetch_handbuch_section(anchor: str) -> str:
     """Holt eine Sektion aus dem Collmex-Handbuch per Anker-ID.
 
-    Extrahiert Text zwischen dem Anker und dem naechsten <h2>.
-    Gibt Plain-Text zurueck (HTML-Tags entfernt).
+    Extrahiert Text zwischen dem Anker und dem nächsten <h2>.
+    Gibt Plain-Text zurück (HTML-Tags entfernt).
     """
     try:
         resp = requests.get(HANDBUCH_URL, timeout=15)
@@ -304,9 +304,9 @@ def fetch_handbuch_section(anchor: str) -> str:
     if not match:
         return f"Sektion '{anchor}' nicht im Handbuch gefunden."
 
-    # Ab Anker bis zum naechsten <a name= auf gleicher/uebergeordneter Ebene
+    # Ab Anker bis zum nächsten <a name= auf gleicher/uebergeordneter Ebene
     rest = html[match.end() :]
-    # Naechste Sektion = naechstes <a name="..."> (Collmex benutzt <a name> fuer alle Sektionen)
+    # Nächste Sektion = nächstes <a name="..."> (Collmex benutzt <a name> für alle Sektionen)
     next_section = re.search(r'<a\s+name="[^"]+"\s*>', rest)
     if next_section:
         section_html = rest[: next_section.start()]
@@ -314,7 +314,7 @@ def fetch_handbuch_section(anchor: str) -> str:
         section_html = rest[:5000]  # Fallback: max 5000 Zeichen
 
     # HTML zu lesbarem Text konvertieren
-    # Block-Elemente → Zeilenumbrueche
+    # Block-Elemente → Zeilenumbrüche
     text = re.sub(r"<br\s*/?>", "\n", section_html)
     text = re.sub(r"</(?:p|div|tr|li|h[1-6])>", "\n", text)
     text = re.sub(r"<(?:p|div|tr|h[1-6])[^>]*>", "\n", text)

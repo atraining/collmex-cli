@@ -1,4 +1,4 @@
-"""Tests fuer collmex CLI (Click-basiert).
+"""Tests für collmex CLI (Click-basiert).
 
 Nutzt click.testing.CliRunner und gemockte API-Clients.
 """
@@ -16,7 +16,7 @@ from collmex.cli import main
 
 @pytest.fixture
 def runner():
-    """Click CliRunner fuer CLI-Tests."""
+    """Click CliRunner für CLI-Tests."""
     return CliRunner()
 
 
@@ -51,20 +51,20 @@ def test_konten_command(runner):
 
 
 def test_konten_enthaelt_bank(runner):
-    """Kontenrahmen enthaelt Konto 1200 (Bank)."""
+    """Kontenrahmen enthält Konto 1200 (Bank)."""
     result = runner.invoke(main, ["konten"])
     assert "1200" in result.output
     assert "Bank" in result.output
 
 
-def test_konten_enthaelt_erloese(runner):
-    """Kontenrahmen enthaelt Ertragskonten."""
+def test_konten_enthaelt_erlöse(runner):
+    """Kontenrahmen enthält Ertragskonten."""
     result = runner.invoke(main, ["konten"])
     assert "8400" in result.output
 
 
 def test_konten_enthaelt_aufwand(runner):
-    """Kontenrahmen enthaelt Aufwandskonten."""
+    """Kontenrahmen enthält Aufwandskonten."""
     result = runner.invoke(main, ["konten"])
     assert "4400" in result.output
 
@@ -139,12 +139,12 @@ def test_status_verbose(runner):
 
 
 def test_dry_run_keine_buchung(runner):
-    """'--dry-run' fuehrt keine Buchung aus."""
+    """'--dry-run' führt keine Buchung aus."""
     result = runner.invoke(
         main,
         [
             "buchen",
-            "Bueromaterial Staples",
+            "Büromaterial Staples",
             "--betrag",
             "100.00",
             "--lieferant",
@@ -166,7 +166,7 @@ def test_dry_run_zeigt_buchungssatz(runner):
         main,
         [
             "buchen",
-            "Bueromaterial",
+            "Büromaterial",
             "--betrag",
             "500.00",
             "--lieferant",
@@ -192,7 +192,7 @@ def test_dry_run_auto_konto(runner):
         main,
         [
             "buchen",
-            "Bueromaterial Papier",
+            "Büromaterial Papier",
             "--betrag",
             "50.00",
             "--lieferant",
@@ -201,7 +201,7 @@ def test_dry_run_auto_konto(runner):
         ],
     )
     assert result.exit_code == 0
-    assert "4400" in result.output  # Buerobedarf
+    assert "4400" in result.output  # Bürobedarf
 
 
 def test_dry_run_7_prozent_ust(runner):
@@ -292,20 +292,20 @@ def test_fristen_command(runner):
 
 
 def test_fristen_monat(runner):
-    """'collmex fristen --monat 3' zeigt Fristen fuer Maerz."""
+    """'collmex fristen --monat 3' zeigt Fristen für März."""
     result = runner.invoke(main, ["fristen", "--monat", "3", "--jahr", "2026"])
     assert result.exit_code == 0
     assert "03/2026" in result.output
 
 
-def test_fristen_ueberfaellig(runner):
-    """'collmex fristen --ueberfaellig' zeigt ueberfaellige Fristen."""
-    result = runner.invoke(main, ["fristen", "--ueberfaellig"])
+def test_fristen_ueberfällig(runner):
+    """'collmex fristen --überfällig' zeigt überfällige Fristen."""
+    result = runner.invoke(main, ["fristen", "--überfällig"])
     assert result.exit_code == 0
 
 
 def test_fristen_tage(runner):
-    """'collmex fristen --tage 7' zeigt Fristen der naechsten 7 Tage."""
+    """'collmex fristen --tage 7' zeigt Fristen der nächsten 7 Tage."""
     result = runner.invoke(main, ["fristen", "--tage", "7"])
     assert result.exit_code == 0
 
@@ -316,7 +316,7 @@ def test_fristen_help(runner):
     assert result.exit_code == 0
     assert "--monat" in result.output
     assert "--tage" in result.output
-    assert "--ueberfaellig" in result.output
+    assert "--überfällig" in result.output
 
 
 # ---------------------------------------------------------------------------
@@ -346,27 +346,27 @@ def test_ustva_zeigt_kennzahlen(runner):
 
 
 # ---------------------------------------------------------------------------
-# liquiditaet (gemockter Client)
+# liquidität (gemockter Client)
 # ---------------------------------------------------------------------------
 
 
-def test_liquiditaet_help(runner):
-    """'collmex liquiditaet --help' zeigt Optionen."""
-    result = runner.invoke(main, ["liquiditaet", "--help"])
+def test_liquidität_help(runner):
+    """'collmex liquidität --help' zeigt Optionen."""
+    result = runner.invoke(main, ["liquidität", "--help"])
     assert result.exit_code == 0
     assert "--wochen" in result.output
 
 
-def test_liquiditaet_zeigt_vorschau(runner):
-    """'collmex liquiditaet' zeigt Liquiditaetsvorschau."""
+def test_liquidität_zeigt_vorschau(runner):
+    """'collmex liquidität' zeigt Liquiditätsvorschau."""
     mock_client = MagicMock()
     mock_client.get_open_items.return_value = []
     mock_client.get_balances.return_value = []
 
     with patch("collmex.cli.CollmexClient", return_value=mock_client):
-        result = runner.invoke(main, ["liquiditaet", "--wochen", "4"])
+        result = runner.invoke(main, ["liquidität", "--wochen", "4"])
         assert result.exit_code == 0
-        assert "Liquiditaetsvorschau" in result.output
+        assert "Liquiditätsvorschau" in result.output
 
 
 # ---------------------------------------------------------------------------
@@ -409,7 +409,7 @@ def test_storno_help(runner):
 
 
 def test_storno_dry_run(runner):
-    """'collmex storno --dry-run' zeigt Storno-Details ohne Ausfuehrung."""
+    """'collmex storno --dry-run' zeigt Storno-Details ohne Ausführung."""
     result = runner.invoke(
         main,
         [
@@ -523,7 +523,7 @@ def test_ausgang_help(runner):
 
 
 def test_ausgang_dry_run(runner):
-    """'collmex ausgang --dry-run' zeigt Ausgangsrechnung ohne Ausfuehrung."""
+    """'collmex ausgang --dry-run' zeigt Ausgangsrechnung ohne Ausführung."""
     result = runner.invoke(
         main,
         [
@@ -550,7 +550,7 @@ def test_ausgang_dry_run(runner):
 
 
 def test_ausgang_auto_konto(runner):
-    """'collmex ausgang --dry-run' ohne --konto waehlt Ertragskonto automatisch."""
+    """'collmex ausgang --dry-run' ohne --konto wählt Ertragskonto automatisch."""
     result = runner.invoke(
         main,
         [
@@ -570,7 +570,7 @@ def test_ausgang_auto_konto(runner):
 
 
 def test_ausgang_7_prozent_auto_konto(runner):
-    """'collmex ausgang --dry-run' mit 7% waehlt 8300 automatisch."""
+    """'collmex ausgang --dry-run' mit 7% wählt 8300 automatisch."""
     result = runner.invoke(
         main,
         [
@@ -586,7 +586,7 @@ def test_ausgang_7_prozent_auto_konto(runner):
         ],
     )
     assert result.exit_code == 0
-    assert "8300" in result.output  # Erloese 7%
+    assert "8300" in result.output  # Erlöse 7%
 
 
 def test_ausgang_ohne_kunde_fehlt(runner):
@@ -698,13 +698,13 @@ def test_kunde_anlegen_dry_run(runner):
             "--name",
             "Test-Kunde AG",
             "--ort",
-            "Muenchen",
+            "München",
             "--dry-run",
         ],
     )
     assert result.exit_code == 0
     assert "Test-Kunde AG" in result.output
-    assert "Muenchen" in result.output
+    assert "München" in result.output
     assert "CMXKND" in result.output
     assert "dry-run" in result.output.lower() or "NICHT" in result.output
 
@@ -860,7 +860,7 @@ def test_abfrage_kunden_leer(runner):
 # ---------------------------------------------------------------------------
 
 
-def test_hilfe_uebersicht(runner):
+def test_hilfe_übersicht(runner):
     """'collmex hilfe' zeigt Kategorien und Satzarten."""
     result = runner.invoke(main, ["hilfe"])
     assert result.exit_code == 0
@@ -1071,7 +1071,7 @@ def test_webui_mengeneinheiten(runner):
     from collmex.webui import Mengeneinheit
 
     mock_einheiten = [
-        Mengeneinheit("PCE", "St", "pcs", 0, "Stueck", "H87"),
+        Mengeneinheit("PCE", "St", "pcs", 0, "Stück", "H87"),
         Mengeneinheit("HR", "h", "h", 2, "Stunden", "HUR"),
     ]
 
@@ -1080,7 +1080,7 @@ def test_webui_mengeneinheiten(runner):
         result = runner.invoke(main, ["webui", "mengeneinheiten"])
         assert result.exit_code == 0
         assert "PCE" in result.output
-        assert "Stueck" in result.output
+        assert "Stück" in result.output
         assert "2 Mengeneinheiten" in result.output
 
 
@@ -1107,7 +1107,7 @@ def test_webui_firma(runner):
 
     mock_firma = Firmenstammdaten(
         firma="Test GmbH",
-        strasse="Teststr. 1",
+        straße="Teststr. 1",
         plz="12345",
         ort="Berlin",
         land="DE",

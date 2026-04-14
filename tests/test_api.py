@@ -1,4 +1,4 @@
-"""Tests fuer collmex.api — Collmex API Client.
+"""Tests für collmex.api — Collmex API Client.
 
 Unit Tests mocken requests.post, Live Tests (markiert mit @pytest.mark.live)
 kommunizieren mit der echten Collmex-API.
@@ -29,7 +29,7 @@ from collmex.api import (
 
 @pytest.fixture
 def client():
-    """CollmexClient mit Dummy-Credentials (fuer Unit Tests)."""
+    """CollmexClient mit Dummy-Credentials (für Unit Tests)."""
     return CollmexClient(
         url="https://www.collmex.de/c.cmx?123456,0,data_exchange",
         user="testuser",
@@ -80,7 +80,7 @@ class TestLoginLine:
         assert len(parts) == 5
 
     def test_login_with_special_chars_in_password(self):
-        """Passwoerter mit Sonderzeichen werden korrekt uebernommen."""
+        """Passwörter mit Sonderzeichen werden korrekt übernommen."""
         client = CollmexClient(
             url="https://example.com",
             user="user",
@@ -100,7 +100,7 @@ class TestResponseParsing:
     """Test: MESSAGE-Satzarten werden korrekt geparst (S/W/E)."""
 
     def test_success_response(self, client):
-        raw = 'MESSAGE;S;0;"Datenimport erfolgreich. 1 Saetze verarbeitet."'
+        raw = 'MESSAGE;S;0;"Datenimport erfolgreich. 1 Sätze verarbeitet."'
         resp = client._parse_response(raw)
         assert resp.success is True
         assert len(resp.messages) == 1
@@ -116,12 +116,12 @@ class TestResponseParsing:
         assert resp.warnings[0].type == MessageType.WARNING
 
     def test_error_response(self, client):
-        raw = 'MESSAGE;E;10001;"Ungueltige Kontonummer"'
+        raw = 'MESSAGE;E;10001;"Ungültige Kontonummer"'
         resp = client._parse_response(raw)
         assert resp.success is False
         assert len(resp.errors) == 1
         assert resp.errors[0].code == "10001"
-        assert resp.first_error == "Ungueltige Kontonummer"
+        assert resp.first_error == "Ungültige Kontonummer"
 
     def test_mixed_messages(self, client):
         raw = 'MESSAGE;W;50;"Warnung: Datum"\nMESSAGE;S;0;"OK"\n'
@@ -144,7 +144,7 @@ class TestResponseParsing:
 
     def test_new_object_id_4_felder(self, client):
         """Live-Format: NEW_OBJECT_ID;70004;0;2 (CMXLIF/CMXKND)."""
-        raw = 'NEW_OBJECT_ID;70004;0;2\nMESSAGE;S;204020;"Datenuebertragung erfolgreich."\n'
+        raw = 'NEW_OBJECT_ID;70004;0;2\nMESSAGE;S;204020;"Datenübertragung erfolgreich."\n'
         resp = client._parse_response(raw)
         assert resp.success is True
         assert resp.new_ids == ["70004"]
@@ -177,31 +177,31 @@ class TestCsvParsing:
     """Test: CSV-Parsing mit Semikolon und Umlauten."""
 
     def test_basic_semicolon_parsing(self):
-        text = "ACCDOC;1;42;1;4400;Buerobedarf;S;500,00;EUR"
+        text = "ACCDOC;1;42;1;4400;Bürobedarf;S;500,00;EUR"
         rows = _parse_csv_response(text)
         assert len(rows) == 1
         assert rows[0][0] == "ACCDOC"
         assert rows[0][4] == "4400"
-        assert rows[0][5] == "Buerobedarf"
+        assert rows[0][5] == "Bürobedarf"
         assert rows[0][7] == "500,00"
 
     def test_umlauts(self):
-        text = "ACCDOC;1;1;1;4400;Bueroermoebel fuer Geschaeftsfuehrer;S;1200,00;EUR"
+        text = "ACCDOC;1;1;1;4400;Büroermoebel für Geschäftsführer;S;1200,00;EUR"
         rows = _parse_csv_response(text)
-        assert "Bueroermoebel" in rows[0][5]
-        assert "Geschaeftsfuehrer" in rows[0][5]
+        assert "Büroermoebel" in rows[0][5]
+        assert "Geschäftsführer" in rows[0][5]
 
     def test_real_umlauts(self):
         """Echte deutsche Umlaute (nicht ASCII-Ersatz)."""
-        text = 'ACCDOC;1;1;1;4400;"Buerobedarf & Zubehoer";S;500,00;EUR'
+        text = 'ACCDOC;1;1;1;4400;"Bürobedarf & Zubehoer";S;500,00;EUR'
         rows = _parse_csv_response(text)
-        assert "Buerobedarf & Zubehoer" in rows[0][5]
+        assert "Bürobedarf & Zubehoer" in rows[0][5]
 
     def test_quoted_fields_with_semicolons(self):
-        text = 'MESSAGE;S;0;"Import OK; 3 Saetze verarbeitet."'
+        text = 'MESSAGE;S;0;"Import OK; 3 Sätze verarbeitet."'
         rows = _parse_csv_response(text)
         assert len(rows) == 1
-        assert rows[0][3] == "Import OK; 3 Saetze verarbeitet."
+        assert rows[0][3] == "Import OK; 3 Sätze verarbeitet."
 
     def test_multiline_response(self):
         text = (
@@ -230,7 +230,7 @@ class TestCsvParsing:
 
 
 class TestAmountFormatting:
-    """Test: Decimal -> '500,00' Collmex-Format und zurueck."""
+    """Test: Decimal -> '500,00' Collmex-Format und zurück."""
 
     def test_decimal_to_collmex(self):
         assert format_amount(Decimal("500.00")) == "500,00"
@@ -288,7 +288,7 @@ class TestEncoding:
 
     @patch("collmex.api.requests.post")
     def test_umlauts_decoded_correctly(self, mock_post, client):
-        """Umlaute aus Collmex (ISO-8859-1) muessen korrekt ankommen."""
+        """Umlaute aus Collmex (ISO-8859-1) müssen korrekt ankommen."""
         text = (
             'ACC_BAL;4830;"Abschreibungen auf Sachanlagen (ohne Afa auf Kfz und Gebäude)";1850,00\n'
         )
@@ -305,7 +305,7 @@ class TestEncoding:
         assert "Gebäude" in row[2]
 
     @patch("collmex.api.requests.post")
-    def test_erloese_umlaut(self, mock_post, client):
+    def test_erlöse_umlaut(self, mock_post, client):
         """Erlöse mit ö muss korrekt dekodiert werden."""
         text = 'ACC_BAL;8400;"Erlöse 19% Umsatzsteuer";-4500,00\n'
         text += 'MESSAGE;S;0;"OK"\n'
@@ -349,11 +349,11 @@ class TestClientRequest:
 
     @patch("collmex.api.requests.post")
     def test_request_error_raises_not(self, mock_post, client):
-        """request() selbst wirft nicht bei API-Errors, gibt CollmexResponse zurueck."""
-        mock_post.return_value = _mock_response('MESSAGE;E;500;"Konto ungueltig"')
+        """request() selbst wirft nicht bei API-Errors, gibt CollmexResponse zurück."""
+        mock_post.return_value = _mock_response('MESSAGE;E;500;"Konto ungültig"')
         resp = client.request(["ACCDOC;1;..."])
         assert resp.success is False
-        assert resp.first_error == "Konto ungueltig"
+        assert resp.first_error == "Konto ungültig"
 
     @patch("collmex.api.requests.post")
     def test_network_error_raises(self, mock_post, client):
@@ -434,11 +434,11 @@ class TestPostBooking:
 
     @patch("collmex.api.requests.post")
     def test_success_with_new_id(self, mock_post, client):
-        raw = 'NEW_OBJECT_ID;42\nMESSAGE;S;0;"Datenimport erfolgreich. 1 Saetze verarbeitet."\n'
+        raw = 'NEW_OBJECT_ID;42\nMESSAGE;S;0;"Datenimport erfolgreich. 1 Sätze verarbeitet."\n'
         mock_post.return_value = _mock_response(raw)
 
         lines = [
-            "CMXLRN;70000;1;20260303;;500,00;95,00;;;;;;;;Bueromaterial;;4400;;;",
+            "CMXLRN;70000;1;20260303;;500,00;95,00;;;;;;;;Büromaterial;;4400;;;",
         ]
         result = client.post_booking(lines)
 
@@ -448,7 +448,7 @@ class TestPostBooking:
 
     @patch("collmex.api.requests.post")
     def test_cmxums_success(self, mock_post, client):
-        raw = 'NEW_OBJECT_ID;43\nMESSAGE;S;0;"Datenimport erfolgreich. 1 Saetze verarbeitet."\n'
+        raw = 'NEW_OBJECT_ID;43\nMESSAGE;S;0;"Datenimport erfolgreich. 1 Sätze verarbeitet."\n'
         mock_post.return_value = _mock_response(raw)
 
         lines = [
@@ -461,11 +461,11 @@ class TestPostBooking:
 
     @patch("collmex.api.requests.post")
     def test_failure(self, mock_post, client):
-        mock_post.return_value = _mock_response('MESSAGE;E;200;"Konto ungueltig"')
+        mock_post.return_value = _mock_response('MESSAGE;E;200;"Konto ungültig"')
         lines = ["CMXLRN;70000;1;20260303;;500,00;95,00;;;;;;;;Test;;4400;;;"]
         result = client.post_booking(lines)
         assert result.success is False
-        assert "Konto ungueltig" in result.first_error
+        assert "Konto ungültig" in result.first_error
 
     def test_invalid_prefix_raises(self, client):
         with pytest.raises(CollmexError, match="CMXLRN/CMXUMS"):
@@ -521,7 +521,7 @@ class TestCredentials:
         assert "testuser" in r
         assert "testpass" not in r  # Passwort nicht im repr anzeigen... wait
         # repr zeigt URL und User, aber das Passwort ist nicht direkt
-        # enthalten — es wird ueber url=, user=, customer= angezeigt.
+        # enthalten — es wird über url=, user=, customer= angezeigt.
 
 
 # ===================================================================
@@ -553,26 +553,26 @@ class TestDataclasses:
 class TestLive:
     """Tests gegen die echte Collmex-API.
 
-    Nur ausfuehren mit: pytest -m live
-    Benoetigt gueltige .env Konfiguration.
+    Nur ausführen mit: pytest -m live
+    Benötigt gültige .env Konfiguration.
     """
 
     def test_status(self, live_client):
-        """Prueft ob Login funktioniert."""
+        """Prüft ob Login funktioniert."""
         assert live_client.status() is True
 
     def test_get_balances(self, live_client):
-        """Prueft Kontensalden-Abfrage."""
+        """Prüft Kontensalden-Abfrage."""
         # Sollte nicht werfen, auch wenn keine Buchungen existieren
         result = live_client.get_balances(2026, 1)
         assert isinstance(result, list)
 
     def test_get_bookings_empty(self, live_client):
-        """Prueft Buchungsabfrage (kann leer sein)."""
+        """Prüft Buchungsabfrage (kann leer sein)."""
         result = live_client.get_bookings(date_from="20260101", date_to="20260131")
         assert isinstance(result, list)
 
     def test_query_customers(self, live_client):
-        """Prueft generische Abfrage mit CUSTOMER_GET."""
+        """Prüft generische Abfrage mit CUSTOMER_GET."""
         result = live_client.query("CUSTOMER_GET", "", 1)
         assert isinstance(result, list)

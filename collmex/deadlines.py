@@ -1,8 +1,8 @@
 """Fristen-Modul.
 
 Verwaltet steuerliche und buchhalterische Fristen einer deutschen GmbH.
-Berechnet Faelligkeiten unter Beruecksichtigung von Wochenenden,
-Feiertagen und der Schonfrist (3 Tage fuer Bankueberweisungen nach dem 10.).
+Berechnet Fälligkeiten unter Berücksichtigung von Wochenenden,
+Feiertagen und der Schonfrist (3 Tage für Banküberweisungen nach dem 10.).
 
 Deutsche Steuerfristen (Auswahl):
 - UStVA: 10. des Folgemonats (monatlich)
@@ -11,7 +11,7 @@ Deutsche Steuerfristen (Auswahl):
   Zahlung ~3. letzter Werktag (monatlich)
 - Gewerbesteuer-VZ: 15.02, 15.05, 15.08, 15.11 (quartalsweise)
 - KSt-VZ: 10.03, 10.06, 10.09, 10.12 (quartalsweise)
-- Jahresabschluss, Steuererklärung, Offenlegung (jaehrlich)
+- Jahresabschluss, Steuererklärung, Offenlegung (jährlich)
 """
 
 from __future__ import annotations
@@ -37,11 +37,11 @@ class Kategorie(str, Enum):
     MELDUNG = "meldung"
 
 
-class Prioritaet(str, Enum):
-    """Prioritaet einer Frist.
+class Priorität(str, Enum):
+    """Priorität einer Frist.
 
-    critical = Versaeumnis fuehrt zu Saumniszuschlaegen oder Bussgeldern
-    high     = Versaeumnis fuehrt zu Nachteilen (z.B. Verspaetungszuschlag)
+    critical = Versäumnis führt zu Säumniszuschlägen oder Bußgeldern
+    high     = Versäumnis führt zu Nachteilen (z.B. Verspätungszuschlag)
     medium   = Interne Frist ohne direkte Sanktion
     """
 
@@ -61,11 +61,11 @@ class Deadline:
 
     Attributes:
         name: Kurzbezeichnung der Frist (z.B. "UStVA").
-        datum: Faelligkeitsdatum.
+        datum: Fälligkeitsdatum.
         kategorie: Steuer, Buchhaltung oder Meldung.
-        beschreibung: Ausfuehrliche Erlaeuterung.
-        wiederkehrend: True fuer monatliche/quartalsweise Fristen.
-        prioritaet: critical / high / medium.
+        beschreibung: Ausführliche Erläuterung.
+        wiederkehrend: True für monatliche/quartalsweise Fristen.
+        priorität: critical / high / medium.
     """
 
     name: str
@@ -73,7 +73,7 @@ class Deadline:
     kategorie: Kategorie
     beschreibung: str
     wiederkehrend: bool
-    prioritaet: Prioritaet
+    priorität: Priorität
 
 
 # ---------------------------------------------------------------------------
@@ -87,7 +87,7 @@ class Deadline:
 def _ostersonntag(jahr: int) -> date:
     """Berechnet Ostersonntag nach dem Gauss'schen Algorithmus.
 
-    Der Algorithmus bestimmt das Datum des Ostersonntags fuer ein
+    Der Algorithmus bestimmt das Datum des Ostersonntags für ein
     gegebenes Jahr im gregorianischen Kalender.
     """
     a = jahr % 19
@@ -108,11 +108,11 @@ def _ostersonntag(jahr: int) -> date:
 
 
 def feiertage_deutschland(jahr: int) -> set[date]:
-    """Gibt die bundesweiten gesetzlichen Feiertage fuer ein Jahr zurueck.
+    """Gibt die bundesweiten gesetzlichen Feiertage für ein Jahr zurück.
 
-    Enthaelt nur bundeseinheitliche Feiertage, keine laenderspezifischen.
-    Fuer die Fristenberechnung relevant: Wenn eine Frist auf einen
-    Feiertag faellt, verschiebt sie sich auf den naechsten Werktag.
+    Enthält nur bundeseinheitliche Feiertage, keine länderspezifischen.
+    Für die Fristenberechnung relevant: Wenn eine Frist auf einen
+    Feiertag fällt, verschiebt sie sich auf den nächsten Werktag.
     """
     ostern = _ostersonntag(jahr)
     return {
@@ -129,10 +129,10 @@ def feiertage_deutschland(jahr: int) -> set[date]:
 
 
 def ist_werktag(tag: date, feiertage: set[date] | None = None) -> bool:
-    """Prueft ob ein Datum ein Werktag ist (Mo-Fr, kein Feiertag).
+    """Prüft ob ein Datum ein Werktag ist (Mo-Fr, kein Feiertag).
 
     Args:
-        tag: Das zu pruefende Datum.
+        tag: Das zu prüfende Datum.
         feiertage: Menge von Feiertagen. Wird automatisch berechnet
                    wenn nicht angegeben.
     """
@@ -142,12 +142,12 @@ def ist_werktag(tag: date, feiertage: set[date] | None = None) -> bool:
     return tag.weekday() < 5 and tag not in feiertage
 
 
-def naechster_werktag(tag: date, feiertage: set[date] | None = None) -> date:
-    """Gibt den naechsten Werktag zurueck (oder den Tag selbst, falls Werktag).
+def nächster_werktag(tag: date, feiertage: set[date] | None = None) -> date:
+    """Gibt den nächsten Werktag zurück (oder den Tag selbst, falls Werktag).
 
-    Verschiebt ein Datum auf den naechsten Montag-Freitag, der kein
-    Feiertag ist. Wird benoetigt wenn eine Frist auf ein Wochenende
-    oder einen Feiertag faellt.
+    Verschiebt ein Datum auf den nächsten Montag-Freitag, der kein
+    Feiertag ist. Wird benötigt wenn eine Frist auf ein Wochenende
+    oder einen Feiertag fällt.
     """
     if feiertage is None:
         feiertage = feiertage_deutschland(tag.year)
@@ -160,9 +160,9 @@ def naechster_werktag(tag: date, feiertage: set[date] | None = None) -> date:
 def n_ter_letzter_werktag(jahr: int, monat: int, n: int) -> date:
     """Berechnet den n-ten letzten Werktag eines Monats.
 
-    Fuer die Sozialversicherung relevant:
+    Für die Sozialversicherung relevant:
     - Beitragsnachweis: 5. letzter Werktag
-    - Zahlung: 3. letzter Werktag (= Faelligkeitstag)
+    - Zahlung: 3. letzter Werktag (= Fälligkeitstag)
 
     Args:
         jahr: Kalenderjahr.
@@ -193,11 +193,11 @@ def n_ter_letzter_werktag(jahr: int, monat: int, n: int) -> date:
 def schonfrist(frist_datum: date) -> date:
     """Berechnet das Ende der Schonfrist (3 Tage nach Fristablauf).
 
-    Die Schonfrist gilt fuer Steuerzahlungen per Bankueberweisung.
-    Gemaess §240 AO betraegt sie 3 Tage. Das Ende der Schonfrist
-    wird NICHT auf Werktage verschoben — es zaehlen Kalendertage.
+    Die Schonfrist gilt für Steuerzahlungen per Banküberweisung.
+    Gemäß §240 AO beträgt sie 3 Tage. Das Ende der Schonfrist
+    wird NICHT auf Werktage verschoben — es zählen Kalendertage.
 
-    Beispiel: UStVA faellig am 10.03. -> Schonfrist bis 13.03.
+    Beispiel: UStVA fällig am 10.03. -> Schonfrist bis 13.03.
               Zahlung muss bis 13.03. beim Finanzamt eingehen.
 
     Args:
@@ -217,10 +217,10 @@ def schonfrist(frist_datum: date) -> date:
 class DeadlineTracker:
     """Verwaltet steuerliche und buchhalterische Fristen einer GmbH.
 
-    Generiert den Fristenkalender fuer ein Geschaeftsjahr und bietet
-    Methoden zum Filtern nach Zeitraum, Faelligkeit und Kategorie.
+    Generiert den Fristenkalender für ein Geschäftsjahr und bietet
+    Methoden zum Filtern nach Zeitraum, Fälligkeit und Kategorie.
 
-    Alle Fristen werden unter Beruecksichtigung von Wochenenden und
+    Alle Fristen werden unter Berücksichtigung von Wochenenden und
     bundesweiten Feiertagen berechnet.
     """
 
@@ -228,7 +228,7 @@ class DeadlineTracker:
         """Initialisiert den DeadlineTracker.
 
         Args:
-            heute: Referenzdatum fuer Faelligkeitspruefungen.
+            heute: Referenzdatum für Fälligkeitsprüfungen.
                    Standard: date.today().
         """
         self.heute = heute or date.today()
@@ -238,10 +238,10 @@ class DeadlineTracker:
     # ------------------------------------------------------------------
 
     def _monatliche_fristen(self, jahr: int, monat: int) -> list[Deadline]:
-        """Generiert alle monatlichen Fristen fuer einen Monat.
+        """Generiert alle monatlichen Fristen für einen Monat.
 
         Monatliche Fristen beziehen sich immer auf den Vormonat:
-        Die UStVA fuer Januar ist am 10. Februar faellig.
+        Die UStVA für Januar ist am 10. Februar fällig.
 
         Args:
             jahr: Kalenderjahr der Frist (nicht des Bezugsmonats).
@@ -259,43 +259,43 @@ class DeadlineTracker:
             bezugs_jahr = jahr
 
         # --- UStVA: 10. des Folgemonats ---
-        ustva_datum = naechster_werktag(date(jahr, monat, 10), feiertage)
+        ustva_datum = nächster_werktag(date(jahr, monat, 10), feiertage)
         fristen.append(
             Deadline(
                 name="UStVA",
                 datum=ustva_datum,
                 kategorie=Kategorie.STEUER,
                 beschreibung=(
-                    f"Umsatzsteuer-Voranmeldung fuer "
+                    f"Umsatzsteuer-Voranmeldung für "
                     f"{bezugs_monat:02d}/{bezugs_jahr}. "
                     f"Abgabe und Zahlung bis zum 10. des Folgemonats. "
-                    f"Schonfrist fuer Zahlung: {schonfrist(ustva_datum).isoformat()}."
+                    f"Schonfrist für Zahlung: {schonfrist(ustva_datum).isoformat()}."
                 ),
                 wiederkehrend=True,
-                prioritaet=Prioritaet.CRITICAL,
+                priorität=Priorität.CRITICAL,
             )
         )
 
         # --- Lohnsteueranmeldung: 10. des Folgemonats ---
-        lst_datum = naechster_werktag(date(jahr, monat, 10), feiertage)
+        lst_datum = nächster_werktag(date(jahr, monat, 10), feiertage)
         fristen.append(
             Deadline(
                 name="Lohnsteueranmeldung",
                 datum=lst_datum,
                 kategorie=Kategorie.STEUER,
                 beschreibung=(
-                    f"Lohnsteueranmeldung fuer "
+                    f"Lohnsteueranmeldung für "
                     f"{bezugs_monat:02d}/{bezugs_jahr}. "
                     f"Abgabe und Zahlung bis zum 10. des Folgemonats."
                 ),
                 wiederkehrend=True,
-                prioritaet=Prioritaet.CRITICAL,
+                priorität=Priorität.CRITICAL,
             )
         )
 
         # --- Sozialversicherung Beitragsnachweis: ~5. letzter Werktag ---
-        # Der Beitragsnachweis fuer den aktuellen Monat muss VOR dem
-        # Faelligkeitstag eingereicht werden.
+        # Der Beitragsnachweis für den aktuellen Monat muss VOR dem
+        # Fälligkeitstag eingereicht werden.
         sv_nachweis_datum = n_ter_letzter_werktag(jahr, monat, 5)
         fristen.append(
             Deadline(
@@ -303,12 +303,12 @@ class DeadlineTracker:
                 datum=sv_nachweis_datum,
                 kategorie=Kategorie.MELDUNG,
                 beschreibung=(
-                    f"Sozialversicherung: Beitragsnachweis fuer "
+                    f"Sozialversicherung: Beitragsnachweis für "
                     f"{monat:02d}/{jahr}. "
                     f"Einreichung bis zum 5. letzten Werktag des Monats."
                 ),
                 wiederkehrend=True,
-                prioritaet=Prioritaet.CRITICAL,
+                priorität=Priorität.CRITICAL,
             )
         )
 
@@ -320,20 +320,20 @@ class DeadlineTracker:
                 datum=sv_zahlung_datum,
                 kategorie=Kategorie.STEUER,
                 beschreibung=(
-                    f"Sozialversicherung: Beitragszahlung fuer "
+                    f"Sozialversicherung: Beitragszahlung für "
                     f"{monat:02d}/{jahr}. "
                     f"Zahlung muss am 3. letzten Werktag beim "
-                    f"Sozialversicherungstraeger eingehen."
+                    f"Sozialversicherungsträger eingehen."
                 ),
                 wiederkehrend=True,
-                prioritaet=Prioritaet.CRITICAL,
+                priorität=Priorität.CRITICAL,
             )
         )
 
         return fristen
 
     def _quartalsfristen(self, jahr: int) -> list[Deadline]:
-        """Generiert alle quartalsweisen Fristen fuer ein Jahr.
+        """Generiert alle quartalsweisen Fristen für ein Jahr.
 
         Gewerbesteuer-Vorauszahlungen: 15.02, 15.05, 15.08, 15.11
         KSt-Vorauszahlungen: 10.03, 10.06, 10.09, 10.12
@@ -349,7 +349,7 @@ class DeadlineTracker:
             (11, 15, "Q4"),
         ]
         for monat, tag, quartal in gew_st_termine:
-            datum = naechster_werktag(date(jahr, monat, tag), feiertage)
+            datum = nächster_werktag(date(jahr, monat, tag), feiertage)
             fristen.append(
                 Deadline(
                     name="GewSt-Vorauszahlung",
@@ -360,11 +360,11 @@ class DeadlineTracker:
                         f"Schonfrist: {schonfrist(datum).isoformat()}."
                     ),
                     wiederkehrend=True,
-                    prioritaet=Prioritaet.HIGH,
+                    priorität=Priorität.HIGH,
                 )
             )
 
-        # --- Koerperschaftsteuer-Vorauszahlung ---
+        # --- Körperschaftsteuer-Vorauszahlung ---
         kst_termine = [
             (3, 10, "Q1"),
             (6, 10, "Q2"),
@@ -372,125 +372,125 @@ class DeadlineTracker:
             (12, 10, "Q4"),
         ]
         for monat, tag, quartal in kst_termine:
-            datum = naechster_werktag(date(jahr, monat, tag), feiertage)
+            datum = nächster_werktag(date(jahr, monat, tag), feiertage)
             fristen.append(
                 Deadline(
                     name="KSt-Vorauszahlung",
                     datum=datum,
                     kategorie=Kategorie.STEUER,
                     beschreibung=(
-                        f"Koerperschaftsteuer-Vorauszahlung {quartal}/{jahr}. "
+                        f"Körperschaftsteuer-Vorauszahlung {quartal}/{jahr}. "
                         f"Schonfrist: {schonfrist(datum).isoformat()}."
                     ),
                     wiederkehrend=True,
-                    prioritaet=Prioritaet.HIGH,
+                    priorität=Priorität.HIGH,
                 )
             )
 
         return fristen
 
     def _jahresfristen(self, jahr: int) -> list[Deadline]:
-        """Generiert die jaehrlichen Fristen fuer ein Geschaeftsjahr.
+        """Generiert die jährlichen Fristen für ein Geschäftsjahr.
 
-        Die Fristen beziehen sich auf das VORJAHR als Geschaeftsjahr.
-        Beispiel: Fuer GJ 2025 fallen die Fristen im Kalenderjahr 2026.
+        Die Fristen beziehen sich auf das VORJAHR als Geschäftsjahr.
+        Beispiel: Für GJ 2025 fallen die Fristen im Kalenderjahr 2026.
 
         Args:
             jahr: Kalenderjahr, in dem die Fristen liegen
-                  (= Geschaeftsjahr + 1 fuer die meisten Fristen).
+                  (= Geschäftsjahr + 1 für die meisten Fristen).
         """
         fristen: list[Deadline] = []
         feiertage = feiertage_deutschland(jahr)
         vorjahr = jahr - 1
 
-        # --- Dauerfristverlaengerung: 10.02 ---
-        # Antrag auf Verlaengerung der UStVA-Frist um 1 Monat
-        dfv_datum = naechster_werktag(date(jahr, 2, 10), feiertage)
+        # --- Dauerfristverlängerung: 10.02 ---
+        # Antrag auf Verlängerung der UStVA-Frist um 1 Monat
+        dfv_datum = nächster_werktag(date(jahr, 2, 10), feiertage)
         fristen.append(
             Deadline(
-                name="Dauerfristverlaengerung",
+                name="Dauerfristverlängerung",
                 datum=dfv_datum,
                 kategorie=Kategorie.STEUER,
                 beschreibung=(
-                    f"Antrag auf Dauerfristverlaengerung fuer {jahr}. "
-                    f"Verlaengert die UStVA-Frist um einen Monat "
+                    f"Antrag auf Dauerfristverlängerung für {jahr}. "
+                    f"Verlängert die UStVA-Frist um einen Monat "
                     f"(10. wird zum 10. des uebernachsten Monats). "
                     f"Sondervorauszahlung: 1/11 der Vorjahres-USt."
                 ),
                 wiederkehrend=False,
-                prioritaet=Prioritaet.HIGH,
+                priorität=Priorität.HIGH,
             )
         )
 
         # --- Jahresabschluss kleine GmbH: 30.06 ---
-        # Aufstellungsfrist fuer kleine Kapitalgesellschaften gemaess §264 HGB
-        ja_datum = naechster_werktag(date(jahr, 6, 30), feiertage)
+        # Aufstellungsfrist für kleine Kapitalgesellschaften gemäß §264 HGB
+        ja_datum = nächster_werktag(date(jahr, 6, 30), feiertage)
         fristen.append(
             Deadline(
                 name="Jahresabschluss Aufstellung",
                 datum=ja_datum,
                 kategorie=Kategorie.BUCHHALTUNG,
                 beschreibung=(
-                    f"Aufstellung Jahresabschluss fuer GJ {vorjahr} "
-                    f"(kleine GmbH, 6-Monats-Frist gemaess §264 Abs. 1 HGB). "
-                    f"Bilanz, GuV und Anhang muessen fertiggestellt sein."
+                    f"Aufstellung Jahresabschluss für GJ {vorjahr} "
+                    f"(kleine GmbH, 6-Monats-Frist gemäß §264 Abs. 1 HGB). "
+                    f"Bilanz, GuV und Anhang müssen fertiggestellt sein."
                 ),
                 wiederkehrend=False,
-                prioritaet=Prioritaet.HIGH,
+                priorität=Priorität.HIGH,
             )
         )
 
-        # --- Steuererklaerung ohne StB: 31.07 ---
-        # Abgabefrist ohne Steuerberater gemaess §149 AO
-        ste_datum = naechster_werktag(date(jahr, 7, 31), feiertage)
+        # --- Steuererklärung ohne StB: 31.07 ---
+        # Abgabefrist ohne Steuerberater gemäß §149 AO
+        ste_datum = nächster_werktag(date(jahr, 7, 31), feiertage)
         fristen.append(
             Deadline(
-                name="Steuererklaerung (ohne StB)",
+                name="Steuererklärung (ohne StB)",
                 datum=ste_datum,
                 kategorie=Kategorie.STEUER,
                 beschreibung=(
-                    f"Abgabe Steuererklaerung fuer GJ {vorjahr} "
+                    f"Abgabe Steuererklärung für GJ {vorjahr} "
                     f"ohne Steuerberater (Frist: 31.07. des Folgejahres). "
-                    f"KSt, GewSt, USt-Jahreserklaerung."
+                    f"KSt, GewSt, USt-Jahreserklärung."
                 ),
                 wiederkehrend=False,
-                prioritaet=Prioritaet.CRITICAL,
+                priorität=Priorität.CRITICAL,
             )
         )
 
         # --- Jahresabschluss Feststellung: 30.11 ---
         # Gesellschafterversammlung muss den Abschluss feststellen
-        fest_datum = naechster_werktag(date(jahr, 11, 30), feiertage)
+        fest_datum = nächster_werktag(date(jahr, 11, 30), feiertage)
         fristen.append(
             Deadline(
                 name="Jahresabschluss Feststellung",
                 datum=fest_datum,
                 kategorie=Kategorie.BUCHHALTUNG,
                 beschreibung=(
-                    f"Feststellung des Jahresabschlusses fuer GJ {vorjahr} "
+                    f"Feststellung des Jahresabschlusses für GJ {vorjahr} "
                     f"durch die Gesellschafterversammlung "
                     f"(Frist: 11 Monate nach GJ-Ende)."
                 ),
                 wiederkehrend=False,
-                prioritaet=Prioritaet.HIGH,
+                priorität=Priorität.HIGH,
             )
         )
 
         # --- Offenlegung Bundesanzeiger: 31.12 ---
         # Kleine GmbH: 12 Monate nach GJ-Ende
-        offen_datum = naechster_werktag(date(jahr, 12, 31), feiertage)
+        offen_datum = nächster_werktag(date(jahr, 12, 31), feiertage)
         fristen.append(
             Deadline(
                 name="Offenlegung Bundesanzeiger",
                 datum=offen_datum,
                 kategorie=Kategorie.MELDUNG,
                 beschreibung=(
-                    f"Offenlegung des Jahresabschlusses fuer GJ {vorjahr} "
+                    f"Offenlegung des Jahresabschlusses für GJ {vorjahr} "
                     f"beim Bundesanzeiger (12 Monate nach GJ-Ende). "
-                    f"Versaeumnis fuehrt zu Ordnungsgeld (mind. 2.500 EUR)."
+                    f"Versäumnis führt zu Ordnungsgeld (mind. 2.500 EUR)."
                 ),
                 wiederkehrend=False,
-                prioritaet=Prioritaet.CRITICAL,
+                priorität=Priorität.CRITICAL,
             )
         )
 
@@ -504,24 +504,24 @@ class DeadlineTracker:
                 kategorie=Kategorie.BUCHHALTUNG,
                 beschreibung=(
                     f"Stichtagsinventur zum Bilanzstichtag {jahr}. "
-                    f"Bestandsaufnahme aller Vermoegenswerte und Schulden "
-                    f"gemaess §240 HGB."
+                    f"Bestandsaufnahme aller Vermögenswerte und Schulden "
+                    f"gemäß §240 HGB."
                 ),
                 wiederkehrend=False,
-                prioritaet=Prioritaet.HIGH,
+                priorität=Priorität.HIGH,
             )
         )
 
         return fristen
 
     # ------------------------------------------------------------------
-    # Oeffentliche API
+    # Öffentliche API
     # ------------------------------------------------------------------
 
     def get_annual_calendar(self, jahr: int) -> list[Deadline]:
-        """Gibt alle Fristen fuer ein Kalenderjahr zurueck.
+        """Gibt alle Fristen für ein Kalenderjahr zurück.
 
-        Enthaelt monatliche, quartalsweise und jaehrliche Fristen,
+        Enthält monatliche, quartalsweise und jährliche Fristen,
         sortiert nach Datum.
 
         Args:
@@ -532,7 +532,7 @@ class DeadlineTracker:
         """
         fristen: list[Deadline] = []
 
-        # Monatliche Fristen fuer jeden Monat des Jahres
+        # Monatliche Fristen für jeden Monat des Jahres
         for monat in range(1, 13):
             fristen.extend(self._monatliche_fristen(jahr, monat))
 
@@ -547,7 +547,7 @@ class DeadlineTracker:
         return fristen
 
     def get_monthly_deadlines(self, jahr: int, monat: int) -> list[Deadline]:
-        """Gibt alle Fristen zurueck, die in einen bestimmten Monat fallen.
+        """Gibt alle Fristen zurück, die in einen bestimmten Monat fallen.
 
         Filtert den Jahreskalender auf Fristen deren Datum im
         angegebenen Monat liegt.
@@ -563,9 +563,9 @@ class DeadlineTracker:
         return [f for f in kalender if f.datum.year == jahr and f.datum.month == monat]
 
     def get_upcoming(self, tage: int = 30) -> list[Deadline]:
-        """Gibt Fristen zurueck, die innerhalb der naechsten N Tage faellig sind.
+        """Gibt Fristen zurück, die innerhalb der nächsten N Tage fällig sind.
 
-        Beruecksichtigt Fristen ab heute (einschliesslich) bis
+        Berücksichtigt Fristen ab heute (einschliesslich) bis
         heute + tage (einschliesslich).
 
         Args:
@@ -577,7 +577,7 @@ class DeadlineTracker:
         von = self.heute
         bis = self.heute + timedelta(days=tage)
 
-        # Kalender fuer die relevanten Jahre generieren
+        # Kalender für die relevanten Jahre generieren
         jahre = {von.year}
         if bis.year != von.year:
             jahre.add(bis.year)
@@ -589,13 +589,13 @@ class DeadlineTracker:
         return [f for f in alle_fristen if von <= f.datum <= bis]
 
     def get_overdue(self) -> list[Deadline]:
-        """Gibt ueberfaellige Fristen zurueck (Datum vor heute).
+        """Gibt überfällige Fristen zurück (Datum vor heute).
 
-        Prueft das aktuelle Jahr und gibt alle Fristen zurueck,
+        Prüft das aktuelle Jahr und gibt alle Fristen zurück,
         deren Datum strikt vor dem heutigen Tag liegt.
 
         Returns:
-            Chronologisch sortierte Liste der ueberfaelligen Fristen.
+            Chronologisch sortierte Liste der überfälligen Fristen.
         """
         kalender = self.get_annual_calendar(self.heute.year)
         return [f for f in kalender if f.datum < self.heute]

@@ -1,10 +1,10 @@
 """Integrationstests gegen die echte Collmex-API.
 
-Simuliert typische Geschaeftsvorfaelle per CMXLRN (Eingangsrechnungen)
-und CMXUMS (Ausgangsrechnungen) und prueft anschliessend ob Collmex
-die doppelte Buchfuehrung korrekt erzeugt.
+Simuliert typische Geschäftsvorfälle per CMXLRN (Eingangsrechnungen)
+und CMXUMS (Ausgangsrechnungen) und prüft anschliessend ob Collmex
+die doppelte Buchführung korrekt erzeugt.
 
-Ausfuehren mit: pytest tests/test_integration_live.py -m live -v
+Ausführen mit: pytest tests/test_integration_live.py -m live -v
 """
 
 from decimal import Decimal
@@ -32,25 +32,25 @@ def engine(client):
 
 
 # ---------------------------------------------------------------------------
-# Geschaeftsvorfaelle buchen
+# Geschäftsvorfälle buchen
 # ---------------------------------------------------------------------------
 
 
 class TestEingangsrechnungen:
     """Eingangsrechnungen (CMXLRN) gegen echte API."""
 
-    def test_bueromaterial_19_mit_gegenkonto(self, engine, client):
-        """Eingangsrechnung Bueromaterial, 19% USt, direkt Bank."""
+    def test_büromaterial_19_mit_gegenkonto(self, engine, client):
+        """Eingangsrechnung Büromaterial, 19% USt, direkt Bank."""
         rechnung = engine.create_eingangsrechnung(
             betrag_netto=Decimal("500.00"),
             ust_satz=19,
             aufwandskonto=4830,  # 4400 existiert nicht in diesem Collmex
-            buchungstext="Live-Test Bueromaterial",
+            buchungstext="Live-Test Büromaterial",
             belegdatum="20260303",
             rechnungs_nr="LIVE-ER-001",
         )
         result = engine.post_and_validate(rechnung)
-        assert result.success, f"Bueromaterial fehlgeschlagen: {result.fehler}"
+        assert result.success, f"Büromaterial fehlgeschlagen: {result.fehler}"
 
     def test_software_lizenz_19_mit_lieferant(self, engine, client):
         """Eingangsrechnung mit Lieferant -> Verbindlichkeiten."""
@@ -151,8 +151,8 @@ class TestValidierung:
         assert len(bookings) > 0, "Keine Buchungen gefunden"
 
     def test_kontensalden_plausibel(self, client):
-        """Kontensalden nach allen Buchungen pruefen."""
-        # Periode 0 = kumuliert ueber alle Monate
+        """Kontensalden nach allen Buchungen prüfen."""
+        # Periode 0 = kumuliert über alle Monate
         salden = client.get_balances(2026, 0)
 
         # Mindestens einige Konten sollten Salden haben

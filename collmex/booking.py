@@ -1,11 +1,11 @@
-"""Buchungslogik fuer das collmex-Projekt.
+"""Buchungslogik für das collmex-Projekt.
 
-Erzeugt Eingangs- und Ausgangsrechnungen als CMXLRN / CMXUMS-Saetze
-und uebermittelt sie ueber den API-Client an Collmex.
+Erzeugt Eingangs- und Ausgangsrechnungen als CMXLRN / CMXUMS-Sätze
+und uebermittelt sie über den API-Client an Collmex.
 
 WICHTIG: Collmex erlaubt KEINEN Import von allgemeinen Buchungen (ACCDOC).
-Stattdessen werden Rechnungen ueber CMXLRN (Eingang) und CMXUMS (Ausgang)
-importiert. Collmex erzeugt die doppelte Buchfuehrung (Soll/Haben) intern.
+Stattdessen werden Rechnungen über CMXLRN (Eingang) und CMXUMS (Ausgang)
+importiert. Collmex erzeugt die doppelte Buchführung (Soll/Haben) intern.
 """
 
 from __future__ import annotations
@@ -26,7 +26,7 @@ from collmex.models import (
 from collmex.validation import validate_ust
 
 # SKR03-Standardkonten
-_AUFWAND_KONTEN_VOLL = {19: None}  # Default: Collmex waehlt
+_AUFWAND_KONTEN_VOLL = {19: None}  # Default: Collmex wählt
 _ERLOES_KONTEN = {19: 8400, 7: 8300}
 _BANK_KONTO = 1200
 
@@ -91,12 +91,12 @@ def parse_betrag(text: str) -> Decimal:
 def format_datum(datum: str) -> str:
     """Stellt sicher, dass ein Datum im YYYYMMDD-Format vorliegt.
 
-    Unterstuetzt folgende Eingabeformate:
-    - YYYYMMDD (wird direkt zurueckgegeben)
+    Unterstützt folgende Eingabeformate:
+    - YYYYMMDD (wird direkt zurückgegeben)
     - YYYY-MM-DD
     - DD.MM.YYYY
 
-    Raises ValueError bei ungueltigem Format.
+    Raises ValueError bei ungültigem Format.
     """
     datum = datum.strip()
 
@@ -127,10 +127,10 @@ def format_datum(datum: str) -> str:
 
 
 class BookingEngine:
-    """Erzeugt und sendet Buchungssaetze an Collmex.
+    """Erzeugt und sendet Buchungssätze an Collmex.
 
-    Verwendet CMXLRN fuer Eingangsrechnungen und CMXUMS fuer
-    Ausgangsrechnungen.  Collmex erzeugt die doppelte Buchfuehrung
+    Verwendet CMXLRN für Eingangsrechnungen und CMXUMS für
+    Ausgangsrechnungen.  Collmex erzeugt die doppelte Buchführung
     (Aufwand/Ertrag + Steuer + Gegenkonto) automatisch.
     """
 
@@ -155,7 +155,7 @@ class BookingEngine:
     ) -> CollmexEingangsrechnung:
         """Erzeugt eine Eingangsrechnung (CMXLRN).
 
-        Collmex kuemmert sich um die doppelte Buchfuehrung:
+        Collmex kümmert sich um die doppelte Buchführung:
         - Aufwandskonto (Soll) -> aufwandskonto
         - Vorsteuer (Soll) -> automatisch
         - Verbindlichkeiten/Bank (Haben) -> lieferant_nr oder gegenkonto
@@ -164,8 +164,8 @@ class BookingEngine:
         ----------
         betrag_netto: Nettobetrag der Rechnung
         ust_satz: USt-Satz (0, 7 oder 19)
-        aufwandskonto: SKR03-Aufwandskonto (z.B. 4400 Buerobedarf)
-        buchungstext: Beschreibung des Geschaeftsvorfalls
+        aufwandskonto: SKR03-Aufwandskonto (z.B. 4400 Bürobedarf)
+        buchungstext: Beschreibung des Geschäftsvorfalls
         belegdatum: Datum (YYYYMMDD, YYYY-MM-DD oder DD.MM.YYYY)
         lieferant_nr: Collmex-Lieferanten-ID (optional)
         gegenkonto: Gegenkonto wenn kein Lieferant (Standard: 1200 Bank)
@@ -182,7 +182,7 @@ class BookingEngine:
             lieferant_nr=lieferant_nr,
             datum=belegdatum,
             rechnungs_nr=rechnungs_nr,
-            waehrung="EUR",
+            währung="EUR",
             gegenkonto=gegenkonto if not lieferant_nr else None,
             buchungstext=buchungstext,
             kostenstelle=kostenstelle,
@@ -220,11 +220,11 @@ class BookingEngine:
         Parameters
         ----------
         positionen: Liste von (betrag_netto, aufwandskonto, ust_satz) Tupeln
-        buchungstext: Beschreibung (wird fuer alle Positionen verwendet)
+        buchungstext: Beschreibung (wird für alle Positionen verwendet)
         belegdatum: Datum (YYYYMMDD, YYYY-MM-DD oder DD.MM.YYYY)
         lieferant_nr: Collmex-Lieferanten-ID (optional)
         gegenkonto: Gegenkonto wenn kein Lieferant (Standard: 1200 Bank)
-        rechnungs_nr: Externe Rechnungsnummer (PFLICHT fuer Split!)
+        rechnungs_nr: Externe Rechnungsnummer (PFLICHT für Split!)
         kostenstelle: Kostenstelle (optional)
         """
         if not rechnungs_nr:
@@ -248,7 +248,7 @@ class BookingEngine:
                 lieferant_nr=lieferant_nr,
                 datum=belegdatum,
                 rechnungs_nr=rechnungs_nr,
-                waehrung="EUR",
+                währung="EUR",
                 gegenkonto=gegenkonto if not lieferant_nr else None,
                 buchungstext=pos_text,
                 kostenstelle=kostenstelle,
@@ -284,9 +284,9 @@ class BookingEngine:
     ) -> CollmexAusgangsrechnung:
         """Erzeugt eine Ausgangsrechnung (CMXUMS).
 
-        Collmex kuemmert sich um die doppelte Buchfuehrung:
+        Collmex kümmert sich um die doppelte Buchführung:
         - Forderungen (Soll) -> kunde_nr oder gegenkonto
-        - Erloeskonto (Haben) -> ertragskonto
+        - Erlöskonto (Haben) -> ertragskonto
         - Umsatzsteuer (Haben) -> automatisch
 
         Parameters
@@ -311,7 +311,7 @@ class BookingEngine:
             kunde_nr=kunde_nr,
             datum=belegdatum,
             rechnungs_nr=rechnungs_nr,
-            waehrung="EUR",
+            währung="EUR",
             gegenkonto=gegenkonto if not kunde_nr else None,
             buchungstext=buchungstext,
             kostenstelle=kostenstelle,
@@ -369,10 +369,10 @@ class BookingEngine:
         self,
         stammsatz: CollmexLieferant | CollmexKunde,
     ) -> int:
-        """Sendet CMXKND/CMXLIF und gibt die neue ID zurueck.
+        """Sendet CMXKND/CMXLIF und gibt die neue ID zurück.
 
         Bei auto-Vergabe (Nr leer) kommt die ID aus NEW_OBJECT_ID.
-        Bei expliziter Nr wird diese zurueckgegeben.
+        Bei expliziter Nr wird diese zurückgegeben.
         """
         csv_line = stammsatz.to_csv_line()
         api_response = self.api_client.post_booking([csv_line])
@@ -380,7 +380,7 @@ class BookingEngine:
         if not api_response.success:
             raise CollmexError(api_response.first_error or "Stammdaten-Fehler")
 
-        # Explizite Nummer? → direkt zurueckgeben
+        # Explizite Nummer? → direkt zurückgeben
         if isinstance(stammsatz, CollmexLieferant) and stammsatz.lieferant_nr:
             return stammsatz.lieferant_nr
         if isinstance(stammsatz, CollmexKunde) and stammsatz.kunde_nr:
@@ -390,7 +390,7 @@ class BookingEngine:
         if api_response.booking_id:
             return int(api_response.booking_id)
 
-        raise CollmexError("Keine ID zurueckbekommen nach Stammdaten-Anlage")
+        raise CollmexError("Keine ID zurückbekommen nach Stammdaten-Anlage")
 
     # ------------------------------------------------------------------
     # Post & Validate
@@ -402,14 +402,14 @@ class BookingEngine:
     ) -> BookingResult:
         """Validiert, sendet und liest eine Rechnung gegen.
 
-        Akzeptiert eine einzelne Rechnung oder eine Liste (fuer Split-Buchungen).
+        Akzeptiert eine einzelne Rechnung oder eine Liste (für Split-Buchungen).
         Bei Listen werden alle Zeilen in einem Request gesendet — Collmex mergt
         Zeilen mit identischer Rechnungsnummer zu einem Beleg.
 
         Ablauf:
         1. Grundvalidierung (Datum, Betrag, Text)
         2. CSV erzeugen und an Collmex senden
-        3. Ergebnis pruefen
+        3. Ergebnis prüfen
         """
         # Liste normalisieren
         if isinstance(rechnung, list):
@@ -441,7 +441,7 @@ class BookingEngine:
                 fehler=[f"API-Fehler beim Senden: {exc}"],
             )
 
-        # 3. Ergebnis pruefen
+        # 3. Ergebnis prüfen
         api_fehler = _extract_api_fehler(api_response)
 
         first = rechnungen[0] if len(rechnungen) == 1 else rechnungen
@@ -455,7 +455,7 @@ class BookingEngine:
                 api_response=api_response,
             )
 
-        # CMXLRN/CMXUMS liefern kein NEW_OBJECT_ID zurueck.
+        # CMXLRN/CMXUMS liefern kein NEW_OBJECT_ID zurück.
         # Die Rechnungsnummer dient als Identifikator.
         beleg_nr = _extract_beleg_nr(api_response)
 
@@ -477,7 +477,7 @@ class BookingEngine:
         betrag: Decimal,
         datum: str,
     ) -> CollmexEingangsrechnung:
-        """Schlaegt eine Eingangsrechnung basierend auf einer Beschreibung vor.
+        """Schlägt eine Eingangsrechnung basierend auf einer Beschreibung vor.
 
         Nutzt suggest_account() um das passende Aufwandskonto zu ermitteln.
         Nimmt 19% USt als Default.
@@ -520,7 +520,7 @@ def _validate_rechnung(
     if isinstance(rechnung, CollmexEingangsrechnung):
         total = rechnung.netto_voll + rechnung.netto_erm + rechnung.sonstige_betrag
         if total <= 0:
-            fehler.append("Mindestens ein Nettobetrag muss groesser 0 sein.")
+            fehler.append("Mindestens ein Nettobetrag muss größer 0 sein.")
         # Lieferant oder Gegenkonto
         if not rechnung.lieferant_nr and not rechnung.gegenkonto:
             fehler.append("Lieferantennummer oder Gegenkonto erforderlich.")
@@ -529,11 +529,11 @@ def _validate_rechnung(
             rechnung.netto_voll
             + rechnung.netto_erm
             + rechnung.ig_lieferung
-            + rechnung.export_umsaetze
+            + rechnung.export_umsätze
             + rechnung.steuerfrei_betrag
         )
         if total <= 0:
-            fehler.append("Mindestens ein Nettobetrag muss groesser 0 sein.")
+            fehler.append("Mindestens ein Nettobetrag muss größer 0 sein.")
         # Kunde oder Gegenkonto
         if not rechnung.kunde_nr and not rechnung.gegenkonto:
             fehler.append("Kundennummer oder Gegenkonto erforderlich.")

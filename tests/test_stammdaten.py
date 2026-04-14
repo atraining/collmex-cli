@@ -1,4 +1,4 @@
-"""Tests fuer collmex.stammdaten — HTML-Parser und generischer Renderer."""
+"""Tests für collmex.stammdaten — HTML-Parser und generischer Renderer."""
 
 from __future__ import annotations
 
@@ -41,7 +41,7 @@ SAMPLE_HTML = """<!DOCTYPE HTML>
 <head><title>Test</title></head>
 <body>
 <table class="help">
-<tr><th class="help">Nr<th class="help">Feld<th class="help">Typ<th class="help">Max.Laenge<th class="help">Bemerkung
+<tr><th class="help">Nr<th class="help">Feld<th class="help">Typ<th class="help">Max.Länge<th class="help">Bemerkung
 <tr><td class="help">1<td class="help">Satzart<td class="help">C<td class="help">&nbsp;<td class="help">Festwert CMXKND
 <tr><td class="help">2<td class="help">Kundennummer<td class="help">I<td class="help">8<td class="help">Eindeutige Nummer
 <tr><td class="help">3<td class="help">Firma Nr<td class="help">I<td class="help">8<td class="help">Interne Nummer

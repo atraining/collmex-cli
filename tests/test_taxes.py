@@ -1,4 +1,4 @@
-"""Tests fuer collmex.taxes — TaxEngine.
+"""Tests für collmex.taxes — TaxEngine.
 
 Alle Tests mocken den API-Client, keine echten API-Calls.
 """
@@ -35,7 +35,7 @@ def engine(mock_client):
 def _make_accbal_row(konto: int, soll: str, haben: str) -> list[str]:
     """Erzeugt eine ACC_BAL-Zeile im echten Collmex-Format (4 Felder).
 
-    Berechnet den Saldo aus soll - haben fuer Rueckwaertskompatibilitaet.
+    Berechnet den Saldo aus soll - haben für Rückwärtskompatibilität.
     """
     from collmex.api import parse_amount
 
@@ -47,11 +47,11 @@ def _make_accbal_row(konto: int, soll: str, haben: str) -> list[str]:
 
 
 def _setup_standard_ustva_mocks(mock_client):
-    """Konfiguriert Mocks fuer einen Standard-UStVA-Fall.
+    """Konfiguriert Mocks für einen Standard-UStVA-Fall.
 
     Szenario:
-    - Erloese 19% (8400): 10.000 EUR (Haben)
-    - Erloese 7% (8300): 2.000 EUR (Haben)
+    - Erlöse 19% (8400): 10.000 EUR (Haben)
+    - Erlöse 7% (8300): 2.000 EUR (Haben)
     - USt 19% (1776): 1.900 EUR (Haben)
     - USt 7% (1771): 140 EUR (Haben)
     - VSt 19% (1576): 500 EUR (Soll)
@@ -110,7 +110,7 @@ class TestGetSaldo:
 
 class TestUstva:
     def test_returns_all_keys(self, engine, mock_client):
-        """UStVA-Dict enthaelt alle erwarteten Kennzahlen."""
+        """UStVA-Dict enthält alle erwarteten Kennzahlen."""
         _setup_standard_ustva_mocks(mock_client)
         result = engine.ustva(2026, 3)
         expected_keys = {
@@ -130,14 +130,14 @@ class TestUstva:
         }
         assert set(result.keys()) == expected_keys
 
-    def test_kz81_umsaetze_19(self, engine, mock_client):
-        """KZ81: Steuerpflichtige Umsaetze 19% (Netto)."""
+    def test_kz81_umsätze_19(self, engine, mock_client):
+        """KZ81: Steuerpflichtige Umsätze 19% (Netto)."""
         _setup_standard_ustva_mocks(mock_client)
         result = engine.ustva(2026, 3)
         assert result["kz81"] == Decimal("10000.00")
 
-    def test_kz86_umsaetze_7(self, engine, mock_client):
-        """KZ86: Steuerpflichtige Umsaetze 7% (Netto)."""
+    def test_kz86_umsätze_7(self, engine, mock_client):
+        """KZ86: Steuerpflichtige Umsätze 7% (Netto)."""
         _setup_standard_ustva_mocks(mock_client)
         result = engine.ustva(2026, 3)
         assert result["kz86"] == Decimal("2000.00")
@@ -188,7 +188,7 @@ class TestUstva:
         assert result["kz83"] == result["vorauszahlung"]
 
     def test_jahr_and_monat(self, engine, mock_client):
-        """Jahr und Monat werden im Ergebnis zurueckgegeben."""
+        """Jahr und Monat werden im Ergebnis zurückgegeben."""
         _setup_standard_ustva_mocks(mock_client)
         result = engine.ustva(2026, 3)
         assert result["jahr"] == 2026
@@ -214,7 +214,7 @@ class TestUstva:
         assert result["vorauszahlung"] < Decimal("0")
 
     def test_all_values_decimal_or_int(self, engine, mock_client):
-        """Alle Geldbetraege sind Decimal, Jahr/Monat sind int."""
+        """Alle Geldbeträge sind Decimal, Jahr/Monat sind int."""
         _setup_standard_ustva_mocks(mock_client)
         result = engine.ustva(2026, 3)
         decimal_keys = {

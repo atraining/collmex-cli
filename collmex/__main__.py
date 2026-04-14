@@ -1,4 +1,4 @@
-"""Ermoeglicht Aufruf via: python -m collmex."""
+"""Ermöglicht Aufruf via: python -m collmex."""
 
 import sys
 

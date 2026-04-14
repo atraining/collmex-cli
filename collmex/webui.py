@@ -1,4 +1,4 @@
-"""Collmex Web-UI Scraper — Fallback fuer Daten die per API nicht verfuegbar sind.
+"""Collmex Web-UI Scraper — Fallback für Daten die per API nicht verfügbar sind.
 
 Die Collmex-API deckt nicht alles ab. Einige Stammdaten (Mengeneinheiten,
 Zahlungsbedingungen, Firmenstammdaten, Kontenrahmen) gibt es NUR per Web-UI.
@@ -55,7 +55,7 @@ class Firmenstammdaten:
     """Firmenstammdaten aus der Collmex Web-UI."""
 
     firma: str
-    strasse: str
+    straße: str
     plz: str
     ort: str
     land: str
@@ -72,7 +72,7 @@ class Firmenstammdaten:
 
 
 class CollmexWebUI:
-    """Session-basierter Client fuer die Collmex Web-Oberflaeche.
+    """Session-basierter Client für die Collmex Web-Oberfläche.
 
     Login-Ablauf (2-Schritt):
     1. GET auf Login-Seite (initialisiert Session-Cookie)
@@ -130,7 +130,7 @@ class CollmexWebUI:
             "Login Schritt 2: Status %d, Cookies: %s", r2.status_code, list(session.cookies.keys())
         )
 
-        # Pruefen ob Login erfolgreich (Session-Cookie muss da sein)
+        # Prüfen ob Login erfolgreich (Session-Cookie muss da sein)
         sid_key = f"sid_{self.customer}"
         if sid_key not in session.cookies:
             raise ValueError("Web-UI Login fehlgeschlagen (kein Session-Cookie)")
@@ -145,7 +145,7 @@ class CollmexWebUI:
         return self._session
 
     def _fetch(self, path: str) -> str:
-        """Holt eine Seite und gibt den HTML-Text zurueck."""
+        """Holt eine Seite und gibt den HTML-Text zurück."""
         r = self.session.get(self._url(path), timeout=15)
         r.raise_for_status()
         r.encoding = "iso-8859-1"
@@ -220,7 +220,7 @@ class CollmexWebUI:
 
         return Firmenstammdaten(
             firma=_val("addresse_adrFirma"),
-            strasse=_val("addresse_adrStrasse"),
+            straße=_val("addresse_adrStrasse"),
             plz=_val("addresse_adrPLZOrt"),
             ort=_val("addresse_adrOrt"),
             land=_val("addresse_adrLand"),
@@ -233,7 +233,7 @@ class CollmexWebUI:
 
 
 # ---------------------------------------------------------------------------
-# URL-Referenz (fuer Dokumentation und zukuenftigen Ausbau)
+# URL-Referenz (für Dokumentation und zukünftigen Ausbau)
 # ---------------------------------------------------------------------------
 
 SEITEN = {

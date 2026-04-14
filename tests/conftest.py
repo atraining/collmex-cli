@@ -1,6 +1,6 @@
-"""Pytest Fixtures fuer collmex-Tests.
+"""Pytest Fixtures für collmex-Tests.
 
-Stellt Mock-Objekte bereit, damit keine echte Collmex-API benoetigt wird.
+Stellt Mock-Objekte bereit, damit keine echte Collmex-API benötigt wird.
 """
 
 from __future__ import annotations
@@ -27,18 +27,18 @@ from collmex.models import Booking, BookingLine, CollmexKunde
 
 
 def _success_message(
-    text: str = "Datenimport erfolgreich. 1 Saetze verarbeitet.",
+    text: str = "Datenimport erfolgreich. 1 Sätze verarbeitet.",
 ) -> CollmexMessage:
     return CollmexMessage(type=MessageType.SUCCESS, code="0", text=text)
 
 
 def _success_response(**kwargs: Any) -> CollmexResponse:
-    """Erzeugt eine erfolgreiche CollmexResponse mit optionalen Uebersteuerungen."""
+    """Erzeugt eine erfolgreiche CollmexResponse mit optionalen Übersteuerungen."""
     defaults: dict[str, Any] = {
-        "rows": [["MESSAGE", "S", "0", "Datenimport erfolgreich. 1 Saetze verarbeitet."]],
+        "rows": [["MESSAGE", "S", "0", "Datenimport erfolgreich. 1 Sätze verarbeitet."]],
         "messages": [_success_message()],
         "new_ids": [],
-        "raw": "MESSAGE;S;0;Datenimport erfolgreich. 1 Saetze verarbeitet.\n",
+        "raw": "MESSAGE;S;0;Datenimport erfolgreich. 1 Sätze verarbeitet.\n",
     }
     defaults.update(kwargs)
     return CollmexResponse(**defaults)
@@ -48,8 +48,8 @@ def _success_response(**kwargs: Any) -> CollmexResponse:
 def mock_api_client() -> MagicMock:
     """Mock CollmexClient der vordefinierte Responses liefert.
 
-    Alle Methoden geben Erfolgs-Responses zurueck. Einzelne Methoden
-    koennen im Test ueberschrieben werden:
+    Alle Methoden geben Erfolgs-Responses zurück. Einzelne Methoden
+    können im Test überschrieben werden:
 
         def test_fehler(mock_api_client):
             mock_api_client.post_booking.return_value = BookingResult(
@@ -77,13 +77,13 @@ def mock_api_client() -> MagicMock:
         success=True,
         booking_id="100001",
         messages=[_success_message()],
-        raw_response="MESSAGE;S;0;Datenimport erfolgreich. 1 Saetze verarbeitet.\nNEW_OBJECT_ID;100001\n",
+        raw_response="MESSAGE;S;0;Datenimport erfolgreich. 1 Sätze verarbeitet.\nNEW_OBJECT_ID;100001\n",
     )
 
     # get_balances() — Beispielsalden
     client.get_balances.return_value = [
         ["ACCBAL", "1", "2026", "1", "1200", "Bank", "10000,00", "0,00", "10000,00"],
-        ["ACCBAL", "1", "2026", "1", "4400", "Buerobedarf", "500,00", "0,00", "500,00"],
+        ["ACCBAL", "1", "2026", "1", "4400", "Bürobedarf", "500,00", "0,00", "500,00"],
     ]
 
     # get_bookings() — Beispielbuchung
@@ -94,13 +94,13 @@ def mock_api_client() -> MagicMock:
             "100001",
             "1",
             "4400",
-            "Buerobedarf",
+            "Bürobedarf",
             "S",
             "500,00",
             "EUR",
             "",
             "20260303",
-            "Bueromaterial",
+            "Büromaterial",
             "",
             "",
         ],
@@ -170,7 +170,7 @@ def sample_booking() -> Booking:
     """Standard-Eingangsrechnung: 500 EUR netto, 19% USt, Konto 4400.
 
     Buchungssatz:
-      Soll 4400 (Buerobedarf)        500,00 EUR
+      Soll 4400 (Bürobedarf)        500,00 EUR
       Soll 1576 (Vorsteuer 19%)       95,00 EUR
       Haben 1200 (Bank)              595,00 EUR
     """
@@ -183,12 +183,12 @@ def sample_booking() -> Booking:
             BookingLine(
                 positions_nr=1,
                 konto=4400,
-                bezeichnung="Buerobedarf",
+                bezeichnung="Bürobedarf",
                 soll_haben="S",
                 betrag=Decimal("500.00"),
-                waehrung="EUR",
+                währung="EUR",
                 steuersatz="",
-                buchungstext="Bueromaterial Lieferant X",
+                buchungstext="Büromaterial Lieferant X",
             ),
             BookingLine(
                 positions_nr=2,
@@ -196,7 +196,7 @@ def sample_booking() -> Booking:
                 bezeichnung="Vorsteuer 19%",
                 soll_haben="S",
                 betrag=Decimal("95.00"),
-                waehrung="EUR",
+                währung="EUR",
                 steuersatz="",
                 buchungstext="Vorsteuer 19%",
             ),
@@ -206,7 +206,7 @@ def sample_booking() -> Booking:
                 bezeichnung="Bank",
                 soll_haben="H",
                 betrag=Decimal("595.00"),
-                waehrung="EUR",
+                währung="EUR",
                 steuersatz="",
                 buchungstext="Bank",
             ),
@@ -225,7 +225,7 @@ def sample_customer() -> CollmexKunde:
     return CollmexKunde(
         kunde_nr=10001,
         name="Musterfirma GmbH",
-        strasse="Musterstr. 1",
+        straße="Musterstr. 1",
         plz="12345",
         ort="Berlin",
         land="DE",
@@ -235,13 +235,13 @@ def sample_customer() -> CollmexKunde:
 
 
 # ---------------------------------------------------------------------------
-# Temporaeres .collmex Verzeichnis (GoBD-Tests)
+# Temporäres .collmex Verzeichnis (GoBD-Tests)
 # ---------------------------------------------------------------------------
 
 
 @pytest.fixture
 def tmp_collmex_dir(tmp_path: Any) -> Any:
-    """Erzeugt ein temporaeres .collmex Verzeichnis mit Unterordnern.
+    """Erzeugt ein temporäres .collmex Verzeichnis mit Unterordnern.
 
     Struktur:
         tmp_path/.collmex/
@@ -249,7 +249,7 @@ def tmp_collmex_dir(tmp_path: Any) -> Any:
             belege/
             export/
 
-    Setzt COLLMEX_HOME auf das temporaere Verzeichnis und stellt
+    Setzt COLLMEX_HOME auf das temporäre Verzeichnis und stellt
     den Originalwert nach dem Test wieder her.
     """
     collmex_home = tmp_path / ".collmex"

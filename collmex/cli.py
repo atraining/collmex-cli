@@ -1,6 +1,6 @@
-"""collmex CLI — FiBu & Controlling Kommandozeile fuer Collmex.
+"""collmex CLI — FiBu & Controlling Kommandozeile für Collmex.
 
-Verwendet Click als CLI-Framework und Rich fuer formatierte Tabellenausgabe.
+Verwendet Click als CLI-Framework und Rich für formatierte Tabellenausgabe.
 """
 
 from __future__ import annotations
@@ -39,7 +39,7 @@ COMMAND_SECTIONS: list[tuple[str, list[str]]] = [
     ("Auswertungen", ["salden", "buchungen", "op", "bwa", "soll-ist", "dashboard"]),
     (
         "Controlling & Steuern",
-        ["ustva", "liquiditaet", "mahnlauf", "saeumige", "fristen", "datev-export"],
+        ["ustva", "liquidität", "mahnlauf", "säumige", "fristen", "datev-export"],
     ),
     (
         "Stammdaten & API",
@@ -136,11 +136,11 @@ pass_ctx = click.make_pass_decorator(CliContext, ensure=True)
 
 
 @click.group(cls=SectionedGroup)
-@click.option("--verbose", "-v", is_flag=True, help="Ausfuehrliche Ausgabe")
+@click.option("--verbose", "-v", is_flag=True, help="Ausführliche Ausgabe")
 @click.option("--json", "json_output", is_flag=True, help="Ausgabe als JSON")
 @click.pass_context
 def main(ctx: click.Context, verbose: bool, json_output: bool) -> None:
-    """collmex -- FiBu & Controlling CLI fuer Collmex."""
+    """collmex -- FiBu & Controlling CLI für Collmex."""
     ctx.ensure_object(CliContext)
     ctx.obj.verbose = verbose
     ctx.obj.json_output = json_output
@@ -154,7 +154,7 @@ def main(ctx: click.Context, verbose: bool, json_output: bool) -> None:
 @main.command()
 @pass_ctx
 def status(ctx: CliContext) -> None:
-    """API-Verbindungstest und Kurzuebersicht."""
+    """API-Verbindungstest und Kurzübersicht."""
     try:
         ok = ctx.client.status()
     except CollmexError as exc:
@@ -194,7 +194,7 @@ def buchen(
     rechnungsnr: str,
     dry_run: bool,
 ) -> None:
-    """Eingangsrechnung buchen (ueber Nebenbuch/Personenkonto)."""
+    """Eingangsrechnung buchen (über Nebenbuch/Personenkonto)."""
     if datum is None:
         datum = datetime.now().strftime("%Y%m%d")
 
@@ -236,7 +236,7 @@ def buchen(
         console.print(f"Rechnungs-Nr: {rechnungsnr}")
 
     if dry_run:
-        console.print("\n[yellow]--dry-run: Buchung wurde NICHT ausgefuehrt.[/]")
+        console.print("\n[yellow]--dry-run: Buchung wurde NICHT ausgeführt.[/]")
         return
 
     try:
@@ -270,7 +270,7 @@ def buchen(
 
 @main.command(name="lieferant-anlegen")
 @click.option("--name", required=True, help="Firmenname (Pflicht)")
-@click.option("--strasse", default="", help="Strasse")
+@click.option("--straße", default="", help="Straße")
 @click.option("--plz", default="", help="PLZ")
 @click.option("--ort", default="", help="Ort")
 @click.option("--land", default="DE", help="Land (ISO-2, Standard: DE)")
@@ -282,7 +282,7 @@ def buchen(
 def lieferant_anlegen(
     ctx: CliContext,
     name: str,
-    strasse: str,
+    straße: str,
     plz: str,
     ort: str,
     land: str,
@@ -294,7 +294,7 @@ def lieferant_anlegen(
     """Neuen Lieferanten anlegen (CMXLIF)."""
     lif = CollmexLieferant(
         name=name,
-        strasse=strasse,
+        straße=straße,
         plz=plz,
         ort=ort,
         land=land,
@@ -308,8 +308,8 @@ def lieferant_anlegen(
     table.add_column("Feld", style="cyan", width=20)
     table.add_column("Wert", width=40)
     table.add_row("Name", name)
-    if strasse:
-        table.add_row("Strasse", strasse)
+    if straße:
+        table.add_row("Straße", straße)
     if plz or ort:
         table.add_row("PLZ / Ort", f"{plz} {ort}".strip())
     table.add_row("Land", land)
@@ -337,7 +337,7 @@ def lieferant_anlegen(
 
 @main.command(name="kunde-anlegen")
 @click.option("--name", required=True, help="Firmenname (Pflicht)")
-@click.option("--strasse", default="", help="Strasse")
+@click.option("--straße", default="", help="Straße")
 @click.option("--plz", default="", help="PLZ")
 @click.option("--ort", default="", help="Ort")
 @click.option("--land", default="DE", help="Land (ISO-2, Standard: DE)")
@@ -348,7 +348,7 @@ def lieferant_anlegen(
 def kunde_anlegen(
     ctx: CliContext,
     name: str,
-    strasse: str,
+    straße: str,
     plz: str,
     ort: str,
     land: str,
@@ -359,7 +359,7 @@ def kunde_anlegen(
     """Neuen Kunden anlegen (CMXKND)."""
     knd = CollmexKunde(
         name=name,
-        strasse=strasse,
+        straße=straße,
         plz=plz,
         ort=ort,
         land=land,
@@ -372,8 +372,8 @@ def kunde_anlegen(
     table.add_column("Feld", style="cyan", width=20)
     table.add_column("Wert", width=40)
     table.add_row("Name", name)
-    if strasse:
-        table.add_row("Strasse", strasse)
+    if straße:
+        table.add_row("Straße", straße)
     if plz or ort:
         table.add_row("PLZ / Ort", f"{plz} {ort}".strip())
     table.add_row("Land", land)
@@ -399,7 +399,7 @@ def kunde_anlegen(
 
 @main.command()
 @click.option("--monat", type=int, default=None, help="Buchungsperiode (1-12)")
-@click.option("--jahr", type=int, default=None, help="Geschaeftsjahr")
+@click.option("--jahr", type=int, default=None, help="Geschäftsjahr")
 @pass_ctx
 def salden(ctx: CliContext, monat: int | None, jahr: int | None) -> None:
     """Kontensalden anzeigen (ACCBAL_GET)."""
@@ -417,7 +417,7 @@ def salden(ctx: CliContext, monat: int | None, jahr: int | None) -> None:
         sys.exit(1)
 
     if not susa_daten:
-        console.print("[yellow]Keine Kontensalden fuer diesen Zeitraum.[/]")
+        console.print("[yellow]Keine Kontensalden für diesen Zeitraum.[/]")
         return
 
     table = Table(title=f"Kontensalden {monat:02d}/{jahr}")
@@ -439,7 +439,7 @@ def salden(ctx: CliContext, monat: int | None, jahr: int | None) -> None:
 
 @main.command()
 @click.option("--monat", type=int, default=None, help="Buchungsperiode (1-12)")
-@click.option("--jahr", type=int, default=None, help="Geschaeftsjahr")
+@click.option("--jahr", type=int, default=None, help="Geschäftsjahr")
 @pass_ctx
 def bwa(ctx: CliContext, monat: int | None, jahr: int | None) -> None:
     """Betriebswirtschaftliche Auswertung."""
@@ -495,25 +495,25 @@ def op(ctx: CliContext) -> None:
         table.add_column("Beleg", style="cyan", width=10)
         table.add_column("Kunde", width=30)
         table.add_column("Datum", width=10)
-        table.add_column("Faellig", width=10)
+        table.add_column("Fällig", width=10)
         table.add_column("Betrag", justify="right", style="green", width=14)
         table.add_column("Tage", justify="right", width=6)
 
         for p in op_daten["debitoren"]:
             tage_style = (
                 "red"
-                if p["tage_ueberfaellig"] > 30
+                if p["tage_ueberfällig"] > 30
                 else "yellow"
-                if p["tage_ueberfaellig"] > 0
+                if p["tage_ueberfällig"] > 0
                 else "green"
             )
             table.add_row(
                 p["beleg_nr"],
                 p["name"],
                 p["datum"],
-                p["faellig"],
+                p["fällig"],
                 f"{p['betrag']:,.2f}",
-                f"[{tage_style}]{p['tage_ueberfaellig']}[/]",
+                f"[{tage_style}]{p['tage_ueberfällig']}[/]",
             )
 
         console.print(table)
@@ -527,25 +527,25 @@ def op(ctx: CliContext) -> None:
         table.add_column("Beleg", style="cyan", width=10)
         table.add_column("Lieferant", width=30)
         table.add_column("Datum", width=10)
-        table.add_column("Faellig", width=10)
+        table.add_column("Fällig", width=10)
         table.add_column("Betrag", justify="right", style="green", width=14)
         table.add_column("Tage", justify="right", width=6)
 
         for p in op_daten["kreditoren"]:
             tage_style = (
                 "red"
-                if p["tage_ueberfaellig"] > 30
+                if p["tage_ueberfällig"] > 30
                 else "yellow"
-                if p["tage_ueberfaellig"] > 0
+                if p["tage_ueberfällig"] > 0
                 else "green"
             )
             table.add_row(
                 p["beleg_nr"],
                 p["name"],
                 p["datum"],
-                p["faellig"],
+                p["fällig"],
                 f"{p['betrag']:,.2f}",
-                f"[{tage_style}]{p['tage_ueberfaellig']}[/]",
+                f"[{tage_style}]{p['tage_ueberfällig']}[/]",
             )
 
         console.print(table)
@@ -558,36 +558,36 @@ def op(ctx: CliContext) -> None:
     if alters:
         console.print("\n[bold]Altersstruktur Debitoren:[/]")
         console.print(f"  Aktuell (0-30 Tage):    {alters.get('aktuell', 0):>12,.2f} EUR")
-        console.print(f"  31-60 Tage:             {alters.get('ueberfaellig_30', 0):>12,.2f} EUR")
-        console.print(f"  61-90 Tage:             {alters.get('ueberfaellig_60', 0):>12,.2f} EUR")
-        console.print(f"  >90 Tage:               {alters.get('ueberfaellig_90', 0):>12,.2f} EUR")
+        console.print(f"  31-60 Tage:             {alters.get('überfällig_30', 0):>12,.2f} EUR")
+        console.print(f"  61-90 Tage:             {alters.get('überfällig_60', 0):>12,.2f} EUR")
+        console.print(f"  >90 Tage:               {alters.get('überfällig_90', 0):>12,.2f} EUR")
 
 
 @main.command()
 @pass_ctx
-def saeumige(ctx: CliContext) -> None:
-    """Saeumige Kunden anzeigen."""
+def säumige(ctx: CliContext) -> None:
+    """Säumige Kunden anzeigen."""
     try:
         reports = ctx.reports_engine
-        saeumige_liste = reports.saeumige_kunden()
+        säumige_liste = reports.säumige_kunden()
     except CollmexError as exc:
         error_console.print(f"[bold red]Fehler:[/] {exc}")
         sys.exit(1)
 
-    if not saeumige_liste:
-        console.print("[green]Keine saeumigen Kunden.[/]")
+    if not säumige_liste:
+        console.print("[green]Keine säumigen Kunden.[/]")
         return
 
-    table = Table(title="Saeumige Kunden")
+    table = Table(title="Säumige Kunden")
     table.add_column("Kunde", width=30)
     table.add_column("Beleg", style="cyan", width=10)
     table.add_column("Betrag", justify="right", style="green", width=14)
-    table.add_column("Faellig", width=10)
+    table.add_column("Fällig", width=10)
     table.add_column("Tage", justify="right", width=6)
     table.add_column("Mahnstufe", justify="center", width=10)
 
-    for kunde in saeumige_liste:
-        tage = kunde["tage_ueberfaellig"]
+    for kunde in säumige_liste:
+        tage = kunde["tage_ueberfällig"]
         mahnstufe = kunde["mahnstufe"]
         stufe_style = "red" if mahnstufe >= 2 else "yellow" if mahnstufe == 1 else "green"
 
@@ -595,7 +595,7 @@ def saeumige(ctx: CliContext) -> None:
             kunde["name"],
             kunde["beleg_nr"],
             f"{kunde['betrag']:,.2f}",
-            kunde["faellig"],
+            kunde["fällig"],
             str(tage),
             f"[{stufe_style}]{mahnstufe}[/]",
         )
@@ -661,19 +661,19 @@ def dashboard(ctx: CliContext) -> None:
 
         # BWA
         bwa_daten = reports.bwa(jahr, monat)
-        erloese = bwa_daten.get("umsatzerloese", Decimal("0"))
+        erlöse = bwa_daten.get("umsatzerlöse", Decimal("0"))
         kosten = bwa_daten.get("summe_kosten", Decimal("0"))
         ergebnis = bwa_daten.get("betriebsergebnis", Decimal("0"))
 
         ergebnis_style = "green" if ergebnis >= 0 else "red"
 
         console.print("[bold]Ergebnis:[/]")
-        console.print(f"  Umsatzerloese:      {erloese:>12,.2f} EUR")
+        console.print(f"  Umsatzerlöse:      {erlöse:>12,.2f} EUR")
         console.print(f"  Gesamtkosten:       {kosten:>12,.2f} EUR")
         console.print(f"  Betriebsergebnis:   [{ergebnis_style}]{ergebnis:>12,.2f} EUR[/]")
 
-        if erloese > 0:
-            marge = (ergebnis / erloese * 100).quantize(Decimal("0.1"))
+        if erlöse > 0:
+            marge = (ergebnis / erlöse * 100).quantize(Decimal("0.1"))
             console.print(f"  Umsatzrendite:      {marge:>11}%")
 
         # Offene Posten
@@ -682,14 +682,14 @@ def dashboard(ctx: CliContext) -> None:
         console.print(f"  Debitoren:          {op_daten['summe_debitoren']:>12,.2f} EUR")
         console.print(f"  Kreditoren:         {op_daten['summe_kreditoren']:>12,.2f} EUR")
 
-        # Saeumige Kunden
-        saeumige_liste = reports.saeumige_kunden()
-        if saeumige_liste:
-            summe_saeumig = sum(s["betrag"] for s in saeumige_liste)
-            console.print(f"\n[bold yellow]Saeumige Kunden:[/] {len(saeumige_liste)}")
-            console.print(f"  Gesamtbetrag:       [red]{summe_saeumig:>12,.2f} EUR[/]")
+        # Säumige Kunden
+        säumige_liste = reports.säumige_kunden()
+        if säumige_liste:
+            summe_säumig = sum(s["betrag"] for s in säumige_liste)
+            console.print(f"\n[bold yellow]Säumige Kunden:[/] {len(säumige_liste)}")
+            console.print(f"  Gesamtbetrag:       [red]{summe_säumig:>12,.2f} EUR[/]")
         else:
-            console.print("\n[green]Keine saeumigen Kunden.[/]")
+            console.print("\n[green]Keine säumigen Kunden.[/]")
 
     except CollmexError as exc:
         error_console.print(f"[bold red]Fehler:[/] {exc}")
@@ -697,17 +697,17 @@ def dashboard(ctx: CliContext) -> None:
 
 
 @main.command()
-@click.option("--monat", type=int, default=None, help="Fristen fuer einen bestimmten Monat (1-12)")
+@click.option("--monat", type=int, default=None, help="Fristen für einen bestimmten Monat (1-12)")
 @click.option("--jahr", type=int, default=None, help="Kalenderjahr (Standard: aktuelles Jahr)")
 @click.option("--tage", type=int, default=30, help="Anstehende Fristen in N Tagen (Standard: 30)")
-@click.option("--ueberfaellig", is_flag=True, help="Nur ueberfaellige Fristen anzeigen")
+@click.option("--überfällig", is_flag=True, help="Nur überfällige Fristen anzeigen")
 @pass_ctx
 def fristen(
     ctx: CliContext,
     monat: int | None,
     jahr: int | None,
     tage: int,
-    ueberfaellig: bool,
+    überfällig: bool,
 ) -> None:
     """Steuerliche und buchhalterische Fristen anzeigen."""
     from collmex.deadlines import DeadlineTracker
@@ -715,9 +715,9 @@ def fristen(
     now = datetime.now()
     tracker = DeadlineTracker(heute=now.date())
 
-    if ueberfaellig:
+    if überfällig:
         deadlines = tracker.get_overdue()
-        titel = "Ueberfaellige Fristen"
+        titel = "Überfällige Fristen"
     elif monat is not None:
         if jahr is None:
             jahr = now.year
@@ -725,7 +725,7 @@ def fristen(
         titel = f"Fristen {monat:02d}/{jahr}"
     else:
         deadlines = tracker.get_upcoming(tage=tage)
-        titel = f"Anstehende Fristen (naechste {tage} Tage)"
+        titel = f"Anstehende Fristen (nächste {tage} Tage)"
 
     if not deadlines:
         console.print(f"[green]Keine {titel.lower()}.[/]")
@@ -735,13 +735,13 @@ def fristen(
     table.add_column("Datum", style="cyan", width=12)
     table.add_column("Name", width=25)
     table.add_column("Kategorie", width=14)
-    table.add_column("Prioritaet", justify="center", width=10)
+    table.add_column("Priorität", justify="center", width=10)
     table.add_column("Beschreibung", width=50)
 
     prio_styles = {"critical": "bold red", "high": "yellow", "medium": "white"}
 
     for dl in deadlines:
-        prio_style = prio_styles.get(dl.prioritaet.value, "white")
+        prio_style = prio_styles.get(dl.priorität.value, "white")
         kat_style = {"steuer": "red", "buchhaltung": "blue", "meldung": "cyan"}.get(
             dl.kategorie.value, "white"
         )
@@ -749,7 +749,7 @@ def fristen(
             dl.datum.isoformat(),
             dl.name,
             f"[{kat_style}]{dl.kategorie.value}[/]",
-            f"[{prio_style}]{dl.prioritaet.value}[/]",
+            f"[{prio_style}]{dl.priorität.value}[/]",
             dl.beschreibung[:50],
         )
 
@@ -759,7 +759,7 @@ def fristen(
 
 @main.command()
 @click.option("--monat", type=int, default=None, help="Voranmeldungszeitraum (1-12)")
-@click.option("--jahr", type=int, default=None, help="Geschaeftsjahr")
+@click.option("--jahr", type=int, default=None, help="Geschäftsjahr")
 @pass_ctx
 def ustva(ctx: CliContext, monat: int | None, jahr: int | None) -> None:
     """Umsatzsteuer-Voranmeldung berechnen."""
@@ -769,7 +769,7 @@ def ustva(ctx: CliContext, monat: int | None, jahr: int | None) -> None:
     if jahr is None:
         jahr = now.year
     if monat is None:
-        # UStVA fuer den Vormonat
+        # UStVA für den Vormonat
         monat = now.month - 1 if now.month > 1 else 12
         if monat == 12:
             jahr -= 1
@@ -783,8 +783,8 @@ def ustva(ctx: CliContext, monat: int | None, jahr: int | None) -> None:
 
     console.print(f"[bold]UStVA {monat:02d}/{jahr}[/]\n")
 
-    # Umsaetze
-    console.print("[bold]Steuerpflichtige Umsaetze:[/]")
+    # Umsätze
+    console.print("[bold]Steuerpflichtige Umsätze:[/]")
     console.print(f"  KZ 81 (19% netto):   {result['kz81']:>12,.2f} EUR")
     console.print(f"  KZ 86 (7% netto):    {result['kz86']:>12,.2f} EUR")
     console.print(f"  USt 19%:             {result['ust_19']:>12,.2f} EUR")
@@ -812,22 +812,22 @@ def ustva(ctx: CliContext, monat: int | None, jahr: int | None) -> None:
 @main.command()
 @click.option("--wochen", type=int, default=13, help="Prognosezeitraum in Wochen (Standard: 13)")
 @pass_ctx
-def liquiditaet(ctx: CliContext, wochen: int) -> None:
-    """Liquiditaetsvorschau (13-Wochen-Prognose)."""
+def liquidität(ctx: CliContext, wochen: int) -> None:
+    """Liquiditätsvorschau (13-Wochen-Prognose)."""
     from collmex.controlling import ControllingEngine
 
     try:
         ctrl = ControllingEngine(ctx.client)
-        vorschau = ctrl.liquiditaetsvorschau(wochen=wochen)
+        vorschau = ctrl.liquiditätsvorschau(wochen=wochen)
     except CollmexError as exc:
         error_console.print(f"[bold red]Fehler:[/] {exc}")
         sys.exit(1)
 
-    table = Table(title=f"Liquiditaetsvorschau ({wochen} Wochen)")
+    table = Table(title=f"Liquiditätsvorschau ({wochen} Wochen)")
     table.add_column("Woche", style="cyan", width=12)
     table.add_column("Beginn", width=12)
-    table.add_column("Eingaenge", justify="right", style="green", width=14)
-    table.add_column("Ausgaenge", justify="right", style="red", width=14)
+    table.add_column("Eingänge", justify="right", style="green", width=14)
+    table.add_column("Ausgänge", justify="right", style="red", width=14)
     table.add_column("Saldo", justify="right", width=14)
 
     for w in vorschau:
@@ -846,7 +846,7 @@ def liquiditaet(ctx: CliContext, wochen: int) -> None:
 
 @main.command("soll-ist")
 @click.option("--monat", type=int, default=None, help="Buchungsperiode (1-12)")
-@click.option("--jahr", type=int, default=None, help="Geschaeftsjahr")
+@click.option("--jahr", type=int, default=None, help="Geschäftsjahr")
 @click.option(
     "--budget-file",
     type=click.Path(exists=True),
@@ -860,7 +860,7 @@ def soll_ist(
     jahr: int | None,
     budget_file: str | None,
 ) -> None:
-    """Soll-Ist-Vergleich (Budget vs. tatsaechliche Kosten)."""
+    """Soll-Ist-Vergleich (Budget vs. tatsächliche Kosten)."""
     import json
 
     from collmex.controlling import ControllingEngine
@@ -877,12 +877,12 @@ def soll_ist(
             raw = json.load(f)
         budget = {int(k): Decimal(str(v)) for k, v in raw.items()}
     else:
-        # Standard-Budget fuer typische Aufwandskonten
+        # Standard-Budget für typische Aufwandskonten
         budget = {
             4100: Decimal("5000"),  # Personalkosten
             4210: Decimal("1500"),  # Miete
             4830: Decimal("2000"),  # Abschreibungen
-            4400: Decimal("500"),  # Buerobedarf
+            4400: Decimal("500"),  # Bürobedarf
             4900: Decimal("1000"),  # Sonstige
         }
 
@@ -931,8 +931,8 @@ def soll_ist(
 @click.option("--betrag", type=float, required=True, help="Nettobetrag der Originalrechnung")
 @click.option("--konto", type=int, required=True, help="Aufwands-/Ertragskonto")
 @click.option("--ust", type=int, default=19, help="USt-Satz (Standard: 19)")
-@click.option("--lieferant", type=int, default=None, help="Lieferant-Nr (fuer Eingang)")
-@click.option("--kunde", type=int, default=None, help="Kunden-Nr (fuer Ausgang)")
+@click.option("--lieferant", type=int, default=None, help="Lieferant-Nr (für Eingang)")
+@click.option("--kunde", type=int, default=None, help="Kunden-Nr (für Ausgang)")
 @click.option("--datum", default=None, help="Storno-Datum YYYYMMDD (Standard: heute)")
 @click.option("--dry-run", is_flag=True, help="Nur anzeigen, nicht buchen")
 @pass_ctx
@@ -958,7 +958,7 @@ def storno(
     if typ == "eingang":
         if not lieferant:
             error_console.print(
-                "[bold red]Fehler:[/] --lieferant ist Pflicht fuer Eingangs-Storno."
+                "[bold red]Fehler:[/] --lieferant ist Pflicht für Eingangs-Storno."
             )
             sys.exit(1)
         original = engine.create_eingangsrechnung(
@@ -974,7 +974,7 @@ def storno(
         storno_rechnung.rechnungs_nr = f"{rechnungs_nr}-S"
     else:
         if not kunde:
-            error_console.print("[bold red]Fehler:[/] --kunde ist Pflicht fuer Ausgangs-Storno.")
+            error_console.print("[bold red]Fehler:[/] --kunde ist Pflicht für Ausgangs-Storno.")
             sys.exit(1)
         original = engine.create_ausgangsrechnung(
             betrag_netto=betrag_decimal,
@@ -988,7 +988,7 @@ def storno(
         storno_rechnung = engine.create_storno_ausgang(original)
         storno_rechnung.rechnungs_nr = f"{rechnungs_nr}-S"
 
-    console.print(f"[bold]Storno fuer {rechnungs_nr}[/]")
+    console.print(f"[bold]Storno für {rechnungs_nr}[/]")
     console.print(f"  Typ:    {'Eingangsrechnung' if typ == 'eingang' else 'Ausgangsrechnung'}")
     console.print(f"  Betrag: {betrag_decimal:,.2f} EUR netto ({ust}% USt)")
     console.print(f"  Konto:  {konto}")
@@ -996,7 +996,7 @@ def storno(
     console.print(f"  Nr:     {storno_rechnung.rechnungs_nr}")
 
     if dry_run:
-        console.print("\n[yellow]--dry-run: Storno wurde NICHT ausgefuehrt.[/]")
+        console.print("\n[yellow]--dry-run: Storno wurde NICHT ausgeführt.[/]")
         return
 
     try:
@@ -1034,7 +1034,7 @@ def ausgang(
     rechnungsnr: str,
     dry_run: bool,
 ) -> None:
-    """Ausgangsrechnung buchen (ueber Nebenbuch/Personenkonto)."""
+    """Ausgangsrechnung buchen (über Nebenbuch/Personenkonto)."""
     if datum is None:
         datum = datetime.now().strftime("%Y%m%d")
 
@@ -1074,7 +1074,7 @@ def ausgang(
         console.print(f"Rechnungs-Nr: {rechnungsnr}")
 
     if dry_run:
-        console.print("\n[yellow]--dry-run: Buchung wurde NICHT ausgefuehrt.[/]")
+        console.print("\n[yellow]--dry-run: Buchung wurde NICHT ausgeführt.[/]")
         return
 
     try:
@@ -1140,7 +1140,7 @@ def buchungen(
         if len(row) < 10 or row[0] != "ACCDOC":
             continue
         # ACCDOC: [Satzart, Firma, BelegNr, PosNr, Konto, Bezeichnung,
-        #          Soll/Haben(0/1), Betrag, Waehrung, BU, Datum, Text, ...]
+        #          Soll/Haben(0/1), Betrag, Währung, BU, Datum, Text, ...]
         beleg = row[2] if len(row) > 2 else ""
         pos = row[3] if len(row) > 3 else ""
         konto = row[4] if len(row) > 4 else ""
@@ -1170,12 +1170,12 @@ def buchungen(
 
 @main.command()
 @click.option(
-    "--stufe", type=click.IntRange(1, 3), default=None, help="Nur Mahnungen fuer diese Stufe (1-3)"
+    "--stufe", type=click.IntRange(1, 3), default=None, help="Nur Mahnungen für diese Stufe (1-3)"
 )
 @click.option("--dry-run", is_flag=True, default=True, help="Nur Vorschau (Standard: aktiv)")
 @pass_ctx
 def mahnlauf(ctx: CliContext, stufe: int | None, dry_run: bool) -> None:
-    """Mahnlauf durchfuehren (ueberfaellige Debitoren mahnen)."""
+    """Mahnlauf durchführen (überfällige Debitoren mahnen)."""
     from collmex.dunning import DunningEngine
 
     try:
@@ -1193,7 +1193,7 @@ def mahnlauf(ctx: CliContext, stufe: int | None, dry_run: bool) -> None:
     table.add_column("Kunde", width=25)
     table.add_column("Beleg", style="cyan", width=12)
     table.add_column("Betrag", justify="right", width=12)
-    table.add_column("Faellig", width=10)
+    table.add_column("Fällig", width=10)
     table.add_column("Tage", justify="right", width=6)
     table.add_column("Stufe", justify="center", width=6)
     table.add_column("Aktion", width=35)
@@ -1209,15 +1209,15 @@ def mahnlauf(ctx: CliContext, stufe: int | None, dry_run: bool) -> None:
             v["kunde"][:25],
             v["beleg_nr"],
             f"{v['betrag']:,.2f}",
-            v["faellig"],
-            str(v["tage_ueberfaellig"]),
+            v["fällig"],
+            str(v["tage_ueberfällig"]),
             f"[{style}]{s}[/]",
             v["mahnaktion"][:35],
         )
 
     console.print(table)
     console.print(
-        f"\n[bold]{len(vorschlaege)} Mahnvorschlaege[/], Gesamtbetrag: [red]{summe:,.2f} EUR[/]"
+        f"\n[bold]{len(vorschlaege)} Mahnvorschläge[/], Gesamtbetrag: [red]{summe:,.2f} EUR[/]"
     )
 
     if dry_run:
@@ -1226,7 +1226,7 @@ def mahnlauf(ctx: CliContext, stufe: int | None, dry_run: bool) -> None:
 
 @main.command("datev-export")
 @click.option("--monat", type=int, default=None, help="Buchungsperiode (1-12)")
-@click.option("--jahr", type=int, default=None, help="Geschaeftsjahr")
+@click.option("--jahr", type=int, default=None, help="Geschäftsjahr")
 @click.option(
     "--output",
     "-o",
@@ -1247,7 +1247,7 @@ def datev_export(
     mandant: int,
     gruppiert: bool,
 ) -> None:
-    """Buchungen im DATEV-Format exportieren (fuer Steuerberater)."""
+    """Buchungen im DATEV-Format exportieren (für Steuerberater)."""
     from collmex.datev import DatevExporter
 
     now = datetime.now()
@@ -1283,7 +1283,7 @@ def datev_export(
         error_console.print(f"[bold red]Fehler:[/] {exc}")
         sys.exit(1)
 
-    # In Datei schreiben (Windows-1252 fuer DATEV-Kompatibilitaet)
+    # In Datei schreiben (Windows-1252 für DATEV-Kompatibilität)
     with open(output, "w", encoding="windows-1252", newline="") as f:
         f.write(csv_text)
 
@@ -1305,7 +1305,7 @@ def abfrage(ctx: CliContext, satzart: str, felder: tuple, suche: str | None) -> 
     SATZART   Eine GET-Satzart (siehe: collmex hilfe)
     FELDER    Optionale API-Parameter (Feld 2, 3, ... laut Collmex-Doku)
               Leere Felder mit "" uebergeben.
-              Welche Felder moeglich sind: collmex hilfe <SATZART>
+              Welche Felder möglich sind: collmex hilfe <SATZART>
 
     \b
     Beispiele:
@@ -1313,9 +1313,9 @@ def abfrage(ctx: CliContext, satzart: str, felder: tuple, suche: str | None) -> 
       collmex abfrage CUSTOMER_GET --suche helm             Suche in Ergebnissen
       collmex abfrage VENDOR_GET                            Alle Lieferanten
       collmex abfrage PRODUCT_GET 1                         Produkte Firma 1
-      collmex abfrage INVOICE_GET "" 1 "" 20260301 20260331 Rechnungen Maerz
+      collmex abfrage INVOICE_GET "" 1 "" 20260301 20260331 Rechnungen März
       collmex abfrage QUOTATION_GET                         Alle Angebote
-      collmex abfrage SALES_ORDER_GET                       Alle Auftraege
+      collmex abfrage SALES_ORDER_GET                       Alle Aufträge
     """
     from collmex.stammdaten import render_stammdaten
 
@@ -1390,7 +1390,7 @@ def hilfe(satzart: str | None, suche: str | None) -> None:
     if suche is not None:
         treffer = suche_fn(suche)
         if not treffer:
-            console.print(f"[yellow]Keine Treffer fuer '{suche}'.[/]")
+            console.print(f"[yellow]Keine Treffer für '{suche}'.[/]")
             return
 
         console.print(f"[bold]Suche: '{suche}'[/] — {len(treffer)} Treffer\n")
@@ -1408,20 +1408,20 @@ def hilfe(satzart: str | None, suche: str | None) -> None:
         console.print(table)
         return
 
-    # Uebersicht nach Kategorie
+    # Übersicht nach Kategorie
     console.print("[bold]Collmex API-Referenz[/]\n")
     gruppen = nach_kategorie()
 
     for kat in KATEGORIE_REIHENFOLGE:
-        eintraege = gruppen.get(kat, [])
-        if not eintraege:
+        einträge = gruppen.get(kat, [])
+        if not einträge:
             continue
 
         table = Table(title=KATEGORIE_LABELS[kat], show_header=False, padding=(0, 1))
         table.add_column("Satzart", style="cyan", width=24)
         table.add_column("Beschreibung", width=55)
 
-        for sa in eintraege:
+        for sa in einträge:
             felder_info = f" ({sa['felder']} Felder)" if "felder" in sa else ""
             table.add_row(sa["satzart"], f"{sa['name']}{felder_info}")
 
@@ -1437,19 +1437,19 @@ def handbuch(thema: str | None, suche: str | None) -> None:
 
     \b
     Beispiele:
-      collmex handbuch                  Alle verfuegbaren Themen
+      collmex handbuch                  Alle verfügbaren Themen
       collmex handbuch buchen           Wie man in Collmex bucht
       collmex handbuch ust              Umsatzsteuer
       collmex handbuch mahnung          Mahnwesen
       collmex handbuch reverse-charge   §13b Steuerschuldumkehr
-      collmex handbuch gwg              Geringwertige Wirtschaftsgueter
+      collmex handbuch gwg              Geringwertige Wirtschaftsgüter
       collmex handbuch cmxlrn           Lieferantenrechnung (Import)
     """
     from collmex.stammdaten import HANDBUCH_SEKTIONEN, fetch_handbuch_section
 
     if thema is None and suche is None:
-        # Uebersicht aller Themen
-        console.print("[bold]Collmex-Handbuch — Verfuegbare Themen[/]\n")
+        # Übersicht aller Themen
+        console.print("[bold]Collmex-Handbuch — Verfügbare Themen[/]\n")
         table = Table(show_header=True)
         table.add_column("Thema", style="cyan", width=22)
         table.add_column("Beschreibung", width=50)
@@ -1469,7 +1469,7 @@ def handbuch(thema: str | None, suche: str | None) -> None:
             if suche_lower in k.lower() or suche_lower in v[1].lower()
         }
         if not treffer:
-            console.print(f"[yellow]Keine Treffer fuer '{suche}'.[/]")
+            console.print(f"[yellow]Keine Treffer für '{suche}'.[/]")
             return
         console.print(f"[bold]Handbuch-Suche: '{suche}'[/]\n")
         for key, (_, titel) in sorted(treffer.items()):
@@ -1481,7 +1481,7 @@ def handbuch(thema: str | None, suche: str | None) -> None:
     if thema_lower in HANDBUCH_SEKTIONEN:
         anchor, titel = HANDBUCH_SEKTIONEN[thema_lower]
     else:
-        # Fuzzy: Praefix-Match
+        # Fuzzy: Präfix-Match
         matches = {
             k: v
             for k, v in HANDBUCH_SEKTIONEN.items()
@@ -1491,7 +1491,7 @@ def handbuch(thema: str | None, suche: str | None) -> None:
             key = next(iter(matches))
             anchor, titel = matches[key]
         elif matches:
-            console.print(f"[yellow]Mehrere Treffer fuer '{thema}':[/]")
+            console.print(f"[yellow]Mehrere Treffer für '{thema}':[/]")
             for key, (_, t) in sorted(matches.items()):
                 console.print(f"  [cyan]{key}[/] — {t}")
             return
@@ -1509,7 +1509,7 @@ def handbuch(thema: str | None, suche: str | None) -> None:
 @main.command()
 @pass_ctx
 def onboarding(ctx: CliContext) -> None:
-    """Mandanten-Onboarding: Verbindung pruefen, Kontenrahmen erkennen, Stammdaten lesen."""
+    """Mandanten-Onboarding: Verbindung prüfen, Kontenrahmen erkennen, Stammdaten lesen."""
     console.print("[bold]Mandanten-Onboarding[/]\n")
 
     # 1. Verbindungstest
@@ -1525,7 +1525,7 @@ def onboarding(ctx: CliContext) -> None:
     console.print(f"  [green]OK[/] — Kunde {ctx.client.customer}, Firma {ctx.client.company}")
 
     # 2. Kontenrahmen erkennen
-    # Logik: ACCBAL_GET fuer ein Konto → Fehler "nicht vorhanden" = Konto existiert nicht
+    # Logik: ACCBAL_GET für ein Konto → Fehler "nicht vorhanden" = Konto existiert nicht
     # Kein Fehler (auch leere Antwort) = Konto existiert im Kontenrahmen
     console.print("\n[bold]2. Kontenrahmen erkennen[/]")
     jahr = datetime.now().year
@@ -1538,7 +1538,7 @@ def onboarding(ctx: CliContext) -> None:
         except CollmexError as exc:
             if "nicht vorhanden" in str(exc):
                 return False  # Konto existiert nicht im Kontenrahmen
-            return True  # Anderer Fehler → Konto koennte existieren
+            return True  # Anderer Fehler → Konto könnte existieren
         except Exception:
             return True  # Im Zweifel: annehmen es existiert
 
@@ -1555,7 +1555,7 @@ def onboarding(ctx: CliContext) -> None:
         kontenrahmen = "nicht erkennbar"
     console.print(f"  Kontenrahmen: [cyan]{kontenrahmen}[/]")
 
-    # 3. Stammdaten zaehlen
+    # 3. Stammdaten zählen
     console.print("\n[bold]3. Stammdaten[/]")
     counts = {}
     for label, satzart, antwort, felder in [
@@ -1633,7 +1633,7 @@ def webui_mengeneinheiten() -> None:
 
     table = Table(title="Mengeneinheiten")
     table.add_column("Code", style="cyan", width=6)
-    table.add_column("Kuerzel", width=6)
+    table.add_column("Kürzel", width=6)
     table.add_column("EN", width=6)
     table.add_column("Nk", justify="right", width=4)
     table.add_column("ISO", style="cyan", width=6)
@@ -1685,7 +1685,7 @@ def webui_firma() -> None:
 
     console.print("[bold]Firmenstammdaten[/]\n")
     console.print(f"  Firma:          {firma.firma}")
-    console.print(f"  Strasse:        {firma.strasse}")
+    console.print(f"  Straße:        {firma.straße}")
     console.print(f"  PLZ/Ort:        {firma.plz} {firma.ort}")
     console.print(f"  Land:           {firma.land}")
     console.print(f"  E-Mail:         {firma.email}")

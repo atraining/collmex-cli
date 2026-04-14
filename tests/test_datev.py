@@ -1,4 +1,4 @@
-"""Tests fuer collmex.datev — DATEV Buchungsstapel Export."""
+"""Tests für collmex.datev — DATEV Buchungsstapel Export."""
 
 from __future__ import annotations
 
@@ -111,7 +111,7 @@ class TestDatevExporter:
                 "EUR",
                 "",
                 "20260303",
-                "Bueromaterial",
+                "Büromaterial",
             ],
             [
                 "ACCDOC",
@@ -166,7 +166,7 @@ class TestDatevExporter:
                 "EUR",
                 "",
                 "20260303",
-                "Bueromaterial",
+                "Büromaterial",
             ],
             [
                 "ACCDOC",
@@ -233,7 +233,7 @@ class TestDatevExporter:
         ]
         exp = DatevExporter(mock_client)
         result = exp.export("20260301", "20260331")
-        assert "1503" in result  # 15. Maerz -> 1503
+        assert "1503" in result  # 15. März -> 1503
 
     def test_bezeichnung_auto(self, mock_client):
         """Bezeichnung wird automatisch generiert."""

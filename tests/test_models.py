@@ -1,4 +1,4 @@
-"""Tests fuer collmex.models — Dataclasses und Geschaeftslogik."""
+"""Tests für collmex.models — Dataclasses und Geschäftslogik."""
 
 from decimal import Decimal
 
@@ -35,7 +35,7 @@ def _make_booking(
             BookingLine(
                 positions_nr=1,
                 konto=4400,
-                bezeichnung="Buerobedarf",
+                bezeichnung="Bürobedarf",
                 soll_haben="S",
                 betrag=soll_betrag,
             ),
@@ -81,7 +81,7 @@ class TestBookingLine:
         assert line.betrag == Decimal("99.99")
 
     def test_negativer_betrag_wirft_error(self) -> None:
-        """Negative Betraege sind nicht erlaubt."""
+        """Negative Beträge sind nicht erlaubt."""
         with pytest.raises(ValueError, match="nicht negativ"):
             BookingLine(
                 positions_nr=1,
@@ -91,7 +91,7 @@ class TestBookingLine:
                 betrag=Decimal("-10.00"),
             )
 
-    def test_ungueltiges_soll_haben(self) -> None:
+    def test_ungültiges_soll_haben(self) -> None:
         """Nur 'S' und 'H' sind erlaubt."""
         with pytest.raises(ValueError, match="soll_haben"):
             BookingLine(
@@ -111,13 +111,13 @@ class TestBookingLine:
             soll_haben="S",
             betrag=Decimal("100.00"),
         )
-        assert line.waehrung == "EUR"
+        assert line.währung == "EUR"
         assert line.steuersatz == ""
         assert line.buchungstext == ""
         assert line.kostenstelle == ""
 
     def test_betrag_null_erlaubt(self) -> None:
-        """Betrag 0 ist zulaessig (z.B. Storno-Gegenbuchung)."""
+        """Betrag 0 ist zulässig (z.B. Storno-Gegenbuchung)."""
         line = BookingLine(
             positions_nr=1,
             konto=4400,
@@ -149,7 +149,7 @@ class TestBookingValidate:
         assert exc_info.value.details["differenz"] == "100.00"
 
     def test_validation_error_details(self) -> None:
-        """ValidationError enthaelt strukturierte Details."""
+        """ValidationError enthält strukturierte Details."""
         booking = _make_booking(Decimal("100.00"), Decimal("80.00"))
         with pytest.raises(ValidationError) as exc_info:
             booking.validate()
@@ -175,7 +175,7 @@ class TestBookingValidate:
             beleg_nr=None,
             belegdatum="20260303",
             positionen=[
-                BookingLine(1, 4400, "Buerobedarf", "S", Decimal("500.00")),
+                BookingLine(1, 4400, "Bürobedarf", "S", Decimal("500.00")),
                 BookingLine(2, 1576, "Vorsteuer 19%", "S", Decimal("95.00")),
                 BookingLine(3, 1200, "Bank", "H", Decimal("595.00")),
             ],
@@ -195,7 +195,7 @@ class TestBookingProperties:
             beleg_nr=None,
             belegdatum="20260303",
             positionen=[
-                BookingLine(1, 4400, "Buerobedarf", "S", Decimal("500.00")),
+                BookingLine(1, 4400, "Bürobedarf", "S", Decimal("500.00")),
                 BookingLine(2, 1576, "Vorsteuer", "S", Decimal("95.00")),
                 BookingLine(3, 1200, "Bank", "H", Decimal("595.00")),
             ],
@@ -208,7 +208,7 @@ class TestBookingProperties:
             beleg_nr=None,
             belegdatum="20260303",
             positionen=[
-                BookingLine(1, 4400, "Buerobedarf", "S", Decimal("500.00")),
+                BookingLine(1, 4400, "Bürobedarf", "S", Decimal("500.00")),
                 BookingLine(2, 1576, "Vorsteuer", "S", Decimal("95.00")),
                 BookingLine(3, 1200, "Bank", "H", Decimal("595.00")),
             ],
@@ -239,12 +239,12 @@ class TestBookingToCsvLines:
                 BookingLine(
                     positions_nr=1,
                     konto=4400,
-                    bezeichnung="Buerobedarf",
+                    bezeichnung="Bürobedarf",
                     soll_haben="S",
                     betrag=Decimal("500.00"),
-                    waehrung="EUR",
+                    währung="EUR",
                     steuersatz="",
-                    buchungstext="Bueromaterial Lieferant X",
+                    buchungstext="Büromaterial Lieferant X",
                     kostenstelle="KST01",
                 ),
             ],
@@ -258,13 +258,13 @@ class TestBookingToCsvLines:
         assert felder[2] == "99"  # beleg_nr
         assert felder[3] == "1"  # positions_nr
         assert felder[4] == "4400"  # konto
-        assert felder[5] == "Buerobedarf"  # bezeichnung
+        assert felder[5] == "Bürobedarf"  # bezeichnung
         assert felder[6] == "S"  # soll_haben
         assert felder[7] == "500,00"  # betrag (deutsches Format)
-        assert felder[8] == "EUR"  # waehrung
+        assert felder[8] == "EUR"  # währung
         assert felder[9] == ""  # steuersatz
         assert felder[10] == "20260303"  # belegdatum
-        assert felder[11] == "Bueromaterial Lieferant X"  # buchungstext
+        assert felder[11] == "Büromaterial Lieferant X"  # buchungstext
         assert felder[12] == "RE-2026-001"  # referenz
         assert felder[13] == "KST01"  # kostenstelle
 
@@ -276,7 +276,7 @@ class TestBookingToCsvLines:
         assert felder[2] == ""  # beleg_nr leer
 
     def test_betrag_deutsches_komma_format(self) -> None:
-        """Betraege werden mit Komma als Dezimaltrennzeichen ausgegeben."""
+        """Beträge werden mit Komma als Dezimaltrennzeichen ausgegeben."""
         booking = _make_booking(Decimal("1234.56"), Decimal("1234.56"))
         lines = booking.to_csv_lines()
         felder = lines[0].split(";")
@@ -288,7 +288,7 @@ class TestBookingToCsvLines:
             beleg_nr=None,
             belegdatum="20260303",
             positionen=[
-                BookingLine(1, 4400, "Buerobedarf", "S", Decimal("500.00")),
+                BookingLine(1, 4400, "Bürobedarf", "S", Decimal("500.00")),
                 BookingLine(2, 1576, "Vorsteuer 19%", "S", Decimal("95.00")),
                 BookingLine(3, 1200, "Bank", "H", Decimal("595.00")),
             ],
@@ -303,7 +303,7 @@ class TestBookingToCsvLines:
 
 
 class TestBookingDatum:
-    def test_ungueltiges_datum_format(self) -> None:
+    def test_ungültiges_datum_format(self) -> None:
         """Datum im falschen Format wirft ValueError."""
         with pytest.raises(ValueError, match="YYYYMMDD"):
             Booking(
@@ -435,107 +435,107 @@ class TestInvoice:
 
 
 class TestOpenItem:
-    def test_mahnstufe_0_nicht_faellig(self) -> None:
-        """Mahnstufe 0: nicht faellig (0 Tage ueberfaellig)."""
+    def test_mahnstufe_0_nicht_fällig(self) -> None:
+        """Mahnstufe 0: nicht fällig (0 Tage überfällig)."""
         item = OpenItem(
             beleg_nr=1,
             kunde_oder_lieferant="Kunde A",
             typ="debitor",
             betrag=Decimal("100.00"),
             datum="20260201",
-            faellig_am="20260303",
-            tage_ueberfaellig=0,
+            fällig_am="20260303",
+            tage_ueberfällig=0,
         )
         assert item.mahnstufe == 0
 
     def test_mahnstufe_0_unter_30_tage(self) -> None:
-        """Mahnstufe 0: bis 30 Tage ueberfaellig."""
+        """Mahnstufe 0: bis 30 Tage überfällig."""
         item = OpenItem(
             beleg_nr=2,
             kunde_oder_lieferant="Kunde B",
             typ="debitor",
             betrag=Decimal("200.00"),
             datum="20260101",
-            faellig_am="20260201",
-            tage_ueberfaellig=30,
+            fällig_am="20260201",
+            tage_ueberfällig=30,
         )
         assert item.mahnstufe == 0
 
     def test_mahnstufe_1_31_tage(self) -> None:
-        """Mahnstufe 1: 31 Tage ueberfaellig."""
+        """Mahnstufe 1: 31 Tage überfällig."""
         item = OpenItem(
             beleg_nr=3,
             kunde_oder_lieferant="Kunde C",
             typ="debitor",
             betrag=Decimal("300.00"),
             datum="20260101",
-            faellig_am="20260115",
-            tage_ueberfaellig=31,
+            fällig_am="20260115",
+            tage_ueberfällig=31,
         )
         assert item.mahnstufe == 1
 
     def test_mahnstufe_1_60_tage(self) -> None:
-        """Mahnstufe 1: genau 60 Tage ueberfaellig."""
+        """Mahnstufe 1: genau 60 Tage überfällig."""
         item = OpenItem(
             beleg_nr=4,
             kunde_oder_lieferant="Kunde D",
             typ="debitor",
             betrag=Decimal("400.00"),
             datum="20251201",
-            faellig_am="20260101",
-            tage_ueberfaellig=60,
+            fällig_am="20260101",
+            tage_ueberfällig=60,
         )
         assert item.mahnstufe == 1
 
     def test_mahnstufe_2_61_tage(self) -> None:
-        """Mahnstufe 2: 61 Tage ueberfaellig."""
+        """Mahnstufe 2: 61 Tage überfällig."""
         item = OpenItem(
             beleg_nr=5,
             kunde_oder_lieferant="Kunde E",
             typ="debitor",
             betrag=Decimal("500.00"),
             datum="20251201",
-            faellig_am="20260101",
-            tage_ueberfaellig=61,
+            fällig_am="20260101",
+            tage_ueberfällig=61,
         )
         assert item.mahnstufe == 2
 
     def test_mahnstufe_2_90_tage(self) -> None:
-        """Mahnstufe 2: genau 90 Tage ueberfaellig."""
+        """Mahnstufe 2: genau 90 Tage überfällig."""
         item = OpenItem(
             beleg_nr=6,
             kunde_oder_lieferant="Kunde F",
             typ="debitor",
             betrag=Decimal("600.00"),
             datum="20251101",
-            faellig_am="20251201",
-            tage_ueberfaellig=90,
+            fällig_am="20251201",
+            tage_ueberfällig=90,
         )
         assert item.mahnstufe == 2
 
     def test_mahnstufe_3_91_tage(self) -> None:
-        """Mahnstufe 3: 91 Tage ueberfaellig."""
+        """Mahnstufe 3: 91 Tage überfällig."""
         item = OpenItem(
             beleg_nr=7,
             kunde_oder_lieferant="Kunde G",
             typ="debitor",
             betrag=Decimal("700.00"),
             datum="20251001",
-            faellig_am="20251101",
-            tage_ueberfaellig=91,
+            fällig_am="20251101",
+            tage_ueberfällig=91,
         )
         assert item.mahnstufe == 3
 
     def test_mahnstufe_3_180_tage(self) -> None:
-        """Mahnstufe 3: weit ueberfaellig (180 Tage)."""
+        """Mahnstufe 3: weit überfällig (180 Tage)."""
         item = OpenItem(
             beleg_nr=8,
             kunde_oder_lieferant="Kunde H",
             typ="debitor",
             betrag=Decimal("800.00"),
             datum="20250601",
-            faellig_am="20250901",
-            tage_ueberfaellig=180,
+            fällig_am="20250901",
+            tage_ueberfällig=180,
         )
         assert item.mahnstufe == 3
 
@@ -547,14 +547,14 @@ class TestOpenItem:
             typ="kreditor",
             betrag=Decimal("1500.00"),
             datum="20260201",
-            faellig_am="20260303",
-            tage_ueberfaellig=0,
+            fällig_am="20260303",
+            tage_ueberfällig=0,
         )
         assert item.typ == "kreditor"
         assert item.mahnstufe == 0
 
-    def test_ungueltiger_typ(self) -> None:
-        """Ungueltiger Typ wirft ValueError."""
+    def test_ungültiger_typ(self) -> None:
+        """Ungültiger Typ wirft ValueError."""
         with pytest.raises(ValueError, match="debitor.*kreditor"):
             OpenItem(
                 beleg_nr=11,
@@ -562,8 +562,8 @@ class TestOpenItem:
                 typ="unbekannt",
                 betrag=Decimal("100.00"),
                 datum="20260101",
-                faellig_am="20260201",
-                tage_ueberfaellig=0,
+                fällig_am="20260201",
+                tage_ueberfällig=0,
             )
 
 
@@ -577,22 +577,22 @@ class TestAccount:
         """Account wird korrekt erstellt."""
         konto = Account(
             konto_nr=4400,
-            bezeichnung="Buerobedarf",
+            bezeichnung="Bürobedarf",
             konto_typ="aufwand",
             ust_relevant=True,
         )
         assert konto.konto_nr == 4400
-        assert konto.bezeichnung == "Buerobedarf"
+        assert konto.bezeichnung == "Bürobedarf"
         assert konto.konto_typ == "aufwand"
         assert konto.ust_relevant is True
 
-    def test_ungueltiger_konto_typ(self) -> None:
-        """Ungueltiger konto_typ wirft ValueError."""
+    def test_ungültiger_konto_typ(self) -> None:
+        """Ungültiger konto_typ wirft ValueError."""
         with pytest.raises(ValueError, match="konto_typ"):
             Account(
                 konto_nr=9999,
                 bezeichnung="Test",
-                konto_typ="ungueltig",
+                konto_typ="ungültig",
                 ust_relevant=False,
             )
 
@@ -609,11 +609,11 @@ class TestCustomer:
         assert kunde.kunde_nr == 1
         assert kunde.name == "Musterfirma GmbH"
         assert kunde.land == "DE"
-        assert kunde.strasse == ""
+        assert kunde.straße == ""
         assert kunde.email == ""
 
     def test_to_csv_line(self) -> None:
-        """to_csv_line() erzeugt gueltige CMXKND-Zeile."""
+        """to_csv_line() erzeugt gültige CMXKND-Zeile."""
         kunde = Customer(kunde_nr=10001, name="Test GmbH")
         csv = kunde.to_csv_line()
         assert csv.startswith("CMXKND;")
@@ -626,19 +626,19 @@ class TestSupplier:
         lieferant = Supplier(
             lieferant_nr=70042,
             name="Lieferant AG",
-            strasse="Hauptstr. 1",
+            straße="Hauptstr. 1",
             plz="50667",
-            ort="Koeln",
+            ort="Köln",
             land="DE",
             ust_id="DE123456789",
             email="info@lieferant.de",
         )
         assert lieferant.lieferant_nr == 70042
         assert lieferant.ust_id == "DE123456789"
-        assert lieferant.ort == "Koeln"
+        assert lieferant.ort == "Köln"
 
     def test_to_csv_line(self) -> None:
-        """to_csv_line() erzeugt gueltige CMXLIF-Zeile."""
+        """to_csv_line() erzeugt gültige CMXLIF-Zeile."""
         lieferant = Supplier(lieferant_nr=70001, name="Test AG")
         csv = lieferant.to_csv_line()
         assert csv.startswith("CMXLIF;")
@@ -679,7 +679,7 @@ class TestCollmexEingangsrechnung:
             netto_voll=Decimal("500.00"),
             steuer_voll=Decimal("95.00"),
             konto_voll=4400,
-            buchungstext="Bueromaterial",
+            buchungstext="Büromaterial",
         )
         assert rechnung.betrag_netto == Decimal("500.00")
         assert rechnung.betrag_brutto == Decimal("595.00")
@@ -730,7 +730,7 @@ class TestCollmexEingangsrechnung:
             gegenkonto=1200,
             datum="20260303",
             netto_voll=Decimal("100.00"),
-            buchungstext="Bankgebuehren",
+            buchungstext="Bankgebühren",
         )
         felder = rechnung.to_csv_line().split(";")
         assert felder[1] == ""  # Kein Lieferant
@@ -786,7 +786,7 @@ class TestCollmexAusgangsrechnung:
             netto_erm=Decimal("200.00"),
             steuer_erm=Decimal("14.00"),
             konto_erm=8300,
-            buchungstext="Ermaessigter Erloes",
+            buchungstext="Ermäßigter Erlös",
         )
         assert rechnung.betrag_netto == Decimal("200.00")
 

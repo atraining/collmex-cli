@@ -1,6 +1,6 @@
-"""Collmex API Client — CSV-Batch-Protokoll ueber HTTP POST.
+"""Collmex API Client — CSV-Batch-Protokoll über HTTP POST.
 
-Alle Kommunikation mit der Collmex-API laeuft ueber dieses Modul.
+Alle Kommunikation mit der Collmex-API läuft über dieses Modul.
 Jeder Request besteht aus einer LOGIN-Zeile gefolgt von Datenzeilen,
 Semikolon-getrennt, per POST an den Collmex-Endpunkt.
 """
@@ -125,7 +125,7 @@ def format_amount(value: Decimal | float | int | str) -> str:
         try:
             value = Decimal(value)
         except InvalidOperation:
-            raise CollmexError(f"Ungueltiger Betrag: {value!r}")
+            raise CollmexError(f"Ungültiger Betrag: {value!r}")
     elif isinstance(value, (int, float)):
         value = Decimal(str(value))
 
@@ -148,13 +148,13 @@ def parse_amount(text: str) -> Decimal:
     try:
         return Decimal(cleaned)
     except InvalidOperation:
-        raise CollmexError(f"Ungueltiger Betrag: {text!r}")
+        raise CollmexError(f"Ungültiger Betrag: {text!r}")
 
 
 def _parse_csv_response(text: str) -> list[list[str]]:
     """Parst die Collmex-CSV-Antwort (Semikolon-getrennt) robust.
 
-    Verwendet das Python csv-Modul fuer korrekte Behandlung von
+    Verwendet das Python csv-Modul für korrekte Behandlung von
     gequoteten Feldern und Semikolon-Trennern.
     """
     rows: list[list[str]] = []
@@ -176,10 +176,10 @@ def _parse_csv_response(text: str) -> list[list[str]]:
 
 
 class CollmexClient:
-    """Client fuer die Collmex CSV-Batch-API.
+    """Client für die Collmex CSV-Batch-API.
 
-    Laedt Credentials aus Umgebungsvariablen (oder .env-Datei):
-      - COLLMEX_URL:      Vollstaendiger Endpunkt inkl. Kundennummer
+    Lädt Credentials aus Umgebungsvariablen (oder .env-Datei):
+      - COLLMEX_URL:      Vollständiger Endpunkt inkl. Kundennummer
       - COLLMEX_USER:     API-Benutzername
       - COLLMEX_PASSWORD:  API-Passwort
       - COLLMEX_CUSTOMER:  Collmex-Kundennummer
@@ -247,7 +247,7 @@ class CollmexClient:
             len(lines),
             self.url,
         )
-        # Login-Zeile NICHT loggen (enthaelt Passwort)
+        # Login-Zeile NICHT loggen (enthält Passwort)
         for line in lines:
             logger.debug("  > %s", line)
 
@@ -358,9 +358,9 @@ class CollmexClient:
     def post_booking(self, lines: list[str]) -> BookingResult:
         """Rechnungen importieren (CMXLRN oder CMXUMS).
 
-        HINWEIS: ACCDOC-Import ist bei Collmex NICHT moeglich.
+        HINWEIS: ACCDOC-Import ist bei Collmex NICHT möglich.
         Stattdessen CMXLRN (Eingangsrechnung) oder CMXUMS (Ausgangsrechnung)
-        verwenden.  Collmex erzeugt die doppelte Buchfuehrung intern.
+        verwenden.  Collmex erzeugt die doppelte Buchführung intern.
 
         Args:
             lines: CSV-Zeilen (CMXLRN oder CMXUMS).
@@ -426,10 +426,10 @@ class CollmexClient:
     # ------------------------------------------------------------------
 
     def status(self) -> bool:
-        """Verbindungstest: Prueft ob Login und API-Zugang funktionieren.
+        """Verbindungstest: Prüft ob Login und API-Zugang funktionieren.
 
-        Fuehrt eine minimale Abfrage (ACCBAL_GET fuer Konto 1200, aktuelles
-        Jahr, Periode 1) durch und prueft ob kein Fehler zurueckkommt.
+        Führt eine minimale Abfrage (ACCBAL_GET für Konto 1200, aktuelles
+        Jahr, Periode 1) durch und prüft ob kein Fehler zurückkommt.
 
         Returns:
             True bei erfolgreichem Login, False bei Fehler.

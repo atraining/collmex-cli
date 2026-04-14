@@ -1,6 +1,6 @@
-"""Tests fuer collmex.gobd — AuditTrail.
+"""Tests für collmex.gobd — AuditTrail.
 
-Alle Tests verwenden ein temporaeres Verzeichnis, keine echten API-Calls.
+Alle Tests verwenden ein temporäres Verzeichnis, keine echten API-Calls.
 """
 
 from __future__ import annotations
@@ -22,14 +22,14 @@ from collmex.gobd import AuditTrail
 
 @pytest.fixture
 def tmp_dir():
-    """Erzeugt ein temporaeres Verzeichnis fuer Audit-Logs."""
+    """Erzeugt ein temporäres Verzeichnis für Audit-Logs."""
     with tempfile.TemporaryDirectory() as d:
         yield d
 
 
 @pytest.fixture
 def trail(tmp_dir):
-    """Erzeugt einen AuditTrail mit temporaerem Verzeichnis."""
+    """Erzeugt einen AuditTrail mit temporärem Verzeichnis."""
     return AuditTrail(log_dir=tmp_dir)
 
 
@@ -45,7 +45,7 @@ class TestLogAction:
         assert (Path(tmp_dir) / "audit.log").exists()
 
     def test_entry_has_all_fields(self, trail):
-        """Der geschriebene Eintrag enthaelt alle Pflichtfelder."""
+        """Der geschriebene Eintrag enthält alle Pflichtfelder."""
         entry = trail.log_action(
             "BUCHUNG",
             {"beleg": "test"},
@@ -104,7 +104,7 @@ class TestLogAction:
         assert len(entries) == 1
 
     def test_log_is_append_only(self, trail):
-        """Mehrere Eintraege werden angehaengt, nicht ueberschrieben."""
+        """Mehrere Einträge werden angehängt, nicht überschrieben."""
         trail.log_action("FIRST", {}, {}, {})
         trail.log_action("SECOND", {}, {}, {})
         trail.log_action("THIRD", {}, {}, {})
@@ -112,7 +112,7 @@ class TestLogAction:
         assert len(entries) == 3
 
     def test_returns_written_entry(self, trail):
-        """log_action gibt den geschriebenen Eintrag zurueck."""
+        """log_action gibt den geschriebenen Eintrag zurück."""
         result = trail.log_action("TEST", {"a": 1}, {"b": 2}, {"c": 3})
         assert isinstance(result, dict)
         assert result["action"] == "TEST"
@@ -130,30 +130,30 @@ class TestGetEntries:
         assert entries == []
 
     def test_returns_all_entries(self, trail):
-        """Gibt alle Eintraege zurueck wenn kein Filter gesetzt."""
+        """Gibt alle Einträge zurück wenn kein Filter gesetzt."""
         trail.log_action("A", {}, {}, {})
         trail.log_action("B", {}, {}, {})
         entries = trail.get_entries()
         assert len(entries) == 2
 
     def test_filter_von(self, trail):
-        """Filtert Eintraege nach Startzeitpunkt."""
+        """Filtert Einträge nach Startzeitpunkt."""
         trail.log_action("OLD", {}, {}, {})
         entries_all = trail.get_entries()
         ts = entries_all[0]["timestamp"]
-        # Alle Eintraege ab diesem Zeitstempel
+        # Alle Einträge ab diesem Zeitstempel
         entries = trail.get_entries(von=ts)
         assert len(entries) >= 1
 
     def test_filter_bis(self, trail):
-        """Filtert Eintraege nach Endzeitpunkt."""
+        """Filtert Einträge nach Endzeitpunkt."""
         trail.log_action("A", {}, {}, {})
         # Bis weit in die Zukunft
         entries = trail.get_entries(bis="2099-12-31T23:59:59")
         assert len(entries) == 1
 
     def test_filter_excludes_future(self, trail):
-        """Filter 'bis' in der Vergangenheit schliesst aktuelle Eintraege aus."""
+        """Filter 'bis' in der Vergangenheit schliesst aktuelle Einträge aus."""
         trail.log_action("A", {}, {}, {})
         entries = trail.get_entries(bis="2000-01-01T00:00:00")
         assert len(entries) == 0
@@ -165,7 +165,7 @@ class TestGetEntries:
         assert entries == []
 
     def test_entries_are_dicts(self, trail):
-        """Eintraege werden als dicts zurueckgegeben."""
+        """Einträge werden als dicts zurückgegeben."""
         trail.log_action("TEST", {}, {}, {})
         entries = trail.get_entries()
         assert isinstance(entries[0], dict)
@@ -187,7 +187,7 @@ class TestEnsureImmutable:
         assert trail.ensure_immutable() is True
 
     def test_multiple_entries_valid(self, trail):
-        """Mehrere korrekte Eintraege sind valide."""
+        """Mehrere korrekte Einträge sind valide."""
         trail.log_action("FIRST", {"a": 1}, {}, {})
         trail.log_action("SECOND", {"b": 2}, {}, {})
         trail.log_action("THIRD", {"c": 3}, {}, {})
@@ -209,12 +209,12 @@ class TestEnsureImmutable:
         assert trail.ensure_immutable() is False
 
     def test_deleted_entry_detected(self, trail, tmp_dir):
-        """Loeschen eines Eintrags bricht die Hash-Kette."""
+        """Löschen eines Eintrags bricht die Hash-Kette."""
         trail.log_action("FIRST", {}, {}, {})
         trail.log_action("SECOND", {}, {}, {})
         trail.log_action("THIRD", {}, {}, {})
 
-        # Zweiten Eintrag loeschen
+        # Zweiten Eintrag löschen
         log_path = Path(tmp_dir) / "audit.log"
         lines = log_path.read_text(encoding="utf-8").strip().split("\n")
         del lines[1]
@@ -223,7 +223,7 @@ class TestEnsureImmutable:
         assert trail.ensure_immutable() is False
 
     def test_nonexistent_log_valid(self, tmp_dir):
-        """Nicht existierende Logdatei ist valide (nichts zu pruefen)."""
+        """Nicht existierende Logdatei ist valide (nichts zu prüfen)."""
         trail = AuditTrail(log_dir=os.path.join(tmp_dir, "empty"))
         assert trail.ensure_immutable() is True
 
@@ -235,13 +235,13 @@ class TestEnsureImmutable:
         assert trail.ensure_immutable() is False
 
     def test_hash_chain_integrity(self, trail):
-        """Hash-Kette ueber 5 Eintraege bleibt intakt."""
+        """Hash-Kette über 5 Einträge bleibt intakt."""
         for i in range(5):
             trail.log_action(f"ACTION_{i}", {"step": i}, {}, {})
         assert trail.ensure_immutable() is True
 
     def test_swapped_entries_detected(self, trail, tmp_dir):
-        """Vertauschte Eintraege brechen die Hash-Kette."""
+        """Vertauschte Einträge brechen die Hash-Kette."""
         trail.log_action("FIRST", {}, {}, {})
         trail.log_action("SECOND", {}, {}, {})
 

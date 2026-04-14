@@ -1,4 +1,4 @@
-"""Tests fuer collmex.controlling — ControllingEngine.
+"""Tests für collmex.controlling — ControllingEngine.
 
 Alle Tests mocken den API-Client, keine echten API-Calls.
 """
@@ -38,7 +38,7 @@ def engine(mock_client):
 def _make_accbal_row(konto: int, soll: str, haben: str) -> list[str]:
     """Erzeugt eine ACC_BAL-Zeile im echten Collmex-Format (4 Felder).
 
-    Berechnet den Saldo aus soll - haben fuer Rueckwaertskompatibilitaet
+    Berechnet den Saldo aus soll - haben für Rückwärtskompatibilität
     der bestehenden Testaufrufe.
     """
     from collmex.api import parse_amount
@@ -113,7 +113,7 @@ class TestGetAccountRangeTotal:
 
 class TestDashboard:
     def _setup_dashboard_mocks(self, mock_client):
-        """Konfiguriert die Mocks fuer einen vollstaendigen Dashboard-Aufruf."""
+        """Konfiguriert die Mocks für einen vollständigen Dashboard-Aufruf."""
 
         def get_balances_side_effect(year, period, account=None):
             if account == 1200:
@@ -125,7 +125,7 @@ class TestDashboard:
             if account == 1600:
                 return [_make_accbal_row(1600, "0,00", "20000,00")]
             if account is None:
-                # Fuer _get_account_range_total
+                # Für _get_account_range_total
                 return [
                     _make_accbal_row(8400, "0,00", "30000,00"),
                     _make_accbal_row(8300, "0,00", "5000,00"),
@@ -138,7 +138,7 @@ class TestDashboard:
         mock_client.get_balances.side_effect = get_balances_side_effect
 
     def test_dashboard_returns_all_keys(self, engine, mock_client):
-        """Dashboard-Dict enthaelt alle erwarteten Schluessel."""
+        """Dashboard-Dict enthält alle erwarteten Schlüssel."""
         self._setup_dashboard_mocks(mock_client)
         result = engine.dashboard()
         expected_keys = {
@@ -148,7 +148,7 @@ class TestDashboard:
             "umsatz_monat",
             "kosten_monat",
             "ergebnis_monat",
-            "liquiditaet_1",
+            "liquidität_1",
             "dso",
         }
         assert set(result.keys()) == expected_keys
@@ -166,7 +166,7 @@ class TestDashboard:
         assert result["offene_forderungen"] == Decimal("15000.00")
 
     def test_dashboard_verbindlichkeiten(self, engine, mock_client):
-        """Verbindlichkeiten werden als positiver Betrag zurueckgegeben."""
+        """Verbindlichkeiten werden als positiver Betrag zurückgegeben."""
         self._setup_dashboard_mocks(mock_client)
         result = engine.dashboard()
         assert result["offene_verbindlichkeiten"] == Decimal("20000.00")
@@ -179,15 +179,15 @@ class TestDashboard:
         # Kosten: 10000 + 2000 + 3000 aus Bereich 4000-4999 = 15000
         assert result["ergebnis_monat"] == result["umsatz_monat"] - result["kosten_monat"]
 
-    def test_dashboard_liquiditaet_1(self, engine, mock_client):
-        """Liquiditaet 1. Grades = (Bank + Kasse) / Verbindlichkeiten."""
+    def test_dashboard_liquidität_1(self, engine, mock_client):
+        """Liquidität 1. Grades = (Bank + Kasse) / Verbindlichkeiten."""
         self._setup_dashboard_mocks(mock_client)
         result = engine.dashboard()
         # (50000 + 2000) / 20000 = 2.60
-        assert result["liquiditaet_1"] == Decimal("2.60")
+        assert result["liquidität_1"] == Decimal("2.60")
 
-    def test_dashboard_liquiditaet_zero_verbindlichkeiten(self, engine, mock_client):
-        """Bei 0 Verbindlichkeiten ist Liquiditaet 0."""
+    def test_dashboard_liquidität_zero_verbindlichkeiten(self, engine, mock_client):
+        """Bei 0 Verbindlichkeiten ist Liquidität 0."""
 
         def get_balances_side_effect(year, period, account=None):
             if account == 1200:
@@ -204,7 +204,7 @@ class TestDashboard:
 
         mock_client.get_balances.side_effect = get_balances_side_effect
         result = engine.dashboard()
-        assert result["liquiditaet_1"] == Decimal("0")
+        assert result["liquidität_1"] == Decimal("0")
 
     def test_dashboard_dso_zero_umsatz(self, engine, mock_client):
         """Bei 0 Umsatz ist DSO 0."""
@@ -235,27 +235,27 @@ class TestDashboard:
 
 
 # ---------------------------------------------------------------------------
-# Tests: liquiditaetsvorschau
+# Tests: liquiditätsvorschau
 # ---------------------------------------------------------------------------
 
 
-class TestLiquiditaetsvorschau:
+class TestLiquiditätsvorschau:
     def test_returns_correct_number_of_weeks(self, engine, mock_client):
-        """Gibt die angeforderte Anzahl Wochen zurueck."""
+        """Gibt die angeforderte Anzahl Wochen zurück."""
         mock_client.get_open_items.return_value = []
-        result = engine.liquiditaetsvorschau(wochen=8)
+        result = engine.liquiditätsvorschau(wochen=8)
         assert len(result) == 8
 
     def test_default_13_weeks(self, engine, mock_client):
         """Standard sind 13 Wochen."""
         mock_client.get_open_items.return_value = []
-        result = engine.liquiditaetsvorschau()
+        result = engine.liquiditätsvorschau()
         assert len(result) == 13
 
     def test_week_dict_has_correct_keys(self, engine, mock_client):
-        """Jede Woche hat die erwarteten Schluessel."""
+        """Jede Woche hat die erwarteten Schlüssel."""
         mock_client.get_open_items.return_value = []
-        result = engine.liquiditaetsvorschau(wochen=1)
+        result = engine.liquiditätsvorschau(wochen=1)
         expected_keys = {
             "woche",
             "start",
@@ -268,7 +268,7 @@ class TestLiquiditaetsvorschau:
     def test_saldo_is_eingaenge_minus_ausgaenge(self, engine, mock_client):
         """Saldo = Eingaenge - Ausgaenge (auch bei leeren Daten)."""
         mock_client.get_open_items.return_value = []
-        result = engine.liquiditaetsvorschau(wochen=1)
+        result = engine.liquiditätsvorschau(wochen=1)
         w = result[0]
         assert w["saldo"] == w["erwartete_eingaenge"] - w["erwartete_ausgaenge"]
 
@@ -276,9 +276,9 @@ class TestLiquiditaetsvorschau:
         """Offene Posten werden der richtigen Woche zugeordnet."""
         heute = date.today()
         montag = heute - timedelta(days=heute.weekday())
-        # Faelligkeit in der zweiten Woche (Mittwoch)
+        # Fälligkeit in der zweiten Woche (Mittwoch)
         target_date = montag + timedelta(days=9)
-        faellig_str = target_date.strftime("%Y%m%d")
+        fällig_str = target_date.strftime("%Y%m%d")
 
         mock_client.get_open_items.return_value = [
             # Debitor-Posten (Personenkonto 10000 = Eingang)
@@ -295,7 +295,7 @@ class TestLiquiditaetsvorschau:
                 "R001",
                 "20260101",
                 "",
-                faellig_str,
+                fällig_str,
                 "0",
                 "0",
                 "",
@@ -305,7 +305,7 @@ class TestLiquiditaetsvorschau:
                 "5000,00",
             ],
         ]
-        result = engine.liquiditaetsvorschau(wochen=4)
+        result = engine.liquiditätsvorschau(wochen=4)
         # Woche 1 (Index 1) sollte den Eingang haben
         assert result[1]["erwartete_eingaenge"] == Decimal("5000.00")
         assert result[0]["erwartete_eingaenge"] == Decimal("0")
@@ -391,7 +391,7 @@ class TestSollIst:
         assert result[2]["konto"] == 4800
 
     def test_result_dict_keys(self, engine, mock_client):
-        """Jedes Ergebnis hat die erwarteten Schluessel."""
+        """Jedes Ergebnis hat die erwarteten Schlüssel."""
         mock_client.get_balances.return_value = [
             _make_accbal_row(4400, "500,00", "0,00"),
         ]

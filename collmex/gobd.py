@@ -1,7 +1,7 @@
 """GoBD-konformer Audit Trail.
 
-Protokolliert alle Buchungsaktionen als unveraenderbare JSON-Logeintraege.
-Jeder Eintrag erhaelt einen SHA-256-Hash zur Integritaetspruefung.
+Protokolliert alle Buchungsaktionen als unveränderbare JSON-Logeinträge.
+Jeder Eintrag erhält einen SHA-256-Hash zur Integritätsprüfung.
 """
 
 from __future__ import annotations
@@ -30,12 +30,12 @@ class AuditTrail:
     """GoBD-konformer Audit Trail.
 
     Schreibt JSON-Zeilen (JSON Lines / JSONL) in eine Logdatei.
-    Jeder Eintrag enthaelt einen SHA-256-Hash ueber den vorherigen
-    Eintrag, sodass nachtraegliche Manipulation erkennbar wird
+    Jeder Eintrag enthält einen SHA-256-Hash über den vorherigen
+    Eintrag, sodass nachträgliche Manipulation erkennbar wird
     (einfache Hash-Kette).
 
     Attributes:
-        log_dir: Verzeichnis fuer die Audit-Logdatei.
+        log_dir: Verzeichnis für die Audit-Logdatei.
         log_file: Pfad zur audit.log Datei.
     """
 
@@ -49,7 +49,7 @@ class AuditTrail:
         self.log_dir.mkdir(parents=True, exist_ok=True)
 
     def _get_last_hash(self) -> str:
-        """Liest den Hash des letzten Eintrags oder gibt den Genesis-Hash zurueck."""
+        """Liest den Hash des letzten Eintrags oder gibt den Genesis-Hash zurück."""
         if not self.log_file.exists():
             return "0" * 64  # Genesis-Hash
 
@@ -78,7 +78,7 @@ class AuditTrail:
         return hashlib.sha256(data.encode("utf-8")).hexdigest()
 
     # ------------------------------------------------------------------
-    # Oeffentliche Methoden
+    # Öffentliche Methoden
     # ------------------------------------------------------------------
 
     def log_action(
@@ -93,8 +93,8 @@ class AuditTrail:
         """Protokolliert eine Aktion im Audit Trail.
 
         Schreibt einen JSON-Eintrag als neue Zeile in die audit.log.
-        Der Eintrag enthaelt einen Hash des vorherigen Eintrags
-        fuer die Integritaetskette.
+        Der Eintrag enthält einen Hash des vorherigen Eintrags
+        für die Integritätskette.
 
         Args:
             action: Art der Aktion (z.B. "BUCHUNG", "STORNO", "VALIDIERUNG").
@@ -120,7 +120,7 @@ class AuditTrail:
             "prev_hash": prev_hash,
         }
 
-        # Hash berechnen ueber den gesamten Eintrag (ohne das hash-Feld selbst)
+        # Hash berechnen über den gesamten Eintrag (ohne das hash-Feld selbst)
         entry_json = json.dumps(entry, cls=_DecimalEncoder, sort_keys=True)
         entry["hash"] = self._compute_hash(entry_json)
 
@@ -143,7 +143,7 @@ class AuditTrail:
         von: str | None = None,
         bis: str | None = None,
     ) -> list[dict]:
-        """Liest und filtert Audit-Eintraege.
+        """Liest und filtert Audit-Einträge.
 
         Args:
             von: ISO-Timestamp ab dem gefiltert wird (inklusive).
@@ -152,7 +152,7 @@ class AuditTrail:
                  z.B. "2026-03-31T23:59:59"
 
         Returns:
-            Liste der Audit-Eintraege als dicts,
+            Liste der Audit-Einträge als dicts,
             gefiltert und chronologisch sortiert.
         """
         if not self.log_file.exists():
@@ -168,7 +168,7 @@ class AuditTrail:
                     try:
                         entry = json.loads(stripped)
                     except json.JSONDecodeError:
-                        logger.warning("Ungueltige Zeile in audit.log: %s", stripped[:80])
+                        logger.warning("Ungültige Zeile in audit.log: %s", stripped[:80])
                         continue
 
                     ts = entry.get("timestamp", "")
@@ -186,17 +186,17 @@ class AuditTrail:
         return entries
 
     def ensure_immutable(self) -> bool:
-        """Prueft die Integritaet der Audit-Log-Datei.
+        """Prüft die Integrität der Audit-Log-Datei.
 
         Verifiziert die Hash-Kette: Jeder Eintrag referenziert den Hash
-        des vorherigen Eintrags. Wenn ein Eintrag veraendert oder
+        des vorherigen Eintrags. Wenn ein Eintrag verändert oder
         entfernt wurde, bricht die Kette.
 
         Returns:
             True wenn die Hash-Kette intakt ist, False wenn manipuliert.
 
         Raises:
-            Keine — gibt False zurueck bei Problemen.
+            Keine — gibt False zurück bei Problemen.
         """
         if not self.log_file.exists():
             # Kein Log = keine Manipulation
@@ -212,7 +212,7 @@ class AuditTrail:
                     try:
                         entries.append(json.loads(stripped))
                     except json.JSONDecodeError:
-                        logger.error("Ungueltige JSON-Zeile in audit.log")
+                        logger.error("Ungültige JSON-Zeile in audit.log")
                         return False
         except OSError as exc:
             logger.error("Fehler beim Lesen von audit.log: %s", exc)
@@ -224,7 +224,7 @@ class AuditTrail:
         expected_prev_hash = "0" * 64  # Genesis-Hash
 
         for i, entry in enumerate(entries):
-            # Pruefen: prev_hash stimmt mit erwartetem ueberein
+            # Prüfen: prev_hash stimmt mit erwartetem überein
             actual_prev = entry.get("prev_hash", "")
             if actual_prev != expected_prev_hash:
                 logger.error(
@@ -253,5 +253,5 @@ class AuditTrail:
 
             expected_prev_hash = stored_hash
 
-        logger.info("Audit-Log Integritaet OK: %d Eintraege verifiziert.", len(entries))
+        logger.info("Audit-Log Integrität OK: %d Einträge verifiziert.", len(entries))
         return True

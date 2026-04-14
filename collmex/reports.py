@@ -1,7 +1,7 @@
-"""Report-Module fuer BWA, SuSa, Offene Posten und Saeumige Kunden.
+"""Report-Module für BWA, SuSa, Offene Posten und Säumige Kunden.
 
-Berechnet kaufmaennische Auswertungen aus Collmex-API-Daten.
-Alle Geldbetraege verwenden Decimal fuer exakte Arithmetik.
+Berechnet kaufmännische Auswertungen aus Collmex-API-Daten.
+Alle Geldbeträge verwenden Decimal für exakte Arithmetik.
 """
 
 from __future__ import annotations
@@ -16,7 +16,7 @@ from collmex.api import CollmexClient, parse_amount
 # ---------------------------------------------------------------------------
 
 BWA_BEREICHE: dict[str, tuple[int, int]] = {
-    "umsatzerloese": (8100, 8700),
+    "umsatzerlöse": (8100, 8700),
     "personalkosten": (4100, 4199),
     "raumkosten": (4200, 4299),
     "betriebskosten": (4300, 4499),
@@ -27,7 +27,7 @@ BWA_BEREICHE: dict[str, tuple[int, int]] = {
 }
 
 BWA_BEZEICHNUNGEN: dict[str, str] = {
-    "umsatzerloese": "Umsatzerloese",
+    "umsatzerlöse": "Umsatzerlöse",
     "personalkosten": "Personalkosten",
     "raumkosten": "Raumkosten",
     "betriebskosten": "Betriebskosten",
@@ -52,7 +52,7 @@ _IDX_SALDO = 3
 
 # OPEN_ITEM Feld-Indizes (verifiziert gegen echte API, 2026-03)
 # Reihenfolge: OPEN_ITEM;Firma;Jahr;Periode;PosNr;KontoNr;Name;
-#              ;;BelegNr;Datum;Zahlungsbedingung;Faellig;;;
+#              ;;BelegNr;Datum;Zahlungsbedingung;Fällig;;;
 #              ;Bezahlt;Ursprung;Skonto;OffenerBetrag
 _OP_IDX_KONTO_NR = 5
 _OP_IDX_NAME = 6
@@ -63,14 +63,14 @@ _OP_IDX_BETRAG = 19  # Offener Betrag (nicht Ursprungsbetrag)
 
 
 def _safe_field(row: list[str], idx: int, default: str = "") -> str:
-    """Gibt ein Feld zurueck oder den Defaultwert bei fehlendem Index."""
+    """Gibt ein Feld zurück oder den Defaultwert bei fehlendem Index."""
     if idx < len(row):
         return row[idx]
     return default
 
 
 def _ist_debitor(konto_nr: int) -> bool:
-    """Prueft ob ein Konto ein Debitorenkonto (Forderungen/Kunden) ist.
+    """Prüft ob ein Konto ein Debitorenkonto (Forderungen/Kunden) ist.
 
     Collmex Personenkonten: 10000-69999 = Debitoren, 70000+ = Kreditoren.
     SKR03 Sachkonten: 1000-1399 = Forderungen (Debitor-nah).
@@ -94,7 +94,7 @@ def _parse_date(datestr: str) -> date | None:
 
 
 class ReportsEngine:
-    """Erzeugt kaufmaennische Auswertungen aus Collmex-Kontensalden.
+    """Erzeugt kaufmännische Auswertungen aus Collmex-Kontensalden.
 
     Args:
         api_client: Ein initialisierter CollmexClient.
@@ -111,7 +111,7 @@ class ReportsEngine:
         """Berechnet eine BWA aus ACCBAL_GET-Daten.
 
         Struktur:
-            1. Umsatzerloese (8100-8700)
+            1. Umsatzerlöse (8100-8700)
             2. - Personalkosten (4100-4199)
             3. - Raumkosten (4200-4299)
             4. - Betriebskosten (4300-4499)
@@ -122,11 +122,11 @@ class ReportsEngine:
             9. = Betriebsergebnis
 
         Args:
-            jahr: Geschaeftsjahr (z.B. 2026).
+            jahr: Geschäftsjahr (z.B. 2026).
             monat: Buchungsperiode (1-12).
 
         Returns:
-            dict mit Schluessel fuer jede Position, 'summe_kosten',
+            dict mit Schlüssel für jede Position, 'summe_kosten',
             'betriebsergebnis', und 'positionen' (geordnete Liste).
         """
         rows = self.client.get_balances(jahr, monat)
@@ -162,9 +162,9 @@ class ReportsEngine:
                     summe += saldo
             positionen[bereich] = summe
 
-        # Erloese als positive Zahl (Ertragskonten haben Haben-Saldo,
+        # Erlöse als positive Zahl (Ertragskonten haben Haben-Saldo,
         # der in Collmex negativ dargestellt sein kann — wir nehmen abs)
-        erloese = abs(positionen.get("umsatzerloese", Decimal("0")))
+        erlöse = abs(positionen.get("umsatzerlöse", Decimal("0")))
 
         # Kosten summieren (Aufwandskonten)
         kosten_keys = [
@@ -178,12 +178,12 @@ class ReportsEngine:
         ]
         summe_kosten = sum(abs(positionen.get(k, Decimal("0"))) for k in kosten_keys)
 
-        betriebsergebnis = erloese - summe_kosten
+        betriebsergebnis = erlöse - summe_kosten
 
         result = {
             "jahr": jahr,
             "monat": monat,
-            "umsatzerloese": erloese,
+            "umsatzerlöse": erlöse,
         }
 
         for key in kosten_keys:
@@ -192,10 +192,10 @@ class ReportsEngine:
         result["summe_kosten"] = summe_kosten
         result["betriebsergebnis"] = betriebsergebnis
 
-        # Geordnete Liste fuer Anzeige
+        # Geordnete Liste für Anzeige
         result["positionen"] = (
             [
-                {"bezeichnung": BWA_BEZEICHNUNGEN["umsatzerloese"], "betrag": erloese},
+                {"bezeichnung": BWA_BEZEICHNUNGEN["umsatzerlöse"], "betrag": erlöse},
             ]
             + [{"bezeichnung": BWA_BEZEICHNUNGEN[k], "betrag": result[k]} for k in kosten_keys]
             + [
@@ -214,7 +214,7 @@ class ReportsEngine:
         """Summen- und Saldenliste: alle bebuchten Konten.
 
         Args:
-            jahr: Geschaeftsjahr.
+            jahr: Geschäftsjahr.
             monat: Buchungsperiode (1-12).
 
         Returns:
@@ -293,22 +293,22 @@ class ReportsEngine:
             name = _safe_field(row, _OP_IDX_NAME)
             beleg_nr = _safe_field(row, _OP_IDX_BELEG_NR)
             datum_str = _safe_field(row, _OP_IDX_DATUM)
-            faellig_str = _safe_field(row, _OP_IDX_FAELLIG)
+            fällig_str = _safe_field(row, _OP_IDX_FAELLIG)
             betrag = parse_amount(_safe_field(row, _OP_IDX_BETRAG, "0"))
 
-            faellig = _parse_date(faellig_str)
-            tage_ueberfaellig = 0
-            if faellig and faellig < heute:
-                tage_ueberfaellig = (heute - faellig).days
+            fällig = _parse_date(fällig_str)
+            tage_ueberfällig = 0
+            if fällig and fällig < heute:
+                tage_ueberfällig = (heute - fällig).days
 
             eintrag = {
                 "konto_nr": konto_nr,
                 "name": name,
                 "beleg_nr": beleg_nr,
                 "datum": datum_str,
-                "faellig": faellig_str,
+                "fällig": fällig_str,
                 "betrag": betrag,
-                "tage_ueberfaellig": tage_ueberfaellig,
+                "tage_ueberfällig": tage_ueberfällig,
             }
 
             # Debitoren vs. Kreditoren:
@@ -341,67 +341,67 @@ class ReportsEngine:
         Returns:
             dict mit Altersgruppen und Summen:
             - 'aktuell': 0-30 Tage
-            - 'ueberfaellig_30': 31-60 Tage
-            - 'ueberfaellig_60': 61-90 Tage
-            - 'ueberfaellig_90': >90 Tage
+            - 'überfällig_30': 31-60 Tage
+            - 'überfällig_60': 61-90 Tage
+            - 'überfällig_90': >90 Tage
         """
         gruppen: dict[str, Decimal] = {
             "aktuell": Decimal("0"),
-            "ueberfaellig_30": Decimal("0"),
-            "ueberfaellig_60": Decimal("0"),
-            "ueberfaellig_90": Decimal("0"),
+            "überfällig_30": Decimal("0"),
+            "überfällig_60": Decimal("0"),
+            "überfällig_90": Decimal("0"),
         }
         for p in posten:
-            tage = p.get("tage_ueberfaellig", 0)
+            tage = p.get("tage_ueberfällig", 0)
             betrag = p.get("betrag", Decimal("0"))
             if tage <= 30:
                 gruppen["aktuell"] += betrag
             elif tage <= 60:
-                gruppen["ueberfaellig_30"] += betrag
+                gruppen["überfällig_30"] += betrag
             elif tage <= 90:
-                gruppen["ueberfaellig_60"] += betrag
+                gruppen["überfällig_60"] += betrag
             else:
-                gruppen["ueberfaellig_90"] += betrag
+                gruppen["überfällig_90"] += betrag
         return gruppen
 
     # ------------------------------------------------------------------
-    # Saeumige Kunden
+    # Säumige Kunden
     # ------------------------------------------------------------------
 
-    def saeumige_kunden(self) -> list[dict]:
-        """Kunden mit ueberfaelligen Rechnungen, sortiert nach Tage ueberfaellig.
+    def säumige_kunden(self) -> list[dict]:
+        """Kunden mit überfälligen Rechnungen, sortiert nach Tage überfällig.
 
         Returns:
-            Liste von dicts mit: name, beleg_nr, betrag, faellig,
-            tage_ueberfaellig, mahnstufe — absteigend sortiert nach
-            tage_ueberfaellig.
+            Liste von dicts mit: name, beleg_nr, betrag, fällig,
+            tage_ueberfällig, mahnstufe — absteigend sortiert nach
+            tage_ueberfällig.
         """
         op = self.op_liste()
-        saeumige: list[dict] = []
+        säumige: list[dict] = []
 
         for posten in op["debitoren"]:
-            if posten["tage_ueberfaellig"] > 0:
-                tage = posten["tage_ueberfaellig"]
+            if posten["tage_ueberfällig"] > 0:
+                tage = posten["tage_ueberfällig"]
                 mahnstufe = self._mahnstufe(tage)
-                saeumige.append(
+                säumige.append(
                     {
                         "name": posten["name"],
                         "beleg_nr": posten["beleg_nr"],
                         "betrag": posten["betrag"],
-                        "faellig": posten["faellig"],
-                        "tage_ueberfaellig": tage,
+                        "fällig": posten["fällig"],
+                        "tage_ueberfällig": tage,
                         "mahnstufe": mahnstufe,
                     }
                 )
 
-        saeumige.sort(key=lambda x: x["tage_ueberfaellig"], reverse=True)
-        return saeumige
+        säumige.sort(key=lambda x: x["tage_ueberfällig"], reverse=True)
+        return säumige
 
     @staticmethod
     def _mahnstufe(tage: int) -> int:
-        """Berechnet Mahnstufe basierend auf Tagen ueberfaellig.
+        """Berechnet Mahnstufe basierend auf Tagen überfällig.
 
-        0 = nicht/kaum ueberfaellig (1-30 Tage)
+        0 = nicht/kaum überfällig (1-30 Tage)
         1 = 31-60 Tage
         2 = 61-90 Tage
         3 = >90 Tage

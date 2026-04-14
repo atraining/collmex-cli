@@ -29,16 +29,16 @@ class TaxEngine:
     # ------------------------------------------------------------------
 
     def _get_saldo(self, konto: int, jahr: int, monat: int) -> Decimal:
-        """Liest den Saldo eines Kontos fuer eine bestimmte Periode.
+        """Liest den Saldo eines Kontos für eine bestimmte Periode.
 
-        Gibt den Nettobetrag zurueck:
+        Gibt den Nettobetrag zurück:
         - Aktivkonten/Aufwandskonten: Soll - Haben (positiv = Soll-Saldo)
         - Passivkonten/Ertragskonten: Haben - Soll (positiv = Haben-Saldo)
 
-        Fuer die UStVA-Berechnung wird der absolute Saldo benoetigt,
+        Für die UStVA-Berechnung wird der absolute Saldo benötigt,
         die Vorzeichen-Interpretation erfolgt in ustva().
 
-        Gibt Decimal(0) zurueck wenn das Konto in Collmex nicht existiert
+        Gibt Decimal(0) zurück wenn das Konto in Collmex nicht existiert
         (z.B. Konto 1580 Vorsteuer §13b, wenn nicht angelegt).
         """
         try:
@@ -63,20 +63,20 @@ class TaxEngine:
     # ------------------------------------------------------------------
 
     def ustva(self, jahr: int, monat: int) -> dict:
-        """Berechnet die Werte fuer die Umsatzsteuer-Voranmeldung.
+        """Berechnet die Werte für die Umsatzsteuer-Voranmeldung.
 
         Liest die relevanten SKR03-Konten und berechnet die UStVA-Kennzahlen.
 
         Args:
-            jahr: Geschaeftsjahr (z.B. 2026).
+            jahr: Geschäftsjahr (z.B. 2026).
             monat: Voranmeldungszeitraum (1-12).
 
         Returns:
             dict mit UStVA-Kennzahlen:
-                - kz81: Steuerpflichtige Umsaetze 19% (Netto, Konto 8400)
-                - kz86: Steuerpflichtige Umsaetze 7% (Netto, Konto 8300)
-                - ust_19: USt auf Umsaetze 19% (Konto 1776)
-                - ust_7: USt auf Umsaetze 7% (Konto 1771)
+                - kz81: Steuerpflichtige Umsätze 19% (Netto, Konto 8400)
+                - kz86: Steuerpflichtige Umsätze 7% (Netto, Konto 8300)
+                - ust_19: USt auf Umsätze 19% (Konto 1776)
+                - ust_7: USt auf Umsätze 7% (Konto 1771)
                 - ust_zahllast: Gesamte USt-Zahllast (1776 + 1771)
                 - kz66: Vorsteuer 19% (Konto 1576)
                 - kz61: Vorsteuer 7% (Konto 1571)
@@ -84,15 +84,15 @@ class TaxEngine:
                 - vst_abzug: Gesamter Vorsteuerabzug (1576 + 1571 + 1580)
                 - vorauszahlung: Zahllast - Abzug
                 - kz83: Verbleibende USt-Vorauszahlung (= vorauszahlung)
-                - jahr: Geschaeftsjahr
+                - jahr: Geschäftsjahr
                 - monat: Voranmeldungszeitraum
         """
-        # --- Umsaetze (Ertragskonten: Haben-Saldo, daher negativ) ---
-        # Konto 8400: Erloese 19% USt
+        # --- Umsätze (Ertragskonten: Haben-Saldo, daher negativ) ---
+        # Konto 8400: Erlöse 19% USt
         raw_8400 = self._get_saldo(8400, jahr, monat)
         kz81 = abs(raw_8400)
 
-        # Konto 8300: Erloese 7% USt
+        # Konto 8300: Erlöse 7% USt
         raw_8300 = self._get_saldo(8300, jahr, monat)
         kz86 = abs(raw_8300)
 

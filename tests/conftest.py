@@ -21,6 +21,17 @@ from collmex.api import (
 )
 from collmex.models import Booking, BookingLine, CollmexKunde
 
+
+@pytest.fixture(autouse=True)
+def _fake_collmex_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Setzt Dummy-Credentials, damit CollmexClient() in Tests instanziiert
+    werden kann, ohne dass eine echte .env-Datei vorhanden sein muss (CI)."""
+    monkeypatch.setenv("COLLMEX_URL", "https://example.invalid/cgi-bin/cgi.exe?0,0,data_exchange")
+    monkeypatch.setenv("COLLMEX_USER", "testuser")
+    monkeypatch.setenv("COLLMEX_PASSWORD", "testpass")
+    monkeypatch.setenv("COLLMEX_CUSTOMER", "999999")
+
+
 # ---------------------------------------------------------------------------
 # Mock API Client
 # ---------------------------------------------------------------------------

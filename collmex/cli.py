@@ -957,9 +957,7 @@ def storno(
 
     if typ == "eingang":
         if not lieferant:
-            error_console.print(
-                "[bold red]Fehler:[/] --lieferant ist Pflicht für Eingangs-Storno."
-            )
+            error_console.print("[bold red]Fehler:[/] --lieferant ist Pflicht für Eingangs-Storno.")
             sys.exit(1)
         original = engine.create_eingangsrechnung(
             betrag_netto=betrag_decimal,

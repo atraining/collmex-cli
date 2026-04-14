@@ -27,9 +27,7 @@ def _make_booking(
     """Hilfsfunktion: erzeugt einen gültigen Buchungsbeleg."""
     if positionen is None:
         positionen = [
-            BookingLine(
-                1, 4400, "Bürobedarf", "S", Decimal("500.00"), buchungstext="Büromaterial"
-            ),
+            BookingLine(1, 4400, "Bürobedarf", "S", Decimal("500.00"), buchungstext="Büromaterial"),
             BookingLine(
                 2, 1576, "Vorsteuer 19%", "S", Decimal("95.00"), buchungstext="Büromaterial"
             ),

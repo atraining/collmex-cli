@@ -8,9 +8,9 @@ Die Collmex-API deckt nicht alles ab. Folgende Daten gibt es NUR per Web-UI:
 - **Zahlungsbedingungen** (Skonto-Tage, Skonto-%, Netto-Tage)
 - **Firmenstammdaten** (Steuernummer, USt-IdNr, Adresse)
 - **SMTP/E-Mail-Einstellungen** (Postausgangsserver)
-- **Nummernvergabe** (Start-Nummern fuer Rechnungen, Auftraege etc.)
+- **Nummernvergabe** (Start-Nummern für Rechnungen, Aufträge etc.)
 - **Textbausteine** (Rechnungstexte, Mahnungstexte)
-- **Mahnungseinstellungen** (Mahnstufen, Gebuehren, Fristen)
+- **Mahnungseinstellungen** (Mahnstufen, Gebühren, Fristen)
 - **Kontenrahmen-Einstellungen** (SKR03/SKR04, individuelle Konten)
 - **Druck-/Mail-Vorlagen**
 
@@ -60,7 +60,7 @@ print(r3.text)  # HTML der Einstellungen-Seite
 ### Warum 2 Schritte?
 
 Collmex initialisiert beim GET auf die Login-Seite Session-Cookies.
-Ohne Schritt 1 wird der POST in Schritt 2 abgelehnt (kein gueltiger Session-State).
+Ohne Schritt 1 wird der POST in Schritt 2 abgelehnt (kein gültiger Session-State).
 
 ### Cookies nach erfolgreichem Login
 
@@ -75,7 +75,7 @@ URL-Format: `https://www.collmex.de/c.cmx?{kundennr},{parameter}`
 
 | Parameter | Seite |
 |-----------|-------|
-| `1,settings` | Einstellungen-Uebersicht |
+| `1,settings` | Einstellungen-Übersicht |
 | `1,coch,1` | Firmenstammdaten (Adresse, Steuernr, USt-IdNr) |
 | `1,ac` | Kontenrahmen (alle Konten) |
 | `1,uomch` | Mengeneinheiten |
@@ -120,7 +120,7 @@ html = r3.text
 
 ### HTML parsen
 
-Die Seiten enthalten Standard-HTML-Tabellen. Fuer einfaches Parsen:
+Die Seiten enthalten Standard-HTML-Tabellen. Für einfaches Parsen:
 ```python
 from html.parser import HTMLParser
 # oder: pip install beautifulsoup4
@@ -132,18 +132,18 @@ tables = soup.find_all('table')
 
 ## Sicherheitshinweise
 
-- Web-Credentials gehoeren in `.env`, NICHT in Code oder Git
+- Web-Credentials gehören in `.env`, NICHT in Code oder Git
 - `.env` steht in `.gitignore` → wird nicht committed
-- Session-Cookies sind temporaer und verfallen nach Inaktivitaet
-- Fuer Mandanten-Forks: `.env` pro Mandant individuell
+- Session-Cookies sind temporär und verfallen nach Inaktivität
+- Für Mandanten-Forks: `.env` pro Mandant individuell
 
 ## Sachkonto anlegen per Web-UI
 
 Collmex SKR03 hat einen reduzierten Kontenrahmen. Fehlende Konten (z.B. 0868)
-muessen per Web-UI angelegt werden.
+müssen per Web-UI angelegt werden.
 
 ```python
-# WICHTIG: acch (aendern), NICHT accr (anlegen)!
+# WICHTIG: acch (ändern), NICHT accr (anlegen)!
 session.post(
     f'https://www.collmex.de/c.cmx?{COLLMEX_KUNDENNR},1,acch',
     data={
@@ -155,8 +155,8 @@ session.post(
 ```
 
 Die `accr`-Seite erwartet eine existierende Vorlage (group_vorlage) und
-schlaegt fehl wenn das Konto noch nicht existiert. `acch` funktioniert
-auch fuer neue Konten.
+schlägt fehl wenn das Konto noch nicht existiert. `acch` funktioniert
+auch für neue Konten.
 
 ## Wann API vs. Web-UI?
 
@@ -166,7 +166,7 @@ auch fuer neue Konten.
 | Rechnungen erstellen | ja | nein |
 | Kunden/Lieferanten pflegen | ja | nein |
 | Salden/OP abfragen | ja | nein |
-| Firmenstammdaten aendern | NEIN | ja |
+| Firmenstammdaten ändern | NEIN | ja |
 | SMTP konfigurieren | NEIN | ja |
 | Mengeneinheiten sehen | NEIN | ja |
 | Zahlungsbedingungen sehen | NEIN | ja |

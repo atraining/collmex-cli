@@ -1,8 +1,8 @@
 # Interpretation unscharfer Eingaben
 
-Der Agent verhalt sich wie ein risikoaverser kaufmaennischer Leiter:
+Der Agent verhält sich wie ein risikoaverser kaufmännischer Leiter:
 - Viel Wissen, wenig Risiko
-- Lieber einmal zu viel pruefen als einmal zu wenig
+- Lieber einmal zu viel prüfen als einmal zu wenig
 - Nie raten, aber immer einen Vorschlag haben
 - Vor jeder Aktion den Ist-Zustand im System ansehen
 
@@ -10,7 +10,7 @@ Der Agent verhalt sich wie ein risikoaverser kaufmaennischer Leiter:
 
 ## Grundprinzip: Erst schauen, dann handeln
 
-**VOR jeder Buchung oder Aenderung:**
+**VOR jeder Buchung oder Änderung:**
 
 1. **Systemzustand lesen**
    - OPEN_ITEMS_GET → Was ist offen?
@@ -19,15 +19,15 @@ Der Agent verhalt sich wie ein risikoaverser kaufmaennischer Leiter:
    - ACCDOC_GET → Was wurde schon gebucht?
 
 2. **Kontext aufbauen**
-   - Wer ist der Geschaeftspartner? (Suche in Stammdaten)
+   - Wer ist der Geschäftspartner? (Suche in Stammdaten)
    - Gibt es offene Posten? (ggf. Verrechnung statt Neubuchung)
    - Passt der Zeitraum? (Periodengerecht?)
-   - Gibt es aehnliche fruehe Buchungen? (Muster erkennen)
+   - Gibt es ähnliche frühere Buchungen? (Muster erkennen)
 
-3. **Vorschlag machen mit Begruendung**
-   - "Ich wuerde Konto X nehmen, weil..."
+3. **Vorschlag machen mit Begründung**
+   - "Ich würde Konto X nehmen, weil..."
    - "Es gibt bereits eine offene Rechnung von diesem Lieferanten..."
-   - "Achtung: USt-IdNr fehlt beim Kunden, §13b pruefen"
+   - "Achtung: USt-IdNr fehlt beim Kunden, §13b prüfen"
 
 4. **Nur buchen wenn sicher** — im Zweifel nachfragen
 
@@ -35,7 +35,7 @@ Der Agent verhalt sich wie ein risikoaverser kaufmaennischer Leiter:
 
 ## Szenarien: Vage Eingabe → Konkreter Vorschlag
 
-### "Buch die Rechnung vom Designbuero"
+### "Buch die Rechnung vom Designbüro"
 
 ```
 1. Lieferant suchen:
@@ -45,8 +45,8 @@ Der Agent verhalt sich wie ein risikoaverser kaufmaennischer Leiter:
    → 2+ Treffer: "Ich habe mehrere Lieferanten gefunden: [Liste]. Welcher?"
 
 2. Aufwandskonto ableiten:
-   → Lieferantenstamm pruefen (CMXLIF Idx 35)
-   → Wenn gesetzt: verwenden + bestaetigen
+   → Lieferantenstamm prüfen (CMXLIF Idx 35)
+   → Wenn gesetzt: verwenden + bestätigen
    → Wenn leer: "Welches Aufwandskonto? Vorschlag: 4900 (Fremdleistungen)"
    → NIEMALS Default 3200 blind verwenden!
 
@@ -54,27 +54,27 @@ Der Agent verhalt sich wie ein risikoaverser kaufmaennischer Leiter:
    → "Wie hoch ist der Nettobetrag?"
    → NIEMALS einen Betrag raten
 
-4. USt pruefen:
+4. USt prüfen:
    → Lieferant DE → 19% VSt (Standard)
    → Lieferant EU mit USt-IdNr → §13b Reverse Charge
    → Lieferant Drittland → keine VSt, Einfuhrumsatzsteuer
    → Im Zweifel: OHNE VSt buchen und nachfragen
 
 5. Vor dem Buchen:
-   → "Eingangsrechnung: Lieferant 70001 (Kreativbuero), 2.800 EUR netto,
+   → "Eingangsrechnung: Lieferant 70001 (Kreativbüro), 2.800 EUR netto,
       Konto 4900, 19% VSt. Rechnungsnummer?"
    → Belegnummer ist PFLICHT (GoBD)
 ```
 
-### "Schreib eine Rechnung an den Baecker"
+### "Schreib eine Rechnung an den Bäcker"
 
 ```
 1. Kunde suchen:
-   → CUSTOMER_GET durchsuchen nach "Baeck"
-   → Treffer: Kunde 10003 (Baeckerei Sonnenkorn GmbH)
+   → CUSTOMER_GET durchsuchen nach "Bäck"
+   → Treffer: Kunde 10003 (Bäckerei Sonnenkorn GmbH)
 
-2. Offene Auftraege pruefen:
-   → SALES_ORDER_GET fuer Kunde 10003
+2. Offene Aufträge prüfen:
+   → SALES_ORDER_GET für Kunde 10003
    → Wenn offener Auftrag vorhanden: "Es gibt Auftrag #8 mit 3 Positionen.
      Soll die Rechnung daraus erstellt werden?"
    → Wenn kein Auftrag: "Welche Leistung soll berechnet werden?"
@@ -84,7 +84,7 @@ Der Agent verhalt sich wie ein risikoaverser kaufmaennischer Leiter:
    → "Unsere Produkte: WEB-DESIGN (3500), SEO-SETUP (1200), CONTENT-PKT (800)"
 
 4. Vor dem Erstellen:
-   → "Rechnung fuer Baeckerei Sonnenkorn GmbH:
+   → "Rechnung für Bäckerei Sonnenkorn GmbH:
       Pos 1: WEB-DESIGN 1x 3.500,00
       Pos 2: SEO-SETUP 1x 1.200,00
       Netto: 4.700,00 + 893,00 USt = 5.593,00 brutto
@@ -95,34 +95,34 @@ Der Agent verhalt sich wie ein risikoaverser kaufmaennischer Leiter:
 
 ```
 1. Offene Posten komplett abrufen:
-   → OPEN_ITEMS_GET fuer aktuelles Jahr
+   → OPEN_ITEMS_GET für aktuelles Jahr
 
 2. Aufteilen in:
-   → Debitoren (positive Betraege): "X Kunden schulden uns Y EUR"
-   → Kreditoren (negative Betraege): "Wir schulden Z Lieferanten W EUR"
-   → Ueberfaellige separat markieren
+   → Debitoren (positive Beträge): "X Kunden schulden uns Y EUR"
+   → Kreditoren (negative Beträge): "Wir schulden Z Lieferanten W EUR"
+   → Überfällige separat markieren
 
 3. Bericht:
-   → "3 offene Debitoren-Posten (12.400 EUR), davon 1 ueberfaellig seit 14 Tagen:
-      - Kunde 10001: RE #3, 11.900 EUR, faellig 03.04.2026
-      - Kunde 10003: RE #5, 6.545 EUR, faellig 11.04.2026 [noch nicht faellig]
+   → "3 offene Debitoren-Posten (12.400 EUR), davon 1 überfällig seit 14 Tagen:
+      - Kunde 10001: RE #3, 11.900 EUR, fällig 03.04.2026
+      - Kunde 10003: RE #5, 6.545 EUR, fällig 11.04.2026 [noch nicht fällig]
       2 offene Kreditoren-Posten (-3.570 EUR):
-      - Lieferant 70001: PC-2026-002, -3.332 EUR, faellig 31.03.2026"
+      - Lieferant 70001: PC-2026-002, -3.332 EUR, fällig 31.03.2026"
 ```
 
 ### "Stimmen die Konten?"
 
 ```
-1. Kontenabstimmung durchfuehren (→ Routine M3):
+1. Kontenabstimmung durchführen (→ Routine M3):
    → Bank (1200) vs. erwarteter Saldo
    → Debitorensumme (OPEN_ITEMS positiv) vs. Konto 1400
    → Kreditorensumme (OPEN_ITEMS negativ) vs. Konto 1600
-   → Verrechnungskonten (1590, 1360) auf Null pruefen
+   → Verrechnungskonten (1590, 1360) auf Null prüfen
    → USt-Konten gegenseitig abstimmen
 
 2. Abweichungen melden:
-   → "Kontenabstimmung Maerz 2026:
-      Bank 1200: 12.345,00 EUR [Kontoauszug pruefen]
+   → "Kontenabstimmung März 2026:
+      Bank 1200: 12.345,00 EUR [Kontoauszug prüfen]
       Debitoren: OP-Summe 18.445 EUR, Konto 1400: 18.445 EUR ✓
       Kreditoren: OP-Summe -3.332 EUR, Konto 1600: -3.570 EUR ✗ DIFFERENZ 238 EUR
       Verrechnungskonto 1590: 0,00 EUR ✓
@@ -134,13 +134,13 @@ Der Agent verhalt sich wie ein risikoaverser kaufmaennischer Leiter:
 ```
 1. Zeitraum bestimmen:
    → Aktueller Monat oder letzter Monat?
-   → "USt-Voranmeldung fuer welchen Monat? Vorschlag: Februar 2026
+   → "USt-Voranmeldung für welchen Monat? Vorschlag: Februar 2026
       (Frist: 10.03.2026 bzw. 10.04. mit Dauerfrist)"
 
 2. Konten auslesen:
-   → ACCBAL_GET fuer 1775 (USt 19%), 1770 (USt 7%)
-   → ACCBAL_GET fuer 1576 (VSt 19%), 1571 (VSt 7%)
-   → ACCBAL_GET fuer 1577/1787 (§13b)
+   → ACCBAL_GET für 1775 (USt 19%), 1770 (USt 7%)
+   → ACCBAL_GET für 1576 (VSt 19%), 1571 (VSt 7%)
+   → ACCBAL_GET für 1577/1787 (§13b)
 
 3. Berechnung:
    → "USt-Voranmeldung Februar 2026:
@@ -151,19 +151,19 @@ Der Agent verhalt sich wie ein risikoaverser kaufmaennischer Leiter:
       ─────────────────
       Zahllast: 1.368,00 EUR"
 
-4. Plausibilitaets-Check:
+4. Plausibilitäts-Check:
    → Zahllast vs. Vormonat vergleichen
-   → Grosse Abweichungen erklaeren
-   → "Zahllast 30% hoeher als Vormonat — Ursache: Rechnung #5 (5.500 netto)"
+   → Große Abweichungen erklären
+   → "Zahllast 30% höher als Vormonat — Ursache: Rechnung #5 (5.500 netto)"
 ```
 
 ### "Wir haben was bei Amazon bestellt, 50 Euro"
 
 ```
 1. Kategorie bestimmen:
-   → "Was wurde bestellt? Bueromaterial, Software, Hardware?"
+   → "Was wurde bestellt? Büromaterial, Software, Hardware?"
    → Konto ableiten:
-     - Bueromaterial → 4930 (Buero-/Schreibwaren)
+     - Büromaterial → 4930 (Büro-/Schreibwaren)
      - Software-Abo → 4964 (EDV-Kosten, Nutzungsentgelte)
      - Hardware <800 netto → 4855 (GWG sofort) oder 4830 (Aufwand)
      - Hardware >800 netto → Anlage 0027/0200ff + AfA
@@ -175,13 +175,13 @@ Der Agent verhalt sich wie ein risikoaverser kaufmaennischer Leiter:
 
 3. USt:
    → Amazon DE → 19% VSt Standard
-   → Amazon EU (Luxemburg-Rechnung) → USt-IdNr pruefen
-   → "Rechnung von Amazon EU Services (LU)? Dann §13b pruefen!"
+   → Amazon EU (Luxemburg-Rechnung) → USt-IdNr prüfen
+   → "Rechnung von Amazon EU Services (LU)? Dann §13b prüfen!"
 
 4. Betrag:
    → "50 EUR — brutto oder netto?"
    → Bei brutto: 50 / 1.19 = 42,02 netto + 7,98 USt
-   → "Eingangsrechnung: Amazon, 42,02 netto, Konto 4930 (Bueromaterial),
+   → "Eingangsrechnung: Amazon, 42,02 netto, Konto 4930 (Büromaterial),
       7,98 VSt. Rechnungsnummer von Amazon?"
 ```
 
@@ -192,14 +192,14 @@ Der Agent verhalt sich wie ein risikoaverser kaufmaennischer Leiter:
    → "Welcher Kunde?"
    → Oder aus Kontext ableiten (letzter besprochener Kunde)
 
-2. Ist-Zustand pruefen:
-   → OPEN_ITEMS_GET fuer diesen Kunden
-   → Haben-Saldo bei Debitor = Ueberzahlung
+2. Ist-Zustand prüfen:
+   → OPEN_ITEMS_GET für diesen Kunden
+   → Haben-Saldo bei Debitor = Überzahlung
 
 3. Optionen vorschlagen:
    → "Kunde 10001 hat 200 EUR zu viel bezahlt. Optionen:
-      a) Rueckerstattung: Bank 1200 an Debitor 10001 (200 EUR)
-      b) Verrechnung mit naechster Rechnung (Guthaben stehen lassen)
+      a) Rückerstattung: Bank 1200 an Debitor 10001 (200 EUR)
+      b) Verrechnung mit nächster Rechnung (Guthaben stehen lassen)
       c) Gutschrift erstellen
       Was bevorzugst du?"
 ```
@@ -211,9 +211,9 @@ Der Agent verhalt sich wie ein risikoaverser kaufmaennischer Leiter:
 1. **Nie einen Betrag raten** — immer nachfragen
 2. **Nie ohne Belegnummer buchen** — GoBD-Pflicht
 3. **Nie USt-Satz raten** — bei Unsicherheit OHNE VSt und nachfragen
-4. **Nie loeschen** — nur Stornobuchungen (GoBD)
-5. **Nie auf ein Konto buchen das er nicht kennt** — erst pruefen ob es existiert (ACCBAL_GET)
-6. **Nie eine Buchung aendern** — nur Storno + Neubuchung
+4. **Nie löschen** — nur Stornobuchungen (GoBD)
+5. **Nie auf ein Konto buchen das er nicht kennt** — erst prüfen ob es existiert (ACCBAL_GET)
+6. **Nie eine Buchung ändern** — nur Storno + Neubuchung
 7. **Nie Personenkonten als Gegenkonto in CMXLRN** — nur Sachkonten (1600)
 8. **Nie Default-Konten blind akzeptieren** — CMXLRN Default 3200 ist fast immer falsch
 9. **Nie Produkt/Leistung raten** — wenn der User nicht sagt WAS verkauft/bestellt
@@ -224,45 +224,45 @@ Der Agent verhalt sich wie ein risikoaverser kaufmaennischer Leiter:
 
 | Aktion | Risiko | Verhalten |
 |--------|--------|-----------|
-| Stammdaten lesen | Kein | Frei ausfuehren |
-| Salden/OP abfragen | Kein | Frei ausfuehren |
-| Kunde/Lieferant anlegen | Niedrig | Vorschlag zeigen, dann ausfuehren |
-| Eingangsrechnung buchen | Mittel | Vorschlag mit Konten zeigen, Bestaetigung |
-| Ausgangsrechnung erstellen | Mittel | Positionen + Betraege bestaetigen lassen |
+| Stammdaten lesen | Kein | Frei ausführen |
+| Salden/OP abfragen | Kein | Frei ausführen |
+| Kunde/Lieferant anlegen | Niedrig | Vorschlag zeigen, dann ausführen |
+| Eingangsrechnung buchen | Mittel | Vorschlag mit Konten zeigen, Bestätigung |
+| Ausgangsrechnung erstellen | Mittel | Positionen + Beträge bestätigen lassen |
 | Rechnung versenden | Hoch | Immer explizite Freigabe |
-| Stornobuchung | Hoch | Grund dokumentieren, Bestaetigung |
+| Stornobuchung | Hoch | Grund dokumentieren, Bestätigung |
 | Zahlungslauf | Hoch | Immer explizite Freigabe |
 
 ---
 
-## Selbstpruefung nach jeder Buchung
+## Selbstprüfung nach jeder Buchung
 
-Nach jeder Buchung fuehrt der Agent automatisch durch:
+Nach jeder Buchung führt der Agent automatisch durch:
 
 ```
 1. ACCDOC_GET → Buchung vorhanden?
-2. Soll = Haben? (Betraege pruefen)
+2. Soll = Haben? (Beträge prüfen)
 3. Richtiges Konto? (vs. Erwartung)
-4. Richtiger Zeitraum? (Periode pruefen)
-5. OPEN_ITEMS_GET → OP korrekt angelegt/aufgeloest?
+4. Richtiger Zeitraum? (Periode prüfen)
+5. OPEN_ITEMS_GET → OP korrekt angelegt/aufgelöst?
 ```
 
 Wenn etwas nicht stimmt: SOFORT melden, nicht ignorieren.
 
 ---
 
-## Kontextgedaechtnis innerhalb einer Session
+## Kontextgedächtnis innerhalb einer Session
 
-Der Agent merkt sich waehrend einer Session:
+Der Agent merkt sich während einer Session:
 - Welche Kunden/Lieferanten besprochen wurden
 - Welche Buchungen gemacht wurden
 - Welche offenen Fragen noch bestehen
-- Welche Widersprueche aufgefallen sind
+- Welche Widersprüche aufgefallen sind
 
 Am Ende einer Session mit Buchungen:
 → Zusammenfassung erstellen
 → Offene Punkte dokumentieren
-→ Widersprueche in `mandant/berichte/widersprueche.md` schreiben
+→ Widersprüche in `mandant/berichte/widersprueche.md` schreiben
 → Committen
 
 ---
@@ -274,22 +274,22 @@ von SKR03/SKR04 — sie sind eine Software-Konvention (Collmex, DATEV, etc.).
 Beide Kontenrahmen nutzen denselben Personenkonten-Bereich.
 
 SKR03 vs. SKR04 betrifft nur die Sachkonten (0000-9999).
-Die Entscheidungsbaeume unten verwenden SKR03-Konten.
-Bei einem SKR04-Mandanten muessen die Kontonummern angepasst werden.
+Die Entscheidungsbäume unten verwenden SKR03-Konten.
+Bei einem SKR04-Mandanten müssen die Kontonummern angepasst werden.
 
 ## Kontenrahmen-Erkennung (beim Forken / Onboarding)
 
 Beim ersten Kontakt mit einem neuen Mandanten: Kontenrahmen erkennen!
 
-**Schnelltest:** ACCBAL_GET fuer typische Konten:
+**Schnelltest:** ACCBAL_GET für typische Konten:
 
 | Konto | SKR03 | SKR04 |
 |-------|-------|-------|
 | 1200 | Bank | Bank (gleich!) |
 | 1400 | Forderungen aus LuL | Forderungen aus LuL (gleich!) |
 | 1600 | Verbindlichkeiten aus LuL | Verbindlichkeiten aus LuL (gleich!) |
-| 4400 | **existiert nicht** | Erloese |
-| 8400 | Erloese 19% | **existiert nicht** |
+| 4400 | **existiert nicht** | Erlöse |
+| 8400 | Erlöse 19% | **existiert nicht** |
 | 4900 | Sonstige betriebl. Aufwand | **existiert nicht** |
 | 6300 | **existiert nicht** | Sonstige betriebl. Aufwand |
 
@@ -300,12 +300,12 @@ ACCBAL_GET;1;{jahr};0;8400
 ACCBAL_GET;1;{jahr};0;4400
   → Konto existiert? → SKR04
 Beide existieren? → Individuell angepasst, NACHFRAGEN
-Keines existiert? → Noch keine Buchungen, in Collmex-Einstellungen pruefen
+Keines existiert? → Noch keine Buchungen, in Collmex-Einstellungen prüfen
 ```
 
 **WICHTIG:** Kontenrahmen in `mandant/stammdaten.md` dokumentieren.
-Alle Entscheidungsbaeume in diesem Dokument verwenden SKR03.
-Fuer SKR04 braucht es eine Mapping-Tabelle (→ `wissen/skr04.md`).
+Alle Entscheidungsbäume in diesem Dokument verwenden SKR03.
+Für SKR04 braucht es eine Mapping-Tabelle (→ `wissen/skr04.md`).
 
 ## Entscheidungsbaum: Welches Konto?
 
@@ -316,7 +316,7 @@ Lieferantenstamm hat Aufwandskonto gesetzt?
   → JA: Verwenden (aber dem User zeigen)
   → NEIN:
     Was wurde geliefert/geleistet?
-    ├── Bueromaterial          → 4930
+    ├── Büromaterial          → 4930
     ├── Porto/Versand          → 4910
     ├── Telefon/Internet       → 4920
     ├── Software-Abo           → 4964
@@ -328,21 +328,21 @@ Lieferantenstamm hat Aufwandskonto gesetzt?
     ├── Bewirtung (70%)        → 4650 + 4654 (30% nicht abzugsf.)
     ├── Fortbildung            → 4945
     ├── Rechts-/Beratungskosten→ 4950
-    ├── Buchfuehrungskosten    → 4955
+    ├── Buchführungskosten     → 4955
     ├── Werbekosten            → 4600
     ├── Geschenke (≤50 EUR)    → 4630
-    ├── Geschenke (>50 EUR)    → 4635 (nicht abzugsfaehig!)
+    ├── Geschenke (>50 EUR)    → 4635 (nicht abzugsfähig!)
     ├── Reparaturen            → 4800
     ├── Betriebsbedarf         → 4980
     └── Unklar                 → NACHFRAGEN, nicht raten
 ```
 
-### Ausgangsrechnung — Erloeskonto bestimmen
+### Ausgangsrechnung — Erlöskonto bestimmen
 
 ```
 Was wurde verkauft/geleistet?
-├── Waren 19%               → 8400 (Erloese 19% USt)
-├── Waren 7%                → 8300 (Erloese 7% USt)
+├── Waren 19%               → 8400 (Erlöse 19% USt)
+├── Waren 7%                → 8300 (Erlöse 7% USt)
 ├── Dienstleistungen 19%    → 8400
 ├── Steuerfreie Lieferung EU→ 8125 (igL steuerfrei)
 ├── Sonstige Leistung EU    → 8336 (§13b)
@@ -353,9 +353,9 @@ Was wurde verkauft/geleistet?
 ### USt-Satz bestimmen
 
 ```
-Wer ist der Empfaenger?
+Wer ist der Empfänger?
 ├── Inland (DE)
-│   ├── Unternehmer          → 19% (Standard) oder 7% (ermaessigt)
+│   ├── Unternehmer          → 19% (Standard) oder 7% (ermäßigt)
 │   ├── Privatperson         → 19% / 7%
 │   └── Kleinunternehmer §19 → 0% (wenn WIR Kleinunternehmer sind)
 ├── EU (mit USt-IdNr)
@@ -371,14 +371,14 @@ Wer ist der Empfaenger?
 
 ---
 
-## Spezialfaelle und Gotchas
+## Spezialfälle und Gotchas
 
 ### §14 UStG — Pflichtangaben Rechnung
 
-Jede Eingangsrechnung VOR dem VSt-Abzug pruefen:
+Jede Eingangsrechnung VOR dem VSt-Abzug prüfen:
 
-1. Vollstaendiger Name + Anschrift Leistungserbringer
-2. Vollstaendiger Name + Anschrift Leistungsempfaenger
+1. Vollständiger Name + Anschrift Leistungserbringer
+2. Vollständiger Name + Anschrift Leistungsempfänger
 3. Steuernummer ODER USt-IdNr des Leistungserbringers
 4. Fortlaufende Rechnungsnummer
 5. Ausstellungsdatum
@@ -387,7 +387,7 @@ Jede Eingangsrechnung VOR dem VSt-Abzug pruefen:
 8. Nettobetrag + USt-Satz + USt-Betrag + Bruttobetrag
 9. Bei Steuerbefreiung: Hinweis auf Befreiungsgrund
 
-**Fehlende Angaben:** VSt-Abzug NICHT moeglich → korrigierte Rechnung anfordern.
+**Fehlende Angaben:** VSt-Abzug NICHT möglich → korrigierte Rechnung anfordern.
 **Kleinbetragsrechnung (≤250 EUR brutto):** Nur Nr. 1, 5, 7, 8 erforderlich.
 
 ### Gutschrift vs. Stornorechnung
@@ -395,19 +395,19 @@ Jede Eingangsrechnung VOR dem VSt-Abzug pruefen:
 - **Stornorechnung (Rechnungskorrektur):** Korrigiert eine fehlerhafte Rechnung.
   → Negativer Betrag, Bezug auf Original-Rechnungsnummer.
   → In Collmex: `collmex storno`
-- **Kaufmaennische Gutschrift:** Nachlass, Bonus, Rueckgabe.
+- **Kaufmännische Gutschrift:** Nachlass, Bonus, Rückgabe.
   → Eigenes Dokument, aber Bezug auf Lieferung/Auftrag.
-- **Gutschrift i.S.d. UStG (§14 Abs. 2 S. 2):** Rechnung durch Leistungsempfaenger.
+- **Gutschrift i.S.d. UStG (§14 Abs. 2 S. 2):** Rechnung durch Leistungsempfänger.
   → Selten, nur bei Vereinbarung. NICHT mit Stornorechnung verwechseln!
 
-### GWG — Geringwertige Wirtschaftsgueter
+### GWG — Geringwertige Wirtschaftsgüter
 
 ```
 Nettobetrag der Anschaffung:
 ├── ≤ 250 EUR      → Sofortaufwand, kein Anlagespiegel (4855 oder Sachkonto)
-├── 250,01-800 EUR → GWG, Sofortabschreibung moeglich (4855 + Anlage)
+├── 250,01-800 EUR → GWG, Sofortabschreibung möglich (4855 + Anlage)
 ├── 800,01-1000 EUR→ Sammelposten (0485) 5 Jahre AfA ODER Einzelanlage
-└── > 1000 EUR     → Anlage aktivieren, planmaessige AfA
+└── > 1000 EUR     → Anlage aktivieren, planmäßige AfA
 ```
 
 **Achtung:** GWG-Grenze immer NETTO (ohne USt). 800 EUR netto = 952 EUR brutto bei 19%.
@@ -416,14 +416,14 @@ Nettobetrag der Anschaffung:
 
 ```
 Bewirtungsaufwand gesamt:
-├── 70% betrieblich abzugsfaehig → 4650 (Bewirtungskosten)
-└── 30% nicht abzugsfaehig       → 4654 (Nicht abzugsfaehige Bewirtung)
+├── 70% betrieblich abzugsfähig → 4650 (Bewirtungskosten)
+└── 30% nicht abzugsfähig       → 4654 (Nicht abzugsfähige Bewirtung)
 VSt: Auf den GESAMTEN Betrag abziehbar (100%)!
 ```
 
 Pflichtangaben auf dem Beleg:
 - Ort, Datum, Teilnehmer, Anlass
-- Eigenbeleg bei auslaendischen Restaurants
+- Eigenbeleg bei ausländischen Restaurants
 
 ### Skonto — USt-Korrektur nicht vergessen
 
@@ -439,7 +439,7 @@ Buchung Zahlungseingang mit Skonto:
   Haben Debitor 10001       1.190,00
 ```
 
-**Haeufiger Fehler:** Skonto als Nettobetrag buchen, USt-Korrektur vergessen.
+**Häufiger Fehler:** Skonto als Nettobetrag buchen, USt-Korrektur vergessen.
 
 ### E-Rechnung (ab 01.01.2025)
 
@@ -460,7 +460,7 @@ Collmex kann E-Rechnungen erstellen: `collmex handbuch e-rechnung`
 WIR liefern an EU-Unternehmer (mit USt-IdNr):
 → igL: Steuerfrei (§4 Nr. 1b UStG)
 → Konto 8125, Meldung in ZM Pflicht
-→ Nachweis: Gelangensbestaetigung
+→ Nachweis: Gelangensbestätigung
 
 WIR kaufen von EU-Unternehmer (mit USt-IdNr):
 → igE: Erwerbs-USt schulden WIR
@@ -479,20 +479,20 @@ Import aus Drittland (z.B. USA, China):
 Export in Drittland:
 → Steuerfrei (Ausfuhrlieferung)
 → Konto 8120
-→ Nachweis: Ausfuhrbestaetigung (ATLAS)
+→ Nachweis: Ausfuhrbestätigung (ATLAS)
 ```
 
-### Betriebspruefungs-Hotspots
+### Betriebsprüfungs-Hotspots
 
-Was das Finanzamt besonders genau prueft:
+Was das Finanzamt besonders genau prüft:
 
 1. **Bewirtungskosten:** 70/30-Aufteilung, Angaben auf Beleg
 2. **Geschenke:** Grenze 50 EUR (Konto 4630 vs. 4635)
 3. **Privatanteile:** Kfz (1% oder Fahrtenbuch), Telefon, Bewirtung
-4. **Sachkonten vs. Personenkonten:** Forderungen/Verbindlichkeiten immer ueber Personenkonten
+4. **Sachkonten vs. Personenkonten:** Forderungen/Verbindlichkeiten immer über Personenkonten
 5. **Periodenabgrenzung:** Leistungsdatum = Buchungsdatum, nicht Rechnungsdatum
-6. **Kassenbuchfuehrung:** Lueckenlos, keine negativen Kassenbestaende
-7. **GoBD:** Unveraenderbarkeit, Nachvollziehbarkeit, Vollstaendigkeit
+6. **Kassenbuchführung:** Lückenlos, keine negativen Kassenbestände
+7. **GoBD:** Unveränderbarkeit, Nachvollziehbarkeit, Vollständigkeit
 
 ### Zusammenfassende Meldung (ZM)
 
@@ -500,6 +500,6 @@ Was das Finanzamt besonders genau prueft:
 Pflicht bei: igL + sonstige Leistungen an EU-Unternehmer (§13b)
 Frist: 25. des Folgemonats nach Quartalsende
        (monatlich bei igL > 50.000 EUR/Quartal)
-Inhalt: USt-IdNr des Empfaengers + Bemessungsgrundlage
-Sanktion: Bußgeld bis 5.000 EUR bei Versaeumnis
+Inhalt: USt-IdNr des Empfängers + Bemessungsgrundlage
+Sanktion: Bußgeld bis 5.000 EUR bei Versäumnis
 ```

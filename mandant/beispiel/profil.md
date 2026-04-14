@@ -13,7 +13,7 @@
 - Handelsregister: HRB 00000 (Amtsgericht Musterstadt)
 - Steuernr: `00/000/00000` (Finanzamt Musterstadt)
 - USt-IdNr: `DE000000000`
-- Geschaeftsjahr: 01.01. - 31.12.
+- Geschäftsjahr: 01.01. - 31.12.
 
 ## Buchhaltung
 
@@ -22,21 +22,21 @@
 - Personenkonten:
   - Debitoren (Kunden): `10000 - 69999`
   - Kreditoren (Lieferanten): `70000 - 99999`
-- Manuell angelegte Konten: _(Liste mit Begruendung, z.B. "0868: Ausstehende Einlagen auf gez. Kapital")_
+- Manuell angelegte Konten: _(Liste mit Begründung, z.B. "0868: Ausstehende Einlagen auf gez. Kapital")_
 
 ## Umsatzsteuer
 
 - USt-Pflicht: Regelbesteuerung (alternativ: Kleinunternehmer §19 UStG)
-- Voranmeldung: monatlich / vierteljaehrlich / jaehrlich
-- Dauerfristverlaengerung: ja / nein
-- Relevante Saetze: 19% (Standard), 7% (ermaessigt), 0% (steuerfrei/igL)
-- Besonderheiten: _(z.B. "Haeufig §13b wegen EU-Lieferanten")_
+- Voranmeldung: monatlich / vierteljährlich / jährlich
+- Dauerfristverlängerung: ja / nein
+- Relevante Sätze: 19% (Standard), 7% (ermäßigt), 0% (steuerfrei/igL)
+- Besonderheiten: _(z.B. "Häufig §13b wegen EU-Lieferanten")_
 
 ## Steuerberater / DATEV
 
 - Kanzlei: _(Name)_
 - DATEV-Export: ja / nein
-- Uebergabe-Rhythmus: monatlich / quartalsweise
+- Übergabe-Rhythmus: monatlich / quartalsweise
 
 ## Besonderheiten / Lessons Learned
 
@@ -46,7 +46,7 @@
 ## Web-UI
 
 Bestimmte Felder (Firmenstammdaten, Steuernr, SMTP-Einstellungen) sind nur
-ueber die Collmex-Weboberflaeche aenderbar. Dafuer:
+über die Collmex-Weboberfläche änderbar. Dafür:
 
 - Web-User: separater Benutzer, NICHT der API-User
 - In `.env` setzen: `COLLMEX_WEB_USER` und `COLLMEX_WEB_PASSWORD`

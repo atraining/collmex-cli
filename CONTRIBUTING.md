@@ -1,12 +1,12 @@
 # Contributing
 
-Danke fuer dein Interesse an `collmex-cli`. Dieses Dokument beschreibt, wie
+Danke für dein Interesse an `collmex-cli`. Dieses Dokument beschreibt, wie
 du das Projekt lokal aufsetzt und gegen eine eigene Collmex-Instanz testest.
 
-> **Lizenz-Hinweis:** Der Code ist proprietaer (siehe [LICENSE](LICENSE)).
+> **Lizenz-Hinweis:** Der Code ist proprietär (siehe [LICENSE](LICENSE)).
 > Pull Requests und Patches sind willkommen, werden aber bei Merge dem
-> Copyright-Inhaber (Christopher Helm) zugerechnet. Bei groesseren
-> Aenderungen vorher kurz anfragen: **me@christopher-helm.com**.
+> Copyright-Inhaber (Christopher Helm) zugerechnet. Bei größeren
+> Änderungen vorher kurz anfragen: **me@christopher-helm.com**.
 
 ## Lokales Setup
 
@@ -32,19 +32,19 @@ die echte API — **nur gegen einen Test-Mandanten** laufen lassen.
 
 ## Eigenen Test-Mandanten bei Collmex anlegen
 
-1. Account auf [collmex.de](https://www.collmex.de) registrieren. Fuer
+1. Account auf [collmex.de](https://www.collmex.de) registrieren. Für
    API-Zugriff mindestens Tarif "buchhaltung basic".
-2. In Collmex: **Verwaltung -> Benutzer** — einen neuen Benutzer `apiuser`
+2. In Collmex: **Verwaltung → Benutzer** — einen neuen Benutzer `apiuser`
    anlegen. Dieser User ist der API-Zugang.
-3. In Collmex: **Verwaltung -> Einstellungen -> API** — API aktivieren,
+3. In Collmex: **Verwaltung → Einstellungen → API** — API aktivieren,
    die Kundennummer notieren.
-4. `.env` ausfuellen:
+4. `.env` ausfüllen:
    ```
    COLLMEX_CUSTOMER=<deine-kundennr>
    COLLMEX_USER=apiuser
    COLLMEX_PASSWORD=<api-passwort>
    ```
-5. Verbindung pruefen:
+5. Verbindung prüfen:
    ```bash
    collmex status
    ```
@@ -63,12 +63,12 @@ die echte API — **nur gegen einen Test-Mandanten** laufen lassen.
   ```
 - Tests: `pytest`. Neue Features brauchen Tests.
 - Python: `>= 3.11`.
-- Sprache im Code: Englisch fuer Bezeichner, Deutsch fuer User-Output und
+- Sprache im Code: Englisch für Bezeichner, Deutsch für User-Output und
   Dokumentation (das Zielpublikum sind deutsche Buchhalter).
 
 ## Neue API-Erkenntnisse
 
-Wenn du beim Testen auf undokumentiertes API-Verhalten stoesst: bitte
+Wenn du beim Testen auf undokumentiertes API-Verhalten stößt: bitte
 dokumentieren in:
 
 - `docs/docs/api/api-fields.md` — verifizierte Feldstrukturen
@@ -81,7 +81,7 @@ dokumentieren in:
 2. Tests schreiben + lokal laufen lassen (`pytest`)
 3. `ruff check .` und `ruff format .`
 4. Commit-Message auf Deutsch oder Englisch, aber beschreibend
-5. PR gegen `main` oeffnen
+5. PR gegen `main` öffnen
 
 ## Sicherheit
 

@@ -2,7 +2,7 @@
 
 ## Goldene Regel: Lerne und dokumentiere
 
-Wenn du durch Trial & Error etwas Neues ueber die Collmex-API lernst:
+Wenn du durch Trial & Error etwas Neues über die Collmex-API lernst:
 1. Trage es in `api-fields.md` ein (Feldstrukturen)
 2. Trage es hier ein (Patterns, Gotchas, Workflows)
 3. Update `api_reference.py` falls neue Satzarten entdeckt werden
@@ -11,12 +11,12 @@ Wenn du durch Trial & Error etwas Neues ueber die Collmex-API lernst:
 
 **Format:** `NEW_OBJECT_ID;ID;0;2` (4 Felder, Semikolon-getrennt)
 
-- `row[1]` = Die neue ID (z.B. 70004 fuer Lieferant, 10005 fuer Kunde)
+- `row[1]` = Die neue ID (z.B. 70004 für Lieferant, 10005 für Kunde)
 - `row[2]` und `row[3]` = interne Collmex-Felder (ignorieren)
 
 **Getestet mit:** CMXLIF (Lieferant), CMXKND (Kunde)
 
-**ACHTUNG:** CMXLRN und CMXUMS liefern KEIN NEW_OBJECT_ID zurueck!
+**ACHTUNG:** CMXLRN und CMXUMS liefern KEIN NEW_OBJECT_ID zurück!
 Diese Satzarten verwenden die Rechnungsnummer als Identifikator.
 
 ## Pattern: Beleg mit mehreren Positionen anlegen
@@ -24,10 +24,10 @@ Diese Satzarten verwenden die Rechnungsnummer als Identifikator.
 **Problem:** Bei leerem Belegnummer-Feld erstellt Collmex pro CSV-Zeile
 einen NEUEN Beleg. Zwei Zeilen ohne Nr = zwei separate Belege.
 
-**Loesung (2-Schritt-Verfahren):**
+**Lösung (2-Schritt-Verfahren):**
 
 ```python
-# Schritt 1: Position 1 anlegen, Belegnummer zurueckbekommen
+# Schritt 1: Position 1 anlegen, Belegnummer zurückbekommen
 r1 = client.request([build_pos('', 1, 'Pos A', 5, '100,00')])
 beleg_nr = r1.new_ids[0]
 
@@ -38,10 +38,10 @@ r2 = client.request([
 ])
 ```
 
-**WICHTIG:** Schritt 2 ERSETZT alle Positionen — nicht ergaenzen!
+**WICHTIG:** Schritt 2 ERSETZT alle Positionen — nicht ergänzen!
 Immer ALLE Positionen mitsenden, auch die bestehenden.
 
-Gilt fuer: CMXORD-2, CMXINV, CMXQTN, CMXDLV (alle Belege mit Positionen).
+Gilt für: CMXORD-2, CMXINV, CMXQTN, CMXDLV (alle Belege mit Positionen).
 
 ## Pattern: Split-Buchung (mehrere Aufwandskonten pro Rechnung)
 
@@ -66,34 +66,34 @@ Haben 1200 (Bank)                119,00
 
 **Regeln:**
 - Rechnungsnummer MUSS identisch sein (sonst 2 separate Belege)
-- Zeilen muessen aufeinanderfolgen im selben Request
+- Zeilen müssen aufeinanderfolgen im selben Request
 - Funktioniert auch mit CMXUMS (Ausgangsrechnungen)
 - Storno: gleiche Zeilen mit Storno-Flag=1 (Feld 19)
 
-**Anwendungsfaelle:**
+**Anwendungsfälle:**
 - Bewirtungsbeleg 70/30 (4650 + 4654)
-- Gemischte Rechnung (Bueromaterial + Fremdleistung)
-- Rechnung mit Positionen in verschiedenen Steuersaetzen UND Konten
+- Gemischte Rechnung (Bürobedarf + Fremdleistung)
+- Rechnung mit Positionen in verschiedenen Steuersätzen UND Konten
 
 **In collmex:** `BookingEngine.create_split_eingangsrechnung()`
 
-## Pattern: Beleg loeschen (GoBD-konform)
+## Pattern: Beleg löschen (GoBD-konform)
 
-Collmex loescht nicht physisch. Stattdessen Geloescht-Flag setzen:
+Collmex löscht nicht physisch. Stattdessen Gelöscht-Flag setzen:
 - CMXORD-2: Index 42 = '1'
 - CMXINV: Index 40 = '1'
 
-Den Beleg mit allen Pflichtfeldern + Geloescht=1 erneut senden.
+Den Beleg mit allen Pflichtfeldern + Gelöscht=1 erneut senden.
 
 ## Pattern: Rechnung aus Kundenauftrag
 
-CMXINV Feld 5 (Index 5) = Auftragsnummer verknuepft die Rechnung
-mit dem Kundenauftrag. Die Positionen muessen trotzdem manuell
-uebernommen werden — es gibt kein "konvertiere Auftrag zu Rechnung".
+CMXINV Feld 5 (Index 5) = Auftragsnummer verknüpft die Rechnung
+mit dem Kundenauftrag. Die Positionen müssen trotzdem manuell
+übernommen werden — es gibt kein "konvertiere Auftrag zu Rechnung".
 
 ## Pattern: Rechnung per E-Mail versenden
 
-Voraussetzungen (alle drei noetig!):
+Voraussetzungen (alle drei nötig!):
 1. **Firma:** Steuernummer oder USt-IdNr in Firmenstammdaten
    (nur per Web-UI: Verwaltung → Firma)
 2. **SMTP:** Postausgangs-Server in Collmex konfiguriert
@@ -112,7 +112,7 @@ f = [''] * 35
 f[0]  = 'CMXKND'
 f[2]  = '1'                         # Firma Nr
 f[7]  = 'Firmenname GmbH'           # Firma
-f[9]  = 'Strasse 1'                 # Strasse
+f[9]  = 'Straße 1'                  # Straße
 f[10] = '12345'                     # PLZ
 f[11] = 'Berlin'                    # Ort
 f[14] = 'DE'                        # Land
@@ -135,8 +135,8 @@ f[11] = '1'                       # Produktart (1=Dienstleistung)
 f[14] = '3500,00'                 # Verkaufs-Preis
 ```
 
-**WICHTIG:** Mengeneinheiten muessen ISO-Codes sein!
-`PCE` = Stueck, NICHT "Stk", "Stck" oder "Stueck".
+**WICHTIG:** Mengeneinheiten müssen ISO-Codes sein!
+`PCE` = Stück, NICHT "Stk", "Stck" oder "Stueck".
 
 ## Pattern: Angebot erstellen (CMXQTN)
 
@@ -149,7 +149,7 @@ f[2]  = str(pos_nr)               # Position
 f[4]  = '1'                       # Firma Nr
 f[5]  = str(kunden_nr)            # Kunden-Nr
 f[28] = datum                     # Angebotsdatum YYYYMMDD
-f[47] = gueltig_bis               # Gueltig-bis YYYYMMDD
+f[47] = gueltig_bis               # Gültig-bis YYYYMMDD
 f[68] = '0'                       # Positionstyp (0=Normal)
 f[69] = produkt_nr                # Produktnummer
 f[70] = beschreibung              # Produktbeschreibung
@@ -169,7 +169,7 @@ f[0]  = 'CMXDLV'
 f[2]  = str(pos_nr)               # Position
 f[4]  = '1'                       # Firma Nr
 f[5]  = str(kunden_nr)            # Kunden-Nr
-f[6]  = str(auftrags_nr)          # Auftrag Nr (Verknuepfung!)
+f[6]  = str(auftrags_nr)          # Auftrag Nr (Verknüpfung!)
 f[30] = datum                     # Lieferungsdatum YYYYMMDD
 f[60] = '0'                       # Positionstyp
 f[61] = produkt_nr                # Produktnummer
@@ -178,20 +178,20 @@ f[64] = str(menge)                # Menge
 f[65] = str(pos_nr)               # Kundenauftragsposition
 ```
 
-**Voraussetzung:** Auftragspositionen muessen `Lieferrelevant=1` haben
+**Voraussetzung:** Auftragspositionen müssen `Lieferrelevant=1` haben
 (CMXORD-2 Index 98). Ohne das: "Auftrag ist bereits komplett beliefert
 oder enthält keine lieferrelevanten Positionen".
 
-## Pattern: Kompletter Geschaeftsvorfall (Workflow)
+## Pattern: Kompletter Geschäftsvorfall (Workflow)
 
 Getestet und verifiziert am 2026-03-04:
 
-1. **Kunde anlegen** (CMXKND) → Kunden-Nr zurueck
-2. **Produkte anlegen** (CMXPRD) — Mengeneinheit=PCE, Produktart=1 fuer DL
+1. **Kunde anlegen** (CMXKND) → Kunden-Nr zurück
+2. **Produkte anlegen** (CMXPRD) — Mengeneinheit=PCE, Produktart=1 für DL
 3. **Angebot erstellen** (CMXQTN) — 2-Schritt, gleiche Indizes wie CMXORD-2
-4. **Kundenauftrag** (CMXORD-2) — 2-Schritt, Lieferrelevant=1 (Idx 98) fuer DL!
+4. **Kundenauftrag** (CMXORD-2) — 2-Schritt, Lieferrelevant=1 (Idx 98) für DL!
 5. **Projekt** (CMXPRJ) — Import geht, aber im Basic-Tarif nicht abrufbar
-6. **Lieferung** (CMXDLV) — 2-Schritt, verknuepft mit Auftrag (Idx 6)
+6. **Lieferung** (CMXDLV) — 2-Schritt, verknüpft mit Auftrag (Idx 6)
 7. **Rechnung** (CMXINV) — 2-Schritt, Auftrag Nr in Idx 5
 8. **Rechnungsversand** (INVOICE_OUTPUT) — braucht Steuernr + SMTP
 
@@ -204,8 +204,8 @@ f = [''] * 41
 f[0]  = 'CMXLIF'
 f[2]  = '1'                        # Firma Nr
 f[3]  = 'Firma'                    # Anrede
-f[7]  = 'Kreativbuero GmbH'       # Firma
-f[9]  = 'Strasse 1'               # Strasse
+f[7]  = 'Kreativbüro GmbH'         # Firma
+f[9]  = 'Straße 1'                 # Straße
 f[10] = '10115'                    # PLZ
 f[11] = 'Berlin'                   # Ort
 f[14] = 'DE'                       # Land
@@ -228,7 +228,7 @@ f[3]  = '20260301'                 # Rechnungsdatum
 f[4]  = 'PC-2026-002'             # Belegnummer des Lieferanten
 f[5]  = '2800,00'                  # Netto voller Satz (19%)
 f[6]  = '532,00'                   # USt 19% (auto wenn leer)
-f[11] = 'EUR'                      # Waehrung
+f[11] = 'EUR'                      # Währung
 f[14] = 'Logo + Corporate Design'  # Buchungstext
 f[16] = '4900'                     # Aufwandskonto — IMMER explizit!
 ```
@@ -245,22 +245,22 @@ Default ist 3200 (Wareneingang), NICHT das Konto aus dem Lieferantenstamm.
 
 Getestet und verifiziert am 2026-03-04:
 
-1. **Lieferant anlegen** (CMXLIF) → Lieferant-Nr zurueck (ab 70001)
+1. **Lieferant anlegen** (CMXLIF) → Lieferant-Nr zurück (ab 70001)
 2. **Eingangsrechnung** (CMXLRN) — Aufwandskonto explizit setzen!
-3. **Buchung verifizieren** (ACCDOC_GET) — Soll=Haben pruefen
+3. **Buchung verifizieren** (ACCDOC_GET) — Soll=Haben prüfen
 4. **Offene Posten** (OPEN_ITEMS_GET) — Feld 7 = Personenkonto
 
-Kein 2-Schritt-Verfahren noetig — CMXLRN hat keine Positionen!
+Kein 2-Schritt-Verfahren nötig — CMXLRN hat keine Positionen!
 
 ## Pattern: Personenkonten (Kreditoren/Debitoren)
 
 Collmex bucht auf Sammelkonten (SKR03):
-- **1400** Forderungen (Debitoren-Sammelkonto) — fuer Ausgangsrechnungen
-- **1600** Verbindlichkeiten (Kreditoren-Sammelkonto) — fuer Eingangsrechnungen
+- **1400** Forderungen (Debitoren-Sammelkonto) — für Ausgangsrechnungen
+- **1600** Verbindlichkeiten (Kreditoren-Sammelkonto) — für Eingangsrechnungen
 
-Die Personenkontozuordnung laeuft automatisch:
-- Debitor 10001 → ueber Kundennummer in CMXINV/CMXUMS
-- Kreditor 70001 → ueber Lieferantennummer in CMXLRN
+Die Personenkontozuordnung läuft automatisch:
+- Debitor 10001 → über Kundennummer in CMXINV/CMXUMS
+- Kreditor 70001 → über Lieferantennummer in CMXLRN
 
 Personenkonten sind KEIN Sachkonto im Kontenrahmen:
 - ACCBAL_GET(70001) → Fehler "Konto nicht vorhanden"
@@ -270,7 +270,7 @@ Personenkonten sind KEIN Sachkonto im Kontenrahmen:
 
 ### request() erwartet list[str], nicht str
 ```python
-# FALSCH — iteriert zeichenweise, "Datentyp C ist ungueltig"
+# FALSCH — iteriert zeichenweise, "Datentyp C ist ungültig"
 client.request(csv_string)
 
 # RICHTIG
@@ -283,7 +283,7 @@ client.request([zeile1, zeile2])
 - CUSTOMER_GET: `Satzart;KundenNr;FirmaNr`
 - Immer in der Doku nachschlagen — Reihenfolge ist NICHT konsistent!
 
-### Firmenstammdaten nicht per API aenderbar
+### Firmenstammdaten nicht per API änderbar
 Steuernummer, USt-IdNr, SMTP-Einstellungen → nur Web-UI.
 URL: `https://www.collmex.de/c.cmx?{kundennr},1,coch,1`
 
@@ -300,21 +300,21 @@ Ohne Firma-Steuernummer geht NICHTS raus.
 | 3 | Brief |
 | 100 | Keine Ausgabe |
 
-### Betraege immer deutsches Format
+### Beträge immer deutsches Format
 `1500,00` nicht `1500.00` — Collmex erwartet Komma als Dezimaltrenner.
 
 ### Mengeneinheiten sind ISO-Codes
-`PCE` (Stueck), NICHT "Stk", "Stck" oder "Stueck".
+`PCE` (Stück), NICHT "Stk", "Stck" oder "Stueck".
 Collmex akzeptiert nur ISO-konforme Einheiten.
-Alle verfuegbaren Einheiten: `collmex webui mengeneinheiten`
+Alle verfügbaren Einheiten: `collmex webui mengeneinheiten`
 
-Haeufigste Codes: PCE=Stueck, HR=Stunden, DAY=Tage, MON=Monat, ANN=Jahr,
+Häufigste Codes: PCE=Stück, HR=Stunden, DAY=Tage, MON=Monat, ANN=Jahr,
 KGM=Kilogramm, LTR=Liter, MTR=Meter, P1=Prozent, WEE=Woche.
 
 ACHTUNG: PCE hat ISO-Code H87 (nicht PCE). Collmex-interner Code ≠ ISO-Code!
 
 ### Dienstleistungen brauchen Lieferrelevant=1
-CMXORD-2 Index 98 muss `1` sein, damit Lieferungen (CMXDLV) moeglich sind.
+CMXORD-2 Index 98 muss `1` sein, damit Lieferungen (CMXDLV) möglich sind.
 Ohne das Flag: "Auftrag ist bereits komplett beliefert oder enthält keine
 lieferrelevanten Positionen".
 
@@ -324,9 +324,9 @@ CMXPRJ-Import wird ohne Fehler akzeptiert, aber PROJECT_GET liefert
 vermutlich nicht enthalten.
 
 ### CMXQTN ≈ CMXORD-2
-Angebote (CMXQTN) haben fast identische Feldstruktur wie Kundenauftraege
+Angebote (CMXQTN) haben fast identische Feldstruktur wie Kundenaufträge
 (CMXORD-2). Gleiche Positions-Indizes (68-79). Nur Header-Felder
-unterscheiden sich leicht (z.B. Idx 28 vs 29 fuer Datum, Idx 47 = Gueltig-bis).
+unterscheiden sich leicht (z.B. Idx 28 vs 29 für Datum, Idx 47 = Gültig-bis).
 
 ### CMXLRN Aufwandskonto ist NICHT der Lieferanten-Default
 Feld 16 (KontoVoll) defaultet auf 3200 (Wareneingang), NICHT auf das
@@ -334,23 +334,23 @@ Aufwandskonto aus dem Lieferantenstamm (CMXLIF Idx 35). Immer explizit setzen!
 
 ### CMXLRN Gegenkonto muss Sachkonto sein
 Feld 12 (Gegenkonto) akzeptiert NUR Sachkonten (z.B. 1600). Personenkonten
-(70001) fuehren zu "Konto nicht vorhanden". Die Personenkontozuordnung
-laeuft automatisch ueber die Lieferantennummer (Feld 1).
+(70001) führen zu "Konto nicht vorhanden". Die Personenkontozuordnung
+läuft automatisch über die Lieferantennummer (Feld 1).
 
 ### Personenkonten nicht in ACCBAL_GET
-ACCBAL_GET funktioniert NUR fuer Sachkonten. Personenkonten (10000+, 70000+)
+ACCBAL_GET funktioniert NUR für Sachkonten. Personenkonten (10000+, 70000+)
 erzeugen "Konto nicht vorhanden". Stattdessen OPEN_ITEMS_GET nutzen.
 
 ### ACCDOC Soll/Haben ist Text
 ACCDOC_GET liefert "Soll" und "Haben" als Text (Idx 10), NICHT als 0/1.
-Haben-Betraege (Idx 11) sind NEGATIV.
+Haben-Beträge (Idx 11) sind NEGATIV.
 
 ## Pattern: Beliebige Buchung per CMXUMS (ohne Rechnung)
 
 **Problem:** ACCDOC ist NUR lesbar. CMXINV/CMXLRN erzeugen immer Rechnungen.
-Wie bucht man Eroeffnungsbilanz, Umbuchungen, Korrekturen etc.?
+Wie bucht man Eröffnungsbilanz, Umbuchungen, Korrekturen etc.?
 
-**Loesung:** CMXUMS mit "steuerfreie Erloese"-Feldern missbrauchen:
+**Lösung:** CMXUMS mit "steuerfreie Erlöse"-Feldern missbrauchen:
 
 ```python
 f = [''] * 16
@@ -368,11 +368,11 @@ f[14] = str(soll_konto)      # Gegenkonto (SOLL-Seite!)
 
 **WICHTIG:**
 - Feld 11 = Haben-Konto, Feld 14 = Soll-Konto (nicht intuitiv!)
-- Negative Betraege werden ABGELEHNT
-- Kunden-Nr kann '0' sein fuer reine Sachkontenbuchungen
+- Negative Beträge werden ABGELEHNT
+- Kunden-Nr kann '0' sein für reine Sachkontenbuchungen
 - Steuerklassifikation (Feld 13) leer lassen = steuerfrei
 
-**Beispiel Eroeffnungsbilanz GmbH (SKR03):**
+**Beispiel Eröffnungsbilanz GmbH (SKR03):**
 ```python
 # Soll 1200 Bank / Haben 0800 Stammkapital: 12.500 EUR
 f[11] = '800'    # Haben: Gezeichnetes Kapital
@@ -387,13 +387,13 @@ f[14] = '868'    # Soll: Ausstehende Einlagen
 
 ## Pattern: Storno per CMXUMS
 
-**Problem:** CMXUMS akzeptiert keine negativen Betraege. Storno-Flag
-(f[22]='1') wird akzeptiert, erzeugt aber KEINE ACCDOC-Eintraege!
+**Problem:** CMXUMS akzeptiert keine negativen Beträge. Storno-Flag
+(f[22]='1') wird akzeptiert, erzeugt aber KEINE ACCDOC-Einträge!
 
-**Loesung A: Steuerfreie Konten — Soll/Haben tauschen:**
+**Lösung A: Steuerfreie Konten — Soll/Haben tauschen:**
 
 ```python
-# Nur fuer Konten OHNE Steuerklassifikation (0xxx, 1200, etc.)!
+# Nur für Konten OHNE Steuerklassifikation (0xxx, 1200, etc.)!
 # Original: Soll 0860 / Haben 0800: 12.500
 f[11] = '800';  f[14] = '860';  f[12] = '12500,00'
 
@@ -401,12 +401,12 @@ f[11] = '800';  f[14] = '860';  f[12] = '12500,00'
 f[11] = '860';  f[14] = '800';  f[12] = '12500,00'
 ```
 
-**Loesung B: Erloeskonto (8400) stornieren — CMXUMS Gutschrift:**
+**Lösung B: Erlöskonto (8400) stornieren — CMXUMS Gutschrift:**
 
 ```python
 # ACHTUNG: Steuerfreie Felder (f[11]/f[14]) mit 8400 als Gegenkonto
-# loesen Auto-USt aus! 500 EUR wird zu 420,17 netto + 79,83 USt.
-# Stattdessen: Regulaere Revenue-Felder + Rechnungsart=Gutschrift
+# lösen Auto-USt aus! 500 EUR wird zu 420,17 netto + 79,83 USt.
+# Stattdessen: Reguläre Revenue-Felder + Rechnungsart=Gutschrift
 
 f = [''] * 31
 f[0]  = 'CMXUMS'
@@ -423,14 +423,14 @@ f[18] = '8400'           # Konto voller Satz
 Ergibt: Soll 8400 1000 / Soll 1776 190 / Haben Gegenkonto 1190
 (exakt umgekehrt zum Original)
 
-**Loesung C: Eingangsrechnung (CMXLRN) stornieren — Gutschrift-Flag:**
+**Lösung C: Eingangsrechnung (CMXLRN) stornieren — Gutschrift-Flag:**
 
 ```python
 f[13] = '1'  # Gutschrift — dreht Soll/Haben der Eingangsrechnung
 ```
 
 **WICHTIG — Steuerfreie Felder + steuerpflichtige Gegenkonten:**
-Die "steuerfreien Erloese"-Felder (f[11]/f[12]/f[14]) sind NICHT wirklich
+Die "steuerfreien Erlöse"-Felder (f[11]/f[12]/f[14]) sind NICHT wirklich
 steuerfrei wenn das Gegenkonto (f[14]) eine Steuerklassifikation hat!
 8400 als Gegenkonto → Betrag wird als brutto behandelt und in netto+USt
 aufgespalten. Nur verwenden mit Konten OHNE Steuerklassifikation
@@ -439,10 +439,10 @@ aufgespalten. Nur verwenden mit Konten OHNE Steuerklassifikation
 ## Pattern: Sachkonto anlegen per Web-UI
 
 Collmex SKR03 hat einen reduzierten Kontenrahmen — viele Standard-Konten
-(z.B. 0868 Ausstehende Einlagen) fehlen und muessen manuell erstellt werden.
+(z.B. 0868 Ausstehende Einlagen) fehlen und müssen manuell erstellt werden.
 
 ```python
-# POST an die Konto-Aendern-Seite (acch), NICHT Konto-Anlegen (accr)!
+# POST an die Konto-Ändern-Seite (acch), NICHT Konto-Anlegen (accr)!
 session.post(
     f'https://www.collmex.de/c.cmx?{kundennr},1,acch',
     data={
@@ -454,9 +454,9 @@ session.post(
 ```
 
 **WICHTIG:** Die `accr`-Seite (Konto anlegen) funktioniert nur mit
-existierender Vorlage. Fuer neue Konten `acch` (Konto aendern) verwenden!
+existierender Vorlage. Für neue Konten `acch` (Konto ändern) verwenden!
 
-### ACCDOC_GET Datumsfilter unzuverlaessig
+### ACCDOC_GET Datumsfilter unzuverlässig
 ACCDOC_GET mit date_from/date_to liefert manchmal 0 Ergebnisse, obwohl
 Buchungen existieren. Workaround: Ohne Datumsfilter abfragen und
 client-seitig filtern.
@@ -468,16 +468,16 @@ client-seitig filtern.
 ### Re-Import ist idempotent
 
 Gleiche Rechnungsnummer nochmal importieren:
-- **Daten unveraendert** → kein neuer Beleg, stille Akzeptanz
-- **Daten geaendert** → alte Buchung automatisch storniert + neue Buchung
+- **Daten unverändert** → kein neuer Beleg, stille Akzeptanz
+- **Daten geändert** → alte Buchung automatisch storniert + neue Buchung
 
-Das gilt fuer CMXLRN und CMXUMS. Extrem nuetzlich fuer Fehlerkorrektur:
+Das gilt für CMXLRN und CMXUMS. Extrem nützlich für Fehlerkorrektur:
 einfach nochmal mit korrekten Daten senden statt manuell stornieren.
 
 ### All-or-Nothing Transaktionen
 
 Alle Zeilen in einem API-Request = eine DB-Transaktion. Wenn EINE Zeile
-einen Fehler hat, wird ALLES zurueckgerollt. Keine Teilimporte.
+einen Fehler hat, wird ALLES zurückgerollt. Keine Teilimporte.
 
 **Konsequenz:** Bei Split-Buchungen (mehrere CMXLRN-Zeilen) ist das gut —
 entweder geht der ganze Split durch oder gar nichts.
@@ -486,20 +486,20 @@ entweder geht der ganze Split durch oder gar nichts.
 
 - CMXLRN Feld 6 (Steuer voll) leer → Collmex berechnet aus Feld 5 (Netto)
 - CMXLRN Feld 8 (Steuer erm.) leer → Collmex berechnet aus Feld 7
-- CMXUMS identisch fuer Felder 6/8
+- CMXUMS identisch für Felder 6/8
 
 **ACHTUNG Rundungsfalle:** Wenn du BEIDES angibst (Netto + Steuer) und die
-Betraege nicht exakt zum erwarteten Steuersatz passen, waehlt Collmex
-moeglicherweise das FALSCHE Erloeskonto. Besser: Steuer leer lassen.
+Beträge nicht exakt zum erwarteten Steuersatz passen, wählt Collmex
+möglicherweise das FALSCHE Erlöskonto. Besser: Steuer leer lassen.
 
 ### Gegenkonto muss Finanzkonto sein
 
 CMXLRN Feld 12 (Gegenkonto) akzeptiert NUR Konten der Gruppe "Finanzkonto"
 (Bank 1200, Kasse 1000, etc.). NICHT: 1600 (Verbindlichkeiten), NICHT
-Personenkonten (70001). Personenkontozuordnung geht NUR ueber
+Personenkonten (70001). Personenkontozuordnung geht NUR über
 Lieferantennummer (Feld 1).
 
-**Korrektur** zu frueherer Doku: "Sachkonto" war zu ungenau — es muss ein
+**Korrektur** zu früherer Doku: "Sachkonto" war zu ungenau — es muss ein
 Finanzkonto sein. Wenn Lieferantennummer gesetzt ist, wird 1600 automatisch
 verwendet und Gegenkonto kann leer bleiben.
 
@@ -511,7 +511,7 @@ verwendet und Gegenkonto kann leer bleiben.
 | 1 | Gutschrift | Ja (Soll/Haben umgekehrt) |
 | 2 | Abschlagsrechnung | **NEIN!** Kein ACCDOC-Eintrag |
 
-### CMXUMS Erloesart (Feld 25) — Kontenmapping
+### CMXUMS Erlösart (Feld 25) — Kontenmapping
 
 | Code | Bedeutung | SKR03 | SKR04 |
 |------|-----------|-------|-------|
@@ -522,27 +522,27 @@ verwendet und Gegenkonto kann leer bleiben.
 | 14 | Reverse Charge (§13b) | 8337 | 4337 |
 | 15 | Nicht steuerbar Drittland | 8338 | 4338 |
 
-### USt-Satz-Automatik bei Datumsaenderungen
+### USt-Satz-Automatik bei Datumsänderungen
 
-Bei Steuersatzaenderungen (z.B. COVID 2020: 19%→16%) waehlt Collmex
+Bei Steuersatzänderungen (z.B. COVID 2020: 19%→16%) wählt Collmex
 anhand des Belegdatums automatisch andere Konten:
 - 8400 → 8410 (wenn berechneter Satz ≠ Standard-Satz am Belegdatum)
 - 8300 → 8334
 
-### Geschaeftsjahr = Kalenjahr (immer)
+### Geschäftsjahr = Kalenderjahr (immer)
 
-Collmex erlaubt NUR Kalenderjahrgleiche Geschaeftsjahre. Kein Rumpf-GJ,
-kein abweichendes GJ (z.B. April-Maerz). Das ist eine harte Einschraenkung.
+Collmex erlaubt NUR kalenderjahrgleiche Geschäftsjahre. Kein Rumpf-GJ,
+kein abweichendes GJ (z.B. April-März). Das ist eine harte Einschränkung.
 
 ### Automatischer Saldenvortrag
 
 Bilanzkonten (0xxx, 1xxx) werden automatisch ins Folgejahr vorgetragen.
-Erfolgskonten (4xxx, 8xxx) starten bei Null. Keine Eroeffnungsbuchungen noetig.
+Erfolgskonten (4xxx, 8xxx) starten bei Null. Keine Eröffnungsbuchungen nötig.
 
 ### UTF-8 seit Mai 2023 optional
 
-LOGIN-Feld 4 = `1` aktiviert UTF-8 fuer die gesamte Session.
-Ohne dieses Flag: ISO-8859-1 (Default). Zeichen ausserhalb ISO-8859-1
+LOGIN-Feld 4 = `1` aktiviert UTF-8 für die gesamte Session.
+Ohne dieses Flag: ISO-8859-1 (Default). Zeichen außerhalb ISO-8859-1
 werden mit `?` ersetzt.
 
 ### Rate Limits
@@ -551,18 +551,18 @@ werden mit `?` ersetzt.
 |-------|------|
 | API-Calls pro Tag | max 10.000 pro Kundennummer |
 | Gleichzeitige Requests | max 5 pro User |
-| Wartungsfenster | taeglich 03:30 - 05:00 Uhr |
+| Wartungsfenster | täglich 03:30 - 05:00 Uhr |
 | Retry nach Fehler 200005 | min. 1 Minute warten |
 
 ### ACCDOC_GET Delta-Abfragen
 
 Feld 15 = `1` + Feld 16 = Systemname → liefert nur Buchungen die sich
-seit der letzten Abfrage mit diesem Systemnamen geaendert haben.
-Nuetzlich fuer inkrementelle Syncs.
+seit der letzten Abfrage mit diesem Systemnamen geändert haben.
+Nützlich für inkrementelle Syncs.
 
-### INVOICE_PAYMENT_GET nur fuer CMXUMS
+### INVOICE_PAYMENT_GET nur für CMXUMS
 
-Zahlungseingaenge per API abfragen geht NUR fuer Rechnungen die per
+Zahlungseingänge per API abfragen geht NUR für Rechnungen die per
 CMXUMS importiert wurden. CMXINV-Rechnungen oder Web-UI-Rechnungen
 werden NICHT geliefert.
 
@@ -573,26 +573,26 @@ erzeugt Collmex automatisch einen Text aus Rechnungsnummer + Datum.
 
 ### Zahlungsbedingung aus Stammdaten
 
-Wenn CMXLRN Feld 15 oder CMXUMS Feld 17 leer: Collmex uebernimmt die
+Wenn CMXLRN Feld 15 oder CMXUMS Feld 17 leer: Collmex übernimmt die
 Zahlungsbedingung aus dem Lieferanten-/Kundenstamm. Default: 0 = 30 Tage.
 
 ### Anzahlungen (Vorkasse)
 
 CMXUMS mit Zahlungsbedingung 9 (Vorkasse) oder 14 (PayPal):
 Collmex sucht automatisch nach offener Anzahlung mit identischem Betrag
-fuer diesen Kunden. Bei Betragsdifferenz: manuelle Zuordnung noetig.
+für diesen Kunden. Bei Betragsdifferenz: manuelle Zuordnung nötig.
 
-SKR03-Konten fuer erhaltene Anzahlungen:
+SKR03-Konten für erhaltene Anzahlungen:
 - 1718 (19%), 1717 (16%), 1711 (7%), 1712 (5%)
 
-### Sonstige Umsaetze sind IMMER steuerfrei
+### Sonstige Umsätze sind IMMER steuerfrei
 
-CMXLRN Felder 9/10 (Sonstige Umsaetze) werden IMMER ohne Steuer gebucht.
-Das ist der richtige Weg fuer steuerfreie Anteile einer Lieferantenrechnung.
+CMXLRN Felder 9/10 (Sonstige Umsätze) werden IMMER ohne Steuer gebucht.
+Das ist der richtige Weg für steuerfreie Anteile einer Lieferantenrechnung.
 
 ### CMXINV Schreibschutz
 
-CMXINV Feld 94 (Schreibgeschuetzt):
+CMXINV Feld 94 (Schreibgeschützt):
 - `0` setzen = Schutz entfernen (wird VOR anderen Feldern verarbeitet)
-- `1` setzen = nur mit leeren Feldern (ausser Rechnungsnr + Feld 94)
+- `1` setzen = nur mit leeren Feldern (außer Rechnungsnr + Feld 94)
 - Wird automatisch gesetzt beim E-Mail-Versand (seit 2024)

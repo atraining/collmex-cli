@@ -196,7 +196,7 @@ class AuditTrail:
             True wenn die Hash-Kette intakt ist, False wenn manipuliert.
 
         Raises:
-            Keine — gibt False zurück bei Problemen.
+            Keine. Gibt False zurück bei Problemen.
         """
         if not self.log_file.exists():
             # Kein Log = keine Manipulation

@@ -31,7 +31,7 @@ class Account:
 
 
 # ---------------------------------------------------------------------------
-# SKR03 Kontenrahmen — alle relevanten Konten
+# SKR03 Kontenrahmen: alle relevanten Konten
 # ---------------------------------------------------------------------------
 
 SKR03: dict[int, Account] = {
@@ -99,7 +99,7 @@ SKR03: dict[int, Account] = {
 # ---------------------------------------------------------------------------
 
 # Jeder Eintrag: (Schlüsselwörter-Tuple, Kontonummer)
-# Die Reihenfolge bestimmt die Priorität — spezifischere Begriffe zuerst.
+# Die Reihenfolge bestimmt die Priorität. Spezifischere Begriffe zuerst.
 _KEYWORD_MAP: list[tuple[tuple[str, ...], int]] = [
     (("büromaterial", "büro", "papier", "toner"), 4400),
     (("software", "lizenz", "saas", "cloud", "hosting", "domain"), 4830),

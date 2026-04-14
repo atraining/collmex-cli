@@ -1,7 +1,7 @@
 """Generischer Stammdaten-Renderer mit dynamischem Doku-Parser.
 
 Parst Feldnamen direkt von Collmex-Hilfeseiten und rendert
-Stammdaten-Tabellen dynamisch — keine hardcodierten Spalten-Indices.
+Stammdaten-Tabellen dynamisch ohne hardcodierte Spalten-Indices.
 """
 
 from __future__ import annotations

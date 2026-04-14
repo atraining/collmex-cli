@@ -1,4 +1,4 @@
-"""Tests für collmex.taxes — TaxEngine.
+"""Tests für collmex.taxes: TaxEngine.
 
 Alle Tests mocken den API-Client, keine echten API-Calls.
 """

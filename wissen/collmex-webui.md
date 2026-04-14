@@ -18,7 +18,7 @@ Die Collmex-API deckt nicht alles ab. Folgende Daten gibt es NUR per Web-UI:
 
 ### Voraussetzungen
 
-- **Web-Benutzer** (NICHT der API-User!) — Der apiuser hat keinen Web-Zugang.
+- **Web-Benutzer** (NICHT der API-User!). Der apiuser hat keinen Web-Zugang.
 - Zugangsdaten: Benutzer-ID + Kennwort (aus Collmex Verwaltung → Benutzer)
 - Python `requests` Bibliothek
 

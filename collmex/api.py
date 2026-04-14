@@ -1,4 +1,4 @@
-"""Collmex API Client — CSV-Batch-Protokoll über HTTP POST.
+"""Collmex API Client: CSV-Batch-Protokoll über HTTP POST.
 
 Alle Kommunikation mit der Collmex-API läuft über dieses Modul.
 Jeder Request besteht aus einer LOGIN-Zeile gefolgt von Datenzeilen,
@@ -261,7 +261,7 @@ class CollmexClient:
         except requests.RequestException as exc:
             raise CollmexError(f"HTTP-Fehler: {exc}") from exc
 
-        # Collmex liefert ISO-8859-1 — immer explizit dekodieren
+        # Collmex liefert ISO-8859-1, immer explizit dekodieren
         raw_text = http_response.content.decode("iso-8859-1")
 
         logger.debug("Collmex Response (HTTP %d):", http_response.status_code)

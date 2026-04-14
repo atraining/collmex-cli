@@ -1,4 +1,4 @@
-# SKR04 Kontenrahmen — Wissensgrundlage
+# SKR04 Kontenrahmen: Wissensgrundlage
 
 Der SKR04 (Abschlussgliederungsprinzip) ordnet Konten nach Bilanz/GuV-Gliederung.
 Klassen 0-3 = Bilanz, Klassen 4-7 = GuV.

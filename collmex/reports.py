@@ -104,7 +104,7 @@ class ReportsEngine:
         self.client = api_client
 
     # ------------------------------------------------------------------
-    # BWA — Betriebswirtschaftliche Auswertung
+    # BWA: Betriebswirtschaftliche Auswertung
     # ------------------------------------------------------------------
 
     def bwa(self, jahr: int, monat: int) -> dict:
@@ -163,7 +163,7 @@ class ReportsEngine:
             positionen[bereich] = summe
 
         # Erlöse als positive Zahl (Ertragskonten haben Haben-Saldo,
-        # der in Collmex negativ dargestellt sein kann — wir nehmen abs)
+        # der in Collmex negativ dargestellt sein kann (wir nehmen abs)
         erlöse = abs(positionen.get("umsatzerlöse", Decimal("0")))
 
         # Kosten summieren (Aufwandskonten)
@@ -207,7 +207,7 @@ class ReportsEngine:
         return result
 
     # ------------------------------------------------------------------
-    # SuSa — Summen- und Saldenliste
+    # SuSa: Summen- und Saldenliste
     # ------------------------------------------------------------------
 
     def susa(self, jahr: int, monat: int) -> list[dict]:
@@ -373,7 +373,7 @@ class ReportsEngine:
 
         Returns:
             Liste von dicts mit: name, beleg_nr, betrag, fällig,
-            tage_ueberfällig, mahnstufe — absteigend sortiert nach
+            tage_ueberfällig, mahnstufe. Absteigend sortiert nach
             tage_ueberfällig.
         """
         op = self.op_liste()

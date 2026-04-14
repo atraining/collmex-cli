@@ -1,4 +1,4 @@
-"""Collmex API-Referenz — alle Satzarten, Kategorien und Doku-Links.
+"""Collmex API-Referenz: alle Satzarten, Kategorien und Doku-Links.
 
 Dient als Nachschlagewerk für den `collmex api-help` CLI-Befehl.
 Quelle: https://www.collmex.de/c.cmx?1005,1,help,api

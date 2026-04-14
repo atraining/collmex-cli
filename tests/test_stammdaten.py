@@ -1,4 +1,4 @@
-"""Tests für collmex.stammdaten — HTML-Parser und generischer Renderer."""
+"""Tests für collmex.stammdaten: HTML-Parser und generischer Renderer."""
 
 from __future__ import annotations
 
@@ -112,7 +112,7 @@ def test_get_field_names_network_error(mock_get):
 
 
 # ---------------------------------------------------------------------------
-# render_stammdaten — mit query()
+# render_stammdaten: mit query()
 # ---------------------------------------------------------------------------
 
 

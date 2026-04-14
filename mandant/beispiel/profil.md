@@ -17,7 +17,7 @@
 
 ## Buchhaltung
 
-- Kontenrahmen: **SKR03** (alternativ SKR04 — siehe `wissen/skr04.md`)
+- Kontenrahmen: **SKR03** (alternativ SKR04, siehe `wissen/skr04.md`)
 - Abweichende Konten: _(z.B. "Konto 4400 existiert nicht, stattdessen 4830")_
 - Personenkonten:
   - Debitoren (Kunden): `10000 - 69999`
@@ -40,7 +40,7 @@
 
 ## Besonderheiten / Lessons Learned
 
-- _(Freitext — Dinge, die der LLM-Agent bei diesem Mandanten wissen muss,
+- _(Freitext: Dinge, die der LLM-Agent bei diesem Mandanten wissen muss,
    z.B. wiederkehrende Buchungsmuster, Ausnahmen, Workarounds)_
 
 ## Web-UI

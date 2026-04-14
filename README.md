@@ -1,11 +1,11 @@
-# collmex-cli — Buchhaltung aus dem Terminal
+# collmex-cli: Buchhaltung aus dem Terminal
 
 **Für Buchhalter und Collmex-Nutzer, die die Klickerei in der Weboberfläche satt haben.**
 
 `collmex-cli` ersetzt die verschachtelten Collmex-Menüs durch kurze
 Kommandos. Eine Eingangsrechnung buchst du in einer Zeile statt in sieben
 Klicks. Und weil jeder Befehl dokumentiert ist, kann ein LLM-Agent (z.B.
-Claude Code) die Buchhaltung autonom führen — Beleg lesen, richtig
+Claude Code) die Buchhaltung autonom führen: Beleg lesen, richtig
 kontieren, Soll=Haben prüfen, buchen, protokollieren.
 
 ```console
@@ -32,7 +32,7 @@ USt-Voranmeldung 04/2026
   Abgabefrist: 10.05.2026 (Dauerfristverl.: 10.06.2026)
 ```
 
-**Status:** Alpha — produktiv bei einer deutschen GmbH (SKR03).
+**Status:** Alpha, produktiv bei einer deutschen GmbH (SKR03).
 SKR04 ist nur gemappt, nicht live getestet. Tests: 583 grün.
 
 ---
@@ -41,35 +41,35 @@ SKR04 ist nur gemappt, nicht live getestet. Tests: 583 grün.
 
 - Buchhalter, Steuerfachangestellte und GmbH-Inhaber, die **Collmex schon nutzen**
 - Menschen, die **FiBu-Grundlagen** beherrschen (Soll/Haben, SKR03/04, USt-Sätze, §13b, periodengerecht)
-- Alle, die die Web-UI von Collmex — wie [viele Reviews](https://www.capterra.com.de/software/205535/collmex) beschreiben — **altmodisch und klickintensiv** finden
+- Alle, die die Web-UI von Collmex (wie [viele Reviews](https://www.capterra.com.de/software/205535/collmex) beschreiben) **altmodisch und klickintensiv** finden
 - Devs und Agents, die Collmex als Buchhaltungs-Backend für ein eigenes Tool / einen LLM-Agenten verwenden wollen
 
 **Für wen ist das nicht?**
 
-- Wer keine Buchhaltungs-Grundlagen hat — das Tool bucht, was du ihm sagst, nicht was richtig ist
+- Wer keine Buchhaltungs-Grundlagen hat. Das Tool bucht, was du ihm sagst, nicht was richtig ist.
 - Wer lieber klickt als tippt
 - Wer ein GUI braucht (gibt es nicht und wird es auch nicht geben)
-- Wer garantierten Support erwartet — es gibt keinen (siehe *Lizenz*)
+- Wer garantierten Support erwartet (es gibt keinen, siehe *Lizenz*)
 
 ## Was es besser macht als die Web-UI
 
 | Schmerzpunkt in Collmex | Was `collmex-cli` anders macht |
 |------------------------|-------------------------------|
 | Menüdschungel, unklare Optionen | Ein Befehl pro Aktion, `collmex hilfe SATZART` zeigt dokumentiert alle Felder |
-| Nicht mobiloptimiert | Läuft in jedem Terminal — inkl. SSH vom Handy |
+| Nicht mobiloptimiert | Läuft in jedem Terminal, inkl. SSH vom Handy |
 | Hoher manueller Aufwand | Buchungen werden validiert (Soll=Haben, Konto existiert, USt-Satz gültig), bevor sie rausgehen |
 | Mehrere Mandanten = Nutzer wechseln | `.env` umschalten, fertig |
-| CSV-API existiert, aber du musst die Skripte selbst schreiben | Genau diese Skripte liegen hier fertig — Rechnung, Storno, Mahnung, USt-Voranmeldung, DATEV-Export |
+| CSV-API existiert, aber du musst die Skripte selbst schreiben | Genau diese Skripte liegen hier fertig: Rechnung, Storno, Mahnung, USt-Voranmeldung, DATEV-Export |
 | Keine Audit-Historie pro Aktion | Eingebauter GoBD-konformer Audit-Trail (`gobd.py`) |
 
 Das Tool **löst nicht**:
-- Collmex' schwache OCR — Belegdaten tippst du selbst (oder ein LLM liest sie für dich)
-- Collmex' Tarif-Beschränkungen — manche API-Satzarten sind erst ab "buchhaltung pro" freigeschaltet
-- Steuerliche Entscheidungen — siehe Disclaimer
+- Collmex' schwache OCR. Belegdaten tippst du selbst (oder ein LLM liest sie für dich).
+- Collmex' Tarif-Beschränkungen. Manche API-Satzarten sind erst ab "buchhaltung pro" freigeschaltet.
+- Steuerliche Entscheidungen. Siehe Disclaimer.
 
 ## Was es kann (im Überblick)
 
-**Buchen.** Eingangs-/Ausgangsrechnungen, Stornos, Split-Buchungen (z.B. Bewirtung 70/30), §13b Reverse Charge. Immer über Personenkonten (Debitor/Kreditor) — nie direkt auf Bank.
+**Buchen.** Eingangs-/Ausgangsrechnungen, Stornos, Split-Buchungen (z.B. Bewirtung 70/30), §13b Reverse Charge. Immer über Personenkonten (Debitor/Kreditor), nie direkt auf Bank.
 
 **Auswertungen.** Kontensalden, offene Posten, BWA, SuSa, Soll-Ist-Vergleich, KPI-Dashboard.
 
@@ -84,11 +84,11 @@ Das Tool **löst nicht**:
 ## Voraussetzungen
 
 - **Python >= 3.11**
-- **Collmex-Account mit API-Zugang** — nicht jeder Tarif hat die
+- **Collmex-Account mit API-Zugang.** Nicht jeder Tarif hat die
   Data-Exchange-Schnittstelle. Minimum aktuell `buchhaltung basic`. Siehe
   [Collmex-Tarife](https://www.collmex.de/buchhaltung.html).
 - **Separater API-User** in Collmex (Verwaltung → Benutzer). Nicht der
-  normale Web-Login — der API-User ist ein eigener technischer Account.
+  normale Web-Login. Der API-User ist ein eigener technischer Account.
 - **Optional für Web-UI-Scraping** (`collmex webui`): separater Web-User,
   nicht der API-User.
 
@@ -116,7 +116,7 @@ COLLMEX_WEB_PASSWORD=...
 
 Jeder Mandant braucht ein eigenes Profil unter `mandant/<kuerzel>/profil.md`.
 Das Verzeichnis `mandant/` ist bis auf die committete Vorlage
-(`mandant/beispiel/`) via `.gitignore` aus dem Repo ausgeschlossen — deine
+(`mandant/beispiel/`) via `.gitignore` aus dem Repo ausgeschlossen. Deine
 eigenen Mandantendaten bleiben **lokal** und werden nicht versehentlich
 gepusht. Schema: siehe `mandant/beispiel/profil.md` oder `CLAUDE.md` →
 *Multi-Mandant*.
@@ -129,7 +129,7 @@ gepusht. Schema: siehe `mandant/beispiel/profil.md` oder `CLAUDE.md` →
 # 1. Lieferant suchen
 collmex abfrage VENDOR_GET --suche "Deutsche Telekom"
 
-# 2. Buchen (Lieferant ist Pflicht — nie direkt auf Bank)
+# 2. Buchen (Lieferant ist Pflicht, nie direkt auf Bank)
 collmex buchen "Telefon Q2" --betrag 85,00 \
     --lieferant 70034 --konto 4420 --ust 19 --rechnungsnr 2026-04-0815
 
@@ -172,7 +172,7 @@ System:        status | onboarding | handbuch | version | webui
 Dieses Repo ist für autonomen LLM-Betrieb gebaut:
 
 1. **Agent liest `CLAUDE.md`** → kennt Rolle (CFO / Head of Accounting), Regeln (Soll=Haben, keine Löschungen, immer Personenkonten, nie raten) und Flows (Eingang, Ausgang, Storno, Zahlungseingang, Monatsabschluss)
-2. **Arbeitet Aufgaben ab** — Buchungen, Auswertungen, Monatsabschluss, Mahnlauf
+2. **Arbeitet Aufgaben ab:** Buchungen, Auswertungen, Monatsabschluss, Mahnlauf
 3. **Lernt Neues** und dokumentiert es in `wissen/` oder `docs/`
 4. **Committet** ins Repo → die nächste Session profitiert
 
@@ -215,12 +215,12 @@ Das Repo bringt nicht nur Code mit, sondern auch das FiBu-Wissen, das der LLM-Ag
 | `docs/docs/api/api-fields.md` | Verifizierte Collmex-API-Feldstrukturen |
 | `docs/docs/api/api-patterns.md` | API-Gotchas und Workarounds |
 
-## Collmex API — Fakten
+## Collmex API: Fakten
 
 - CSV-over-HTTPS, Semikolon-getrennt, ISO-8859-1
 - Ein einziger Endpunkt, alle Aktionen als CSV-Zeilen
 - Schreiben: `CMXLRN` (Eingang), `CMXUMS` (Ausgang), `CMXINV` (Rechnung), `CMXKND` (Kunde), `CMXLIF` (Lieferant)
-- Lesen: `collmex abfrage SATZART` — alle ~30 GET-Satzarten
+- Lesen: `collmex abfrage SATZART` (alle ~30 GET-Satzarten)
 - Offizielle Doku: <https://www.collmex.de/c.cmx?1005,1,help,api>
 
 ## Tests

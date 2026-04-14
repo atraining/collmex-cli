@@ -1,4 +1,4 @@
-"""Tests für collmex.models — Dataclasses und Geschäftslogik."""
+"""Tests für collmex.models: Dataclasses und Geschäftslogik."""
 
 from decimal import Decimal
 

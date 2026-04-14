@@ -1,4 +1,4 @@
-"""Tests für collmex.gobd — AuditTrail.
+"""Tests für collmex.gobd: AuditTrail.
 
 Alle Tests verwenden ein temporäres Verzeichnis, keine echten API-Calls.
 """

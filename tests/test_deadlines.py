@@ -1,4 +1,4 @@
-"""Tests für collmex.deadlines — Fristenkalender und DeadlineTracker.
+"""Tests für collmex.deadlines: Fristenkalender und DeadlineTracker.
 
 Alle Tests sind deterministisch und benötigen keine API-Calls.
 Datums-abhängige Tests verwenden ein festes Referenzdatum.

@@ -195,7 +195,7 @@ def schonfrist(frist_datum: date) -> date:
 
     Die Schonfrist gilt für Steuerzahlungen per Banküberweisung.
     Gemäß §240 AO beträgt sie 3 Tage. Das Ende der Schonfrist
-    wird NICHT auf Werktage verschoben — es zählen Kalendertage.
+    wird NICHT auf Werktage verschoben. Es zählen Kalendertage.
 
     Beispiel: UStVA fällig am 10.03. -> Schonfrist bis 13.03.
               Zahlung muss bis 13.03. beim Finanzamt eingehen.

@@ -72,7 +72,7 @@ def validate_booking(booking: Booking) -> list[str]:
     if datum_fehler:
         fehler.append(datum_fehler)
 
-    # 6. Buchungstext nicht leer — mindestens eine Position muss Text haben
+    # 6. Buchungstext nicht leer: mindestens eine Position muss Text haben
     hat_buchungstext = any(pos.buchungstext.strip() for pos in booking.positionen)
     if not hat_buchungstext:
         fehler.append("Buchungstext darf nicht leer sein.")

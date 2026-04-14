@@ -93,7 +93,7 @@ def _make_header(
     return ";".join(fields)
 
 
-# DATEV Spalten-Header (125 Felder), Zeile 2 — gekürzt auf die wichtigsten
+# DATEV Spalten-Header (125 Felder), Zeile 2, gekürzt auf die wichtigsten
 _COLUMN_HEADER = (
     "Umsatz (ohne Soll/Haben-Kz);Soll/Haben-Kennzeichen;"
     "WKZ Umsatz;Kurs;Basisumsatz;WKZ Basisumsatz;"

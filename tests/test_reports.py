@@ -1,6 +1,6 @@
 """Tests für collmex Reports (BWA, SuSa, OP, Säumige Kunden).
 
-Alle Tests nutzen gemockte API-Clients — keine echten API-Aufrufe.
+Alle Tests nutzen gemockte API-Clients, keine echten API-Aufrufe.
 """
 
 from __future__ import annotations

@@ -1,4 +1,4 @@
-"""Tests für collmex.controlling — ControllingEngine.
+"""Tests für collmex.controlling: ControllingEngine.
 
 Alle Tests mocken den API-Client, keine echten API-Calls.
 """

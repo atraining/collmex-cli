@@ -6,7 +6,7 @@ Collmex-API-Modelle:
 - CollmexEingangsrechnung -> CMXLRN (Lieferantenrechnung, 20 Felder)
 - CollmexAusgangsrechnung -> CMXUMS (Erlöse/Umsätze, 31 Felder)
 - BookingLine/Booking      -> Interne Repräsentation / ACCDOC_GET-Ergebnis
-  (ACCDOC kann NICHT importiert werden — nur lesen via ACCDOC_GET)
+  (ACCDOC kann NICHT importiert werden, nur lesen via ACCDOC_GET)
 """
 
 from __future__ import annotations
@@ -61,7 +61,7 @@ class CollmexKunde:
     firma_nr: int = 1
     kunde_nr: int | None = None
     anrede: str = "Firma"
-    name: str = ""  # Idx 7 — Firmenname (PFLICHT)
+    name: str = ""  # Idx 7: Firmenname (PFLICHT)
     straße: str = ""
     plz: str = ""
     ort: str = ""
@@ -102,7 +102,7 @@ class CollmexLieferant:
     firma_nr: int = 1
     lieferant_nr: int | None = None
     anrede: str = "Firma"
-    name: str = ""  # Idx 7 — Firmenname (PFLICHT)
+    name: str = ""  # Idx 7: Firmenname (PFLICHT)
     straße: str = ""
     plz: str = ""
     ort: str = ""
@@ -110,7 +110,7 @@ class CollmexLieferant:
     telefon: str = ""
     email: str = ""
     ust_id: str = ""
-    aufwandskonto: int | None = None  # Idx 35 — Default-Aufwandskonto
+    aufwandskonto: int | None = None  # Idx 35: Default-Aufwandskonto
     vorsteuer: int = 0  # 0=19%, 1=7%, 2=steuerfrei
     zahlungsbedingung: str = ""
     url: str = ""
@@ -219,7 +219,7 @@ class Booking:
 
         if soll != haben:
             raise ValidationError(
-                f"Soll ({soll}) != Haben ({haben}) — Differenz: {abs(soll - haben)}",
+                f"Soll ({soll}) != Haben ({haben}), Differenz: {abs(soll - haben)}",
                 {
                     "beleg_nr": self.beleg_nr,
                     "summe_soll": str(soll),

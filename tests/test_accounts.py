@@ -1,4 +1,4 @@
-"""Tests für collmex.accounts — SKR03 Kontenrahmen."""
+"""Tests für collmex.accounts: SKR03 Kontenrahmen."""
 
 from __future__ import annotations
 
@@ -230,7 +230,7 @@ class TestGetAccountsByType:
 
 
 # ---------------------------------------------------------------------------
-# 7. suggest_account — Keyword-Matching
+# 7. suggest_account: Keyword-Matching
 # ---------------------------------------------------------------------------
 
 

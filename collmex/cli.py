@@ -1,4 +1,4 @@
-"""collmex CLI — FiBu & Controlling Kommandozeile für Collmex.
+"""collmex CLI: FiBu & Controlling Kommandozeile für Collmex.
 
 Verwendet Click als CLI-Framework und Rich für formatierte Tabellenausgabe.
 """
@@ -29,7 +29,7 @@ error_console = Console(stderr=True)
 
 
 # ---------------------------------------------------------------------------
-# SectionedGroup — Gruppierte Hilfe-Ausgabe
+# SectionedGroup: Gruppierte Hilfe-Ausgabe
 # ---------------------------------------------------------------------------
 
 # Sektionen: (Titel, [Befehlsnamen])
@@ -491,7 +491,7 @@ def op(ctx: CliContext) -> None:
 
     # Debitoren
     if op_daten["debitoren"]:
-        table = Table(title="Offene Posten — Debitoren")
+        table = Table(title="Offene Posten: Debitoren")
         table.add_column("Beleg", style="cyan", width=10)
         table.add_column("Kunde", width=30)
         table.add_column("Datum", width=10)
@@ -523,7 +523,7 @@ def op(ctx: CliContext) -> None:
 
     # Kreditoren
     if op_daten["kreditoren"]:
-        table = Table(title="Offene Posten — Kreditoren")
+        table = Table(title="Offene Posten: Kreditoren")
         table.add_column("Beleg", style="cyan", width=10)
         table.add_column("Lieferant", width=30)
         table.add_column("Datum", width=10)
@@ -654,7 +654,7 @@ def dashboard(ctx: CliContext) -> None:
     jahr = now.year
     monat = now.month
 
-    console.print(f"[bold]Dashboard — {monat:02d}/{jahr}[/]\n")
+    console.print(f"[bold]Dashboard {monat:02d}/{jahr}[/]\n")
 
     try:
         reports = ctx.reports_engine
@@ -801,7 +801,7 @@ def ustva(ctx: CliContext, monat: int | None, jahr: int | None) -> None:
     # Vorauszahlung
     vz = result["vorauszahlung"]
     vz_style = "red" if vz > 0 else "green"
-    console.print("\n[bold]KZ 83 — Vorauszahlung:[/]")
+    console.print("\n[bold]KZ 83 Vorauszahlung:[/]")
     console.print(f"  [{vz_style}]{vz:>12,.2f} EUR[/]")
     if vz > 0:
         console.print("  [dim](Zahlung an Finanzamt)[/]")
@@ -1189,7 +1189,7 @@ def mahnlauf(ctx: CliContext, stufe: int | None, dry_run: bool) -> None:
         console.print("[green]Keine offenen Mahnungen.[/]")
         return
 
-    table = Table(title=f"Mahnlauf{f' — Stufe {stufe}' if stufe else ''}")
+    table = Table(title=f"Mahnlauf{f' Stufe {stufe}' if stufe else ''}")
     table.add_column("Kunde", width=25)
     table.add_column("Beleg", style="cyan", width=12)
     table.add_column("Betrag", justify="right", width=12)
@@ -1221,7 +1221,7 @@ def mahnlauf(ctx: CliContext, stufe: int | None, dry_run: bool) -> None:
     )
 
     if dry_run:
-        console.print("\n[yellow]Vorschau — keine Mahnungen versendet.[/]")
+        console.print("\n[yellow]Vorschau: Keine Mahnungen versendet.[/]")
 
 
 @main.command("datev-export")
@@ -1299,7 +1299,7 @@ def datev_export(
 @click.option("--suche", default=None, help="In allen Feldern suchen")
 @pass_ctx
 def abfrage(ctx: CliContext, satzart: str, felder: tuple, suche: str | None) -> None:
-    """Collmex-Daten abfragen — alle ~30 GET-Satzarten, mit Filtern.
+    """Collmex-Daten abfragen: alle ~30 GET-Satzarten, mit Filtern.
 
     \b
     SATZART   Eine GET-Satzart (siehe: collmex hilfe)
@@ -1347,7 +1347,7 @@ def hilfe(satzart: str | None, suche: str | None) -> None:
             error_console.print("Tipp: collmex api-help --suche <stichwort>")
             sys.exit(1)
 
-        console.print(f"\n[bold]{sa['satzart']}[/] — {sa['name']}")
+        console.print(f"\n[bold]{sa['satzart']}[/]: {sa['name']}")
         console.print(f"  Kategorie:    {KATEGORIE_LABELS[sa['kategorie']]}")
         if "felder" in sa:
             console.print(f"  Felder:       {sa['felder']}")
@@ -1393,7 +1393,7 @@ def hilfe(satzart: str | None, suche: str | None) -> None:
             console.print(f"[yellow]Keine Treffer für '{suche}'.[/]")
             return
 
-        console.print(f"[bold]Suche: '{suche}'[/] — {len(treffer)} Treffer\n")
+        console.print(f"[bold]Suche: '{suche}'[/] ({len(treffer)} Treffer)\n")
         table = Table()
         table.add_column("Satzart", style="cyan", width=24)
         table.add_column("Name", width=28)
@@ -1449,7 +1449,7 @@ def handbuch(thema: str | None, suche: str | None) -> None:
 
     if thema is None and suche is None:
         # Übersicht aller Themen
-        console.print("[bold]Collmex-Handbuch — Verfügbare Themen[/]\n")
+        console.print("[bold]Collmex-Handbuch: Verfügbare Themen[/]\n")
         table = Table(show_header=True)
         table.add_column("Thema", style="cyan", width=22)
         table.add_column("Beschreibung", width=50)
@@ -1493,7 +1493,7 @@ def handbuch(thema: str | None, suche: str | None) -> None:
         elif matches:
             console.print(f"[yellow]Mehrere Treffer für '{thema}':[/]")
             for key, (_, t) in sorted(matches.items()):
-                console.print(f"  [cyan]{key}[/] — {t}")
+                console.print(f"  [cyan]{key}[/]: {t}")
             return
         else:
             # Direkter Anker-Versuch
@@ -1522,7 +1522,7 @@ def onboarding(ctx: CliContext) -> None:
     if not ok:
         error_console.print("[bold red]Verbindung fehlgeschlagen[/]")
         sys.exit(1)
-    console.print(f"  [green]OK[/] — Kunde {ctx.client.customer}, Firma {ctx.client.company}")
+    console.print(f"  [green]OK[/] Kunde {ctx.client.customer}, Firma {ctx.client.company}")
 
     # 2. Kontenrahmen erkennen
     # Logik: ACCBAL_GET für ein Konto → Fehler "nicht vorhanden" = Konto existiert nicht

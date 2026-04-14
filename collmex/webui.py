@@ -1,4 +1,4 @@
-"""Collmex Web-UI Scraper — Fallback für Daten die per API nicht verfügbar sind.
+"""Collmex Web-UI Scraper: Fallback für Daten die per API nicht verfügbar sind.
 
 Die Collmex-API deckt nicht alles ab. Einige Stammdaten (Mengeneinheiten,
 Zahlungsbedingungen, Firmenstammdaten, Kontenrahmen) gibt es NUR per Web-UI.
@@ -139,7 +139,7 @@ class CollmexWebUI:
 
     @property
     def session(self) -> requests.Session:
-        """Lazy Login — Session wird beim ersten Zugriff aufgebaut."""
+        """Lazy Login: Session wird beim ersten Zugriff aufgebaut."""
         if self._session is None:
             self._session = self._login()
         return self._session
@@ -249,4 +249,4 @@ SEITEN = {
     "benutzer": "1,us",
     "login": "0,login",
 }
-"""Bekannte Web-UI-Seiten — Pfad nach der Kundennummer."""
+"""Bekannte Web-UI-Seiten. Pfad nach der Kundennummer."""

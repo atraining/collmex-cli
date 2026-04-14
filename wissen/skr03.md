@@ -1,4 +1,4 @@
-# SKR03 Kontenrahmen — Wissensgrundlage
+# SKR03 Kontenrahmen: Wissensgrundlage
 
 Der SKR03 (Prozessgliederungsprinzip) ordnet Konten nach dem Ablauf
 betrieblicher Prozesse. Klassen 0-2 Bilanz, Klasse 3 Wareneingang,
@@ -8,7 +8,7 @@ Erlöse, Klasse 9 Vortrag.
 > **Quelle der kuratierten Liste:** `collmex/accounts.py` (Modul
 > `SKR03`). Dieses Markdown ist die lesbare Fassung derselben Konten
 > und dient als Nachschlagewerk für den LLM-Agenten. Der Python-Code
-> ist die kanonische Quelle — wenn sich etwas ändert, dort ändern.
+> ist die kanonische Quelle. Wenn sich etwas ändert, dort ändern.
 
 ## Kontenklassen-Übersicht
 
@@ -19,8 +19,8 @@ Erlöse, Klasse 9 Vortrag.
 | 2 | Neutrale Aufwendungen/Erträge, Steuern | GuV |
 | 3 | Wareneingang, Bestände, Fremdleistungen | GuV (Aufwand) |
 | 4 | Betriebliche Aufwendungen | GuV (Aufwand) |
-| 5 | — (leer im Standard-SKR03) | - |
-| 6 | — (leer im Standard-SKR03) | - |
+| 5 | (leer im Standard-SKR03) | - |
+| 6 | (leer im Standard-SKR03) | - |
 | 7 | Bestände Erzeugnisse, unfertige Leistungen | Bilanz |
 | 8 | Erlöse | GuV (Ertrag) |
 | 9 | Vortrags-/statistische Konten | Sonstiges |
@@ -107,11 +107,11 @@ Kurztest beim Erstkontakt mit einem Mandanten:
 
 ## Kontierungsregeln (Entscheidungshilfen)
 
-### Bewirtung — 70/30-Split
+### Bewirtung: 70/30-Split
 Geschäftliche Bewirtung ist nur zu 70% steuerlich abziehbar, die VSt
 dagegen zu 100%. Split auf zwei Konten:
-- **4650** (70% — abzugsfähig)
-- **4654** (30% — nicht abzugsfähig)
+- **4650** (70%, abzugsfähig)
+- **4654** (30%, nicht abzugsfähig)
 
 VSt wird auf den **gesamten** Netto-Betrag gezogen (1576 bei 19%).
 Siehe auch Flow *Split-Buchung* in `CLAUDE.md`.
@@ -121,10 +121,10 @@ EU-Lieferant mit gültiger USt-IdNr:
 - Aufwand auf normales Aufwandskonto (z.B. 4830 für SaaS)
 - USt: Konto **1580** (Vorsteuer §13b) auf der Soll-Seite
 - Gegenbuchung: **1787** (USt §13b) auf der Haben-Seite
-- Netto-Effekt auf USt: null — aber BZSt-meldepflichtig.
+- Netto-Effekt auf USt: null (aber BZSt-meldepflichtig).
 
 ### Bank, Kasse, Verrechnung
-- Nie direkt auf **1200** (Bank) buchen — IMMER über Personenkonto
+- Nie direkt auf **1200** (Bank) buchen. IMMER über Personenkonto
   (Debitor/Kreditor). Siehe Regel 9 in `CLAUDE.md`.
 - **1590** Durchlaufende Posten / Verrechnungskonto: maximal 10 Tage
   offene Salden, dann klären.

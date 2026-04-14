@@ -1,4 +1,4 @@
-"""Tests für collmex.booking — CMXLRN/CMXUMS-basierte Buchungslogik."""
+"""Tests für collmex.booking: CMXLRN/CMXUMS-basierte Buchungslogik."""
 
 from __future__ import annotations
 
@@ -571,7 +571,7 @@ class TestBookingResult:
 
 
 # ---------------------------------------------------------------------------
-# CollmexLieferant / CollmexKunde — to_csv_line
+# CollmexLieferant / CollmexKunde: to_csv_line
 # ---------------------------------------------------------------------------
 
 

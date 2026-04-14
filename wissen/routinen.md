@@ -1,4 +1,4 @@
-# Kaufmännische Routinen — Checklisten für den Agenten
+# Kaufmännische Routinen: Checklisten für den Agenten
 
 Dieses Dokument beschreibt die Prüf-Routinen eines kaufmännischen Leiters.
 Der Agent arbeitet diese Checklisten periodisch ab, dokumentiert Ergebnisse
@@ -23,7 +23,7 @@ in `mandant/berichte/` und meldet Widersprüche.
 
 - **Prüfung:** Eingegangene Rechnungen auf Pflichtangaben (§14 UStG) prüfen, kontieren, erfassen
 - **Konten:** Aufwandskonten (typ-abhängig), 1576 (VSt 19%), 1571 (VSt 7%), Kreditoren 70000+
-- **Collmex:** CMXLRN — Aufwandskonto IMMER explizit in Feld 16!
+- **Collmex:** CMXLRN. Aufwandskonto IMMER explizit in Feld 16!
 - **Typische Fehler:**
   - Pflichtangaben fehlen (USt-IdNr, Leistungszeitraum, fortlaufende Nr)
   - VSt abgezogen obwohl Rechnung formell fehlerhaft
@@ -50,7 +50,7 @@ in `mandant/berichte/` und meldet Widersprüche.
 
 - **Prüfung:** Alle überfälligen Forderungen identifizieren (0-14d, 15-30d, 31-60d, 60d+)
 - **Konten:** Debitoren 10000-69999
-- **Collmex:** OPEN_ITEMS_GET — positive Beträge = Debitoren
+- **Collmex:** OPEN_ITEMS_GET (positive Beträge = Debitoren)
 - **Typische Fehler:**
   - Bereits bezahlte Rechnungen noch offen (Zuordnungsfehler)
   - Gutschriften nicht verrechnet
@@ -71,7 +71,7 @@ in `mandant/berichte/` und meldet Widersprüche.
 
 - **Prüfung:** Fällige Lieferantenrechnungen, Skontofähige priorisieren
 - **Konten:** Kreditoren 70000+, 1200 (Bank), 3736 (Erhaltene Skonti 19%)
-- **Collmex:** OPEN_ITEMS_GET — negative Beträge = Kreditoren
+- **Collmex:** OPEN_ITEMS_GET (negative Beträge = Kreditoren)
 - **Typische Fehler:**
   - Skontofrist verpasst (2-3% Verlust)
   - Doppelzahlung
@@ -89,7 +89,7 @@ in `mandant/berichte/` und meldet Widersprüche.
 
 ### W5: Verrechnungskonten prüfen
 
-- **Prüfung:** 1590, 1360, 1361 — müssen auf Null stehen. Posten >2 Wochen = Warnsignal.
+- **Prüfung:** 1590, 1360, 1361. Müssen auf Null stehen. Posten >2 Wochen = Warnsignal.
 - **Konten:** 1590 (Durchlaufende Posten), 1360 (Geldtransit), 1361 (Kreditkarten)
 - **Collmex:** ACCBAL_GET für diese Konten
 - **Typische Fehler:**
@@ -116,7 +116,7 @@ in `mandant/berichte/` und meldet Widersprüche.
 
 ### M2: BWA prüfen
 
-- **Prüfung:** Erlöse, Wareneinsatz, Personalkosten, EBIT — Monatsvergleich + vs. Vorjahr
+- **Prüfung:** Erlöse, Wareneinsatz, Personalkosten, EBIT. Monatsvergleich + vs. Vorjahr.
 - **Konten:** Erlöse 8000-8999, Aufwand 4000-7999
 - **Collmex:** `collmex soll-ist`
 - **Typische Fehler:**
@@ -188,7 +188,7 @@ in `mandant/berichte/` und meldet Widersprüche.
 
 ### Q2: Steuervorauszahlungen prüfen
 
-- **Prüfung:** KSt + GewSt — stimmen Vorauszahlungen noch zum erwarteten Gewinn?
+- **Prüfung:** KSt + GewSt: stimmen Vorauszahlungen noch zum erwarteten Gewinn?
 - **Fristen:** KSt: 10.03/06/09/12. GewSt: 15.02/05/08/11.
 - **Konten:** 2200 (KSt), 2203 (KSt-VZ), 4320 (GewSt), 1550/1800 (FA-Forderungen/-Verbindl.)
 - **Typische Fehler:**

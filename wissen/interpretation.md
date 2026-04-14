@@ -29,11 +29,11 @@ Der Agent verhält sich wie ein risikoaverser kaufmännischer Leiter:
    - "Es gibt bereits eine offene Rechnung von diesem Lieferanten..."
    - "Achtung: USt-IdNr fehlt beim Kunden, §13b prüfen"
 
-4. **Nur buchen wenn sicher** — im Zweifel nachfragen
+4. **Nur buchen wenn sicher.** Im Zweifel nachfragen.
 
 ---
 
-## Szenarien: Vage Eingabe → Konkreter Vorschlag
+## Szenarien: Vage Eingabe, konkreter Vorschlag
 
 ### "Buch die Rechnung vom Designbüro"
 
@@ -80,7 +80,7 @@ Der Agent verhält sich wie ein risikoaverser kaufmännischer Leiter:
    → Wenn kein Auftrag: "Welche Leistung soll berechnet werden?"
 
 3. Produkte vorschlagen:
-   → PRODUCT_GET — bekannte Produkte auflisten
+   → PRODUCT_GET: bekannte Produkte auflisten
    → "Unsere Produkte: WEB-DESIGN (3500), SEO-SETUP (1200), CONTENT-PKT (800)"
 
 4. Vor dem Erstellen:
@@ -154,7 +154,7 @@ Der Agent verhält sich wie ein risikoaverser kaufmännischer Leiter:
 4. Plausibilitäts-Check:
    → Zahllast vs. Vormonat vergleichen
    → Große Abweichungen erklären
-   → "Zahllast 30% höher als Vormonat — Ursache: Rechnung #5 (5.500 netto)"
+   → "Zahllast 30% höher als Vormonat. Ursache: Rechnung #5 (5.500 netto)"
 ```
 
 ### "Wir haben was bei Amazon bestellt, 50 Euro"
@@ -179,7 +179,7 @@ Der Agent verhält sich wie ein risikoaverser kaufmännischer Leiter:
    → "Rechnung von Amazon EU Services (LU)? Dann §13b prüfen!"
 
 4. Betrag:
-   → "50 EUR — brutto oder netto?"
+   → "50 EUR: brutto oder netto?"
    → Bei brutto: 50 / 1.19 = 42,02 netto + 7,98 USt
    → "Eingangsrechnung: Amazon, 42,02 netto, Konto 4930 (Büromaterial),
       7,98 VSt. Rechnungsnummer von Amazon?"
@@ -208,15 +208,15 @@ Der Agent verhält sich wie ein risikoaverser kaufmännischer Leiter:
 
 ## Risikovermeidung: Was der Agent NIEMALS tut
 
-1. **Nie einen Betrag raten** — immer nachfragen
-2. **Nie ohne Belegnummer buchen** — GoBD-Pflicht
-3. **Nie USt-Satz raten** — bei Unsicherheit OHNE VSt und nachfragen
-4. **Nie löschen** — nur Stornobuchungen (GoBD)
-5. **Nie auf ein Konto buchen das er nicht kennt** — erst prüfen ob es existiert (ACCBAL_GET)
-6. **Nie eine Buchung ändern** — nur Storno + Neubuchung
-7. **Nie Personenkonten als Gegenkonto in CMXLRN** — nur Sachkonten (1600)
-8. **Nie Default-Konten blind akzeptieren** — CMXLRN Default 3200 ist fast immer falsch
-9. **Nie Produkt/Leistung raten** — wenn der User nicht sagt WAS verkauft/bestellt
+1. **Nie einen Betrag raten.** Immer nachfragen.
+2. **Nie ohne Belegnummer buchen.** GoBD-Pflicht.
+3. **Nie USt-Satz raten.** Bei Unsicherheit OHNE VSt buchen und nachfragen.
+4. **Nie löschen.** Nur Stornobuchungen (GoBD).
+5. **Nie auf ein Konto buchen das er nicht kennt.** Erst prüfen ob es existiert (ACCBAL_GET).
+6. **Nie eine Buchung ändern.** Nur Storno + Neubuchung.
+7. **Nie Personenkonten als Gegenkonto in CMXLRN.** Nur Sachkonten (1600).
+8. **Nie Default-Konten blind akzeptieren.** CMXLRN Default 3200 ist fast immer falsch.
+9. **Nie Produkt/Leistung raten.** Wenn der User nicht sagt WAS verkauft/bestellt
    wurde: NACHFRAGEN! Nicht einfach ein vorhandenes Produkt nehmen.
    "Was wurde bestellt/geliefert?" ist immer die erste Frage.
 
@@ -270,7 +270,7 @@ Am Ende einer Session mit Buchungen:
 ## Hinweis: Personenkonten vs. Kontenrahmen
 
 Personenkonten (Debitoren 10000-69999, Kreditoren 70000+) sind NICHT Teil
-von SKR03/SKR04 — sie sind eine Software-Konvention (Collmex, DATEV, etc.).
+von SKR03/SKR04. Sie sind eine Software-Konvention (Collmex, DATEV, etc.).
 Beide Kontenrahmen nutzen denselben Personenkonten-Bereich.
 
 SKR03 vs. SKR04 betrifft nur die Sachkonten (0000-9999).
@@ -309,7 +309,7 @@ Für SKR04 braucht es eine Mapping-Tabelle (→ `wissen/skr04.md`).
 
 ## Entscheidungsbaum: Welches Konto?
 
-### Eingangsrechnung — Aufwandskonto bestimmen
+### Eingangsrechnung: Aufwandskonto bestimmen
 
 ```
 Lieferantenstamm hat Aufwandskonto gesetzt?
@@ -337,7 +337,7 @@ Lieferantenstamm hat Aufwandskonto gesetzt?
     └── Unklar                 → NACHFRAGEN, nicht raten
 ```
 
-### Ausgangsrechnung — Erlöskonto bestimmen
+### Ausgangsrechnung: Erlöskonto bestimmen
 
 ```
 Was wurde verkauft/geleistet?
@@ -373,7 +373,7 @@ Wer ist der Empfänger?
 
 ## Spezialfälle und Gotchas
 
-### §14 UStG — Pflichtangaben Rechnung
+### §14 UStG: Pflichtangaben Rechnung
 
 Jede Eingangsrechnung VOR dem VSt-Abzug prüfen:
 
@@ -400,7 +400,7 @@ Jede Eingangsrechnung VOR dem VSt-Abzug prüfen:
 - **Gutschrift i.S.d. UStG (§14 Abs. 2 S. 2):** Rechnung durch Leistungsempfänger.
   → Selten, nur bei Vereinbarung. NICHT mit Stornorechnung verwechseln!
 
-### GWG — Geringwertige Wirtschaftsgüter
+### GWG: Geringwertige Wirtschaftsgüter
 
 ```
 Nettobetrag der Anschaffung:
@@ -425,7 +425,7 @@ Pflichtangaben auf dem Beleg:
 - Ort, Datum, Teilnehmer, Anlass
 - Eigenbeleg bei ausländischen Restaurants
 
-### Skonto — USt-Korrektur nicht vergessen
+### Skonto: USt-Korrektur nicht vergessen
 
 ```
 Rechnung: 1.000 netto + 190 USt = 1.190 brutto
@@ -468,7 +468,7 @@ WIR kaufen von EU-Unternehmer (mit USt-IdNr):
 → Nicht §13b! Eigener Mechanismus
 ```
 
-### Drittland — Einfuhrumsatzsteuer
+### Drittland: Einfuhrumsatzsteuer
 
 ```
 Import aus Drittland (z.B. USA, China):

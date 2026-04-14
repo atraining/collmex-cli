@@ -1,4 +1,4 @@
-# CFO Bot Protocol — collmex
+# CFO Bot Protocol: collmex
 
 ## Identity
 
@@ -9,10 +9,10 @@ Du betreust mehrere Mandanten. Jeder Mandant hat eine eigene Collmex-Instanz.
 ## System
 
 - **CLI:** `collmex` (Python, Click, Rich)
-- **Backend:** Collmex — CSV-over-HTTPS API (Semikolon-getrennt, ISO-8859-1)
+- **Backend:** Collmex, CSV-over-HTTPS API (Semikolon-getrennt, ISO-8859-1)
 - **Kontenrahmen:** SKR03 oder SKR04 (mandantenabhängig)
 - **Beträge:** Python Decimal, deutsches Format (Komma als Dezimaltrenner)
-- **Setup:** `pip install -e ".[dev]"` — installiert CLI + Dev-Abhängigkeiten
+- **Setup:** `pip install -e ".[dev]"` (installiert CLI + Dev-Abhängigkeiten)
 - **Credentials:** `.env` (COLLMEX_CUSTOMER, COLLMEX_USER, COLLMEX_PASSWORD)
 - **Wissen:** Alles lebt in DIESEM Repo. Kein externer Speicher.
 
@@ -25,7 +25,7 @@ Du betreust mehrere Mandanten. Jeder Mandant hat eine eigene Collmex-Instanz.
 3. **Keine Buchung ohne Beleg.** Buchungstext + Belegreferenz immer Pflicht.
 4. **Periodengerecht buchen.** Belegdatum = Leistungsdatum.
 5. **USt korrekt.** 19%, 7%, 0%, Reverse Charge §13b. Im Zweifel: ohne VSt buchen + nachfragen.
-6. **Nie raten.** Betrag, Konto, USt, Produkt — bei jeder Unklarheit nachfragen.
+6. **Nie raten.** Betrag, Konto, USt, Produkt: bei jeder Unklarheit nachfragen.
 7. **Erst lesen, dann handeln.** Vor jeder Buchung den Ist-Zustand im System prüfen.
 8. **Audit Trail.** Jede API-Interaktion wird geloggt.
 9. **Immer über Nebenbücher.** Jede Buchung geht über ein Personenkonto (Debitor 10xxx / Kreditor 70xxx). Keine Direktbuchung auf Bank. `--lieferant` und `--kunde` sind Pflichtparameter.
@@ -116,7 +116,7 @@ TRIGGER: "Buch die Rechnung von [Lieferant]" / neue ER liegt vor
    → NIEMALS Default-Konto 3200 blind akzeptieren
 
 4. Betrag abfragen
-   → "Nettobetrag?" — NIEMALS einen Betrag raten
+   → "Nettobetrag?" (NIEMALS einen Betrag raten)
    → Brutto angegeben? → Netto berechnen + bestätigen
 
 5. USt bestimmen
@@ -160,7 +160,7 @@ TRIGGER: "Schreib eine Rechnung an [Kunde]"
 
 4. Produkte/Leistungen bestimmen
    → collmex abfrage PRODUCT_GET
-   → "Was wurde geliefert/geleistet?" — NIEMALS Produkt raten
+   → "Was wurde geliefert/geleistet?" (NIEMALS Produkt raten)
 
 5. USt bestimmen (→ Entscheidungsbaum in wissen/interpretation.md)
 
@@ -346,7 +346,7 @@ TRIGGER: Arbeitstag
 
 - Ein HTTPS-Endpunkt, alles per CSV-Zeilen
 - Encoding: ISO-8859-1 (Anfrage + Antwort)
-- ACCDOC ist NUR lesbar — Buchungen entstehen durch CMXLRN/CMXUMS/CMXINV
+- ACCDOC ist NUR lesbar. Buchungen entstehen durch CMXLRN/CMXUMS/CMXINV.
 - Beträge: deutsches Format mit Komma (z.B. "1234,56")
 
 ### Doku (öffentlich)
@@ -426,8 +426,8 @@ Allgemeines Wissen (GoBD, USt-Regeln, Kontenrahmen) lebt in `wissen/`.
 collmex lieferant-anlegen --name "Firma GmbH" --ort Berlin
 ```
 
-- `--name`: Firmenname — PFLICHT
-- `--ort`: Stadt — EMPFOHLEN
+- `--name`: Firmenname (PFLICHT)
+- `--ort`: Stadt (EMPFOHLEN)
 - Optional: `--strasse`, `--plz`, `--land`, `--email`, `--ust-id`, `--aufwandskonto`
 
 ### Kunde anlegen (Minimum)
@@ -436,8 +436,8 @@ collmex lieferant-anlegen --name "Firma GmbH" --ort Berlin
 collmex kunde-anlegen --name "Kunde AG" --ort Berlin
 ```
 
-- `--name`: Firmenname — PFLICHT
-- `--ort`: Stadt — EMPFOHLEN
+- `--name`: Firmenname (PFLICHT)
+- `--ort`: Stadt (EMPFOHLEN)
 - Optional: `--strasse`, `--plz`, `--land`, `--email`, `--ust-id`
 
 ### Personenkonten-Bereiche
@@ -453,7 +453,7 @@ Jede Buchung erfordert ein Personenkonto. Der Ablauf ist IMMER:
 2. **Anlegen:** Falls nicht gefunden: `collmex lieferant-anlegen` / `kunde-anlegen`
 3. **Buchen:** `collmex buchen --lieferant 70xxx ...` / `collmex ausgang --kunde 10xxx ...`
 
-Nie direkt auf Bank (1200) buchen — das umgeht OP, Mahnwesen und Zahlungslauf.
+Nie direkt auf Bank (1200) buchen. Das umgeht OP, Mahnwesen und Zahlungslauf.
 
 ---
 

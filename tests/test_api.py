@@ -1,4 +1,4 @@
-"""Tests für collmex.api — Collmex API Client.
+"""Tests für collmex.api: Collmex API Client.
 
 Unit Tests mocken requests.post, Live Tests (markiert mit @pytest.mark.live)
 kommunizieren mit der echten Collmex-API.
@@ -521,7 +521,7 @@ class TestCredentials:
         assert "testuser" in r
         assert "testpass" not in r  # Passwort nicht im repr anzeigen... wait
         # repr zeigt URL und User, aber das Passwort ist nicht direkt
-        # enthalten — es wird über url=, user=, customer= angezeigt.
+        # enthalten. Es wird über url=, user=, customer= angezeigt.
 
 
 # ===================================================================

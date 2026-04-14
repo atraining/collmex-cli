@@ -196,7 +196,7 @@ class BookingEngine:
             rechnung.netto_erm = betrag_netto
             rechnung.steuer_erm = ust_betrag
             rechnung.konto_erm = aufwandskonto
-        else:  # 0% — steuerfrei
+        else:  # 0%, steuerfrei
             rechnung.sonstige_konto = aufwandskonto
             rechnung.sonstige_betrag = betrag_netto
 
@@ -325,7 +325,7 @@ class BookingEngine:
             rechnung.netto_erm = betrag_netto
             rechnung.steuer_erm = ust_betrag
             rechnung.konto_erm = ertragskonto
-        else:  # 0% — steuerfrei (IG Lieferung, Export, etc.)
+        else:  # 0%, steuerfrei (IG Lieferung, Export, etc.)
             rechnung.steuerfrei_konto = ertragskonto
             rechnung.steuerfrei_betrag = betrag_netto
 
@@ -403,7 +403,7 @@ class BookingEngine:
         """Validiert, sendet und liest eine Rechnung gegen.
 
         Akzeptiert eine einzelne Rechnung oder eine Liste (für Split-Buchungen).
-        Bei Listen werden alle Zeilen in einem Request gesendet — Collmex mergt
+        Bei Listen werden alle Zeilen in einem Request gesendet. Collmex mergt
         Zeilen mit identischer Rechnungsnummer zu einem Beleg.
 
         Ablauf:

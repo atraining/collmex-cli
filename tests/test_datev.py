@@ -1,4 +1,4 @@
-"""Tests für collmex.datev — DATEV Buchungsstapel Export."""
+"""Tests für collmex.datev: DATEV Buchungsstapel Export."""
 
 from __future__ import annotations
 

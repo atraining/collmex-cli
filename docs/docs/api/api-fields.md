@@ -1,6 +1,6 @@
 # Collmex API Field Structures (Verified Against Live API 2026-03)
 
-## ACC_BAL (ACCBAL_GET Response) — 4 Fields
+## ACC_BAL (ACCBAL_GET Response) - 4 Fields
 
 ```
 Index 0: "ACC_BAL"
@@ -11,7 +11,7 @@ Index 3: Saldo (e.g. "306,00")
 
 NO Firma field, NO Soll/Haben split, NO Anfangsbestand.
 
-## OPEN_ITEM (OPEN_ITEMS_GET Response) — 20 Fields
+## OPEN_ITEM (OPEN_ITEMS_GET Response) - 20 Fields
 
 ```
 Index  0: "OPEN_ITEM"
@@ -36,7 +36,7 @@ Index 19: Offener Betrag ("-3332,00")
 
 Debitoren (Kunden) haben positive Beträge, Kreditoren (Lieferanten) negative.
 
-## CMXLIF (Lieferant Import) — 41 Felder
+## CMXLIF (Lieferant Import) - 41 Felder
 
 ```
 Index  0: Satzart ("CMXLIF")
@@ -86,7 +86,7 @@ VENDOR_GET;LieferantNr;FirmaNr
 
 Antwort als CMXLIF (42 Felder).
 
-## CMXLRN (Eingangsrechnung Import) — 20 Fields
+## CMXLRN (Eingangsrechnung Import) - 20 Fields
 
 ```
 CMXLRN;LieferantNr;FirmaNr;Datum;RechnungsNr;
@@ -96,7 +96,7 @@ Gutschrift;Buchungstext;Zahlungsbedingung;
 KontoVoll;KontoErm;Storno;Kostenstelle
 ```
 
-## CMXUMS (Ausgangsrechnung Import) — 31 Felder
+## CMXUMS (Ausgangsrechnung Import) - 31 Felder
 
 ```
 Index  0: Satzart ("CMXUMS")
@@ -121,7 +121,7 @@ Index 18: Konto voller Satz (default 8400)
 Index 19: Konto ermäßigter Satz (default 8300)
 Index 20: Zahlungsreferenz
 Index 21: Auftragsnummer
-Index 22: Storno (1=Storno — ACHTUNG: erzeugt KEINE ACCDOC-Einträge!)
+Index 22: Storno (1=Storno, ACHTUNG: erzeugt KEINE ACCDOC-Einträge!)
 Index 23: Schlussrechnung
 Index 24: Erlösart
 Index 25: Systemname
@@ -132,14 +132,14 @@ Index 29: Land
 Index 30: Produktart
 ```
 
-WICHTIG — Steuerfreie Felder (11/12/14) vs. Revenue-Felder (5/6/18):
+WICHTIG: Steuerfreie Felder (11/12/14) vs. Revenue-Felder (5/6/18):
 - Steuerfreie Felder: Kein Auto-USt auf das Konto (f[11], Haben-Seite),
   ABER Auto-USt auf das Gegenkonto (f[14], Soll-Seite) wenn steuerpflichtig!
 - Revenue-Felder: USt wird auf Basis des Erlöskontos (f[18]) berechnet
-- Gutschrift (f[15]=1): Dreht Soll/Haben komplett — funktioniert zuverlässig
+- Gutschrift (f[15]=1): Dreht Soll/Haben komplett, funktioniert zuverlässig
 - Storno (f[22]=1): Wird akzeptiert, aber erzeugt KEINE Buchung in ACCDOC!
 
-## CMXLRN (Lieferantenrechnung Import) — 21 Felder
+## CMXLRN (Lieferantenrechnung Import) - 21 Felder
 
 ```
 Index  0: Satzart ("CMXLRN")
@@ -166,9 +166,9 @@ Index 20: Internes Memo
 ```
 
 WICHTIG: Feld 16 defaultet auf 3200 (Wareneingang), NICHT auf Lieferanten-Default!
-Feld 13 (Gutschrift) dreht zuverlässig — verwenden für Stornos.
+Feld 13 (Gutschrift) dreht zuverlässig, für Stornos verwenden.
 
-## CMXKND (Kunden Import) — Wichtige Felder
+## CMXKND (Kunden Import) - Wichtige Felder
 
 ```
 Index  0: Satzart ("CMXKND")
@@ -187,7 +187,7 @@ Index 25: Zahlungsbedingung
 Index 29: Ausgabemedium (0=Drucken, 1=E-Mail, 2=Fax, 3=Brief, 100=Keine)
 ```
 
-## CMXPRD (Produkt Import) — Wichtige Felder
+## CMXPRD (Produkt Import) - Wichtige Felder
 
 ```
 Index  0: Satzart ("CMXPRD")
@@ -200,7 +200,7 @@ Index 11: Produktart (0=Ware, 1=Dienstleistung, 2=Mitgliedschaft)
 Index 14: Verkaufs-Preis ("3500,00")
 ```
 
-## PRODUCT_GET (Produkt Abfrage) — 10 Felder
+## PRODUCT_GET (Produkt Abfrage) - 10 Felder
 
 ```
 PRODUCT_GET;FirmaNr;ProduktNr;Produktgruppe;Preisgruppe;
@@ -211,7 +211,7 @@ ACHTUNG: FirmaNr kommt ZUERST, dann ProduktNr!
 Anders als CUSTOMER_GET/VENDOR_GET (dort ID zuerst, FirmaNr danach).
 Nur FirmaNr nötig für alle Produkte. Antwort als CMXPRD.
 
-## CMXQTN (Angebot Import) — 82 Felder
+## CMXQTN (Angebot Import) - 82 Felder
 
 Struktur fast identisch zu CMXORD-2, gleiche Positions-Indizes!
 
@@ -240,7 +240,7 @@ QUOTATION_GET;AngebotsNr;FirmaNr;KundeNr;DatumVon;DatumBis;
 BriefpapierNicht;RueckgabeFormat;NurGeaenderte;Systemname
 ```
 
-## CMXORD-2 (Kundenauftrag Import) — 99 Felder
+## CMXORD-2 (Kundenauftrag Import) - 99 Felder
 
 ```
 Index  0: Satzart ("CMXORD-2")
@@ -258,10 +258,10 @@ Index 76: Einzelpreis (deutsch: "1500,00")
 Index 81: Produktart (0=Ware, 1=Dienstleistung, 2=Mitgliedschaft)
 Index 82: Steuerklassifikation (0=voll 19%, 1=ermäßigt 7%, 2=steuerfrei)
 Index 95: Angebot Nr (nur Export)
-Index 98: Lieferrelevant (0=nein, 1=ja) — WICHTIG für Dienstleistungen!
+Index 98: Lieferrelevant (0=nein, 1=ja), WICHTIG für Dienstleistungen!
 ```
 
-## SALES_ORDER_GET (Kundenauftrag Abfrage) — 12 Felder
+## SALES_ORDER_GET (Kundenauftrag Abfrage) - 12 Felder
 
 ```
 SALES_ORDER_GET;AuftragsNr;FirmaNr;KundeNr;DatumVon;DatumBis;
@@ -271,7 +271,7 @@ NurVomSystem;BriefpapierNicht
 
 Rückgabe-Format: 0=CSV, 1=ZIP mit PDFs. Antwort kommt als CMXORD-2.
 
-## CMXDLV (Lieferung Import) — 72 Felder
+## CMXDLV (Lieferung Import) - 72 Felder
 
 ```
 Index  0: Satzart ("CMXDLV")
@@ -296,7 +296,7 @@ Voraussetzung: Auftragspositionen müssen Lieferrelevant=1 haben (CMXORD-2 Index
 DELIVERY_GET;LieferscheinNr;FirmaNr;...
 ```
 
-## CMXINV (Rechnung Import) — 94 Felder
+## CMXINV (Rechnung Import) - 94 Felder
 
 ```
 Index  0: Satzart ("CMXINV")
@@ -321,7 +321,7 @@ Index 77: Produktart (1=Dienstleistung)
 Index 78: Steuerklassifikation (0=voll, 1=ermäßigt, 2=frei)
 ```
 
-## INVOICE_GET (Rechnung Abfrage) — 12 Felder
+## INVOICE_GET (Rechnung Abfrage) - 12 Felder
 
 ```
 INVOICE_GET;RechnungsNr;FirmaNr;KundeNr;DatumVon;DatumBis;...
@@ -329,14 +329,14 @@ RueckgabeFormat;NurGeaenderte;Systemname;NurVomSystem;
 BriefpapierNicht;Rechnungsart
 ```
 
-## INVOICE_OUTPUT (Rechnung Ausgabe/Versand) — 11 Felder
+## INVOICE_OUTPUT (Rechnung Ausgabe/Versand) - 11 Felder
 
 ```
 INVOICE_OUTPUT;FirmaNr;RechnungsNr;Ausgabemedium;AusgabeNoetig;
 KundeNr;DatumVon;DatumBis;MaxAnzahl;InklGeloeschte;NichtBuchen
 ```
 
-## INVOICE_OUTPUT_SET (Rechnung als ausgegeben markieren) — 3 Felder
+## INVOICE_OUTPUT_SET (Rechnung als ausgegeben markieren) - 3 Felder
 
 ```
 INVOICE_OUTPUT_SET;RechnungsNr;Ausgabemedium
@@ -344,11 +344,11 @@ INVOICE_OUTPUT_SET;RechnungsNr;Ausgabemedium
 
 Ausgabemedium: 0=Drucken, 1=E-Mail, 2=Fax, 3=Brief, 100=Keine Ausgabe
 
-## CMXPRJ (Projekt Import) — Wichtige Felder
+## CMXPRJ (Projekt Import) - Wichtige Felder
 
 ```
 Index  0: Satzart ("CMXPRJ")
-Index  1: Projektnummer (NICHT auto — muss angegeben werden)
+Index  1: Projektnummer (NICHT auto, muss angegeben werden)
 Index  2: Firma Nr ("1")
 Index  3: Bezeichnung
 Index  4: Kunden-Nr
@@ -360,7 +360,7 @@ Index 10: Kundenauftrag Nr
 ACHTUNG: Import wird akzeptiert, aber PROJECT_GET liefert im Tarif
 "buchhaltung basic" keine Ergebnisse. Projekt-Modul ggf. nicht enthalten.
 
-## PROJECT_GET (Projekt Abfrage) — 5 Felder
+## PROJECT_GET (Projekt Abfrage) - 5 Felder
 
 ```
 PROJECT_GET;ProjektNr;FirmaNr;KundeNr;Status
@@ -368,7 +368,7 @@ PROJECT_GET;ProjektNr;FirmaNr;KundeNr;Status
 
 Status: 0/leer=alle, 1=nur aktive, 2=nur abgeschlossene.
 
-## ACCDOC_GET (Abfrage) — 18 Felder
+## ACCDOC_GET (Abfrage) - 18 Felder
 
 ```
 ACCDOC_GET;FirmaNr;Geschaeftsjahr;BelegNr;KontoNr;Kostenstelle;
@@ -381,7 +381,7 @@ WICHTIG: Feld 3 = Geschäftsjahr (z.B. "2026"), NICHT Firma!
 `ACCDOC_GET;1;2026` = Firma 1, GJ 2026.
 `ACCDOC_GET;1;1` = Firma 1, GJ 1 (gibt 0 Ergebnisse!).
 
-## ACCDOC (Response) — 31 Felder
+## ACCDOC (Response) - 31 Felder
 
 ```
 Index  0: "ACCDOC"
@@ -394,8 +394,8 @@ Index  6: Buchungstext ("Rechnung Nr EB-2026-001 vom 01.01.2026")
 Index  7: Positionsnummer ("1", "2")
 Index  8: Kontonummer ("800", "1200", "4900")
 Index  9: Kontobezeichnung ("Gezeichnetes Kapital", "Bank")
-Index 10: Soll/Haben ("Soll" / "Haben") — Text, nicht 0/1!
-Index 11: Betrag ("12500,00" / "-12500,00" — negativ bei Haben)
+Index 10: Soll/Haben ("Soll" / "Haben"), Text, nicht 0/1!
+Index 11: Betrag ("12500,00" / "-12500,00", negativ bei Haben)
 Index 12: Kunden-Nr
 Index 13: Kundenname
 Index 14: Lieferant-Nr
@@ -424,7 +424,7 @@ Haben-Beträge sind NEGATIV. Feld 3 = Belegnummer (Response), nicht Periode!
 3. No NEW_OBJECT_ID returned for CMXLRN/CMXUMS
 4. Account 4400 doesn't exist in this instance; 4830 works
 5. Collmex "buchhaltung basic" (11.95 EUR) has full API access
-6. Konto 1580 (VSt §13b) may not exist — handle gracefully
+6. Konto 1580 (VSt §13b) may not exist, handle gracefully
 7. Period 0 = cumulated for ACCBAL_GET
 8. Firmenstammdaten (Steuernr, USt-IdNr) sind NICHT per API änderbar
 9. E-Rechnungsversand (INVOICE_OUTPUT) braucht: Firma-Steuernr + SMTP-Config in Collmex
@@ -432,15 +432,15 @@ Haben-Beträge sind NEGATIV. Feld 3 = Belegnummer (Response), nicht Periode!
 11. Dienstleistungen brauchen Lieferrelevant=1 (CMXORD-2 Idx 98) für Lieferungen
 12. CMXPRJ Import geht ohne Fehler, aber Projekte nicht abrufbar im Basic-Tarif
 13. CMXQTN hat fast identische Feldstruktur wie CMXORD-2 (gleiche Positions-Indizes 68-79)
-14. CMXUMS kann für beliebige Sachkontenbuchungen genutzt werden (EB, Umbuchungen) — Feld 11=Haben, 14=Soll
+14. CMXUMS kann für beliebige Sachkontenbuchungen genutzt werden (EB, Umbuchungen): Feld 11=Haben, 14=Soll
 15. CMXUMS Storno: Konten tauschen (steuerfrei), Gutschrift f[15]='1' (mit USt), oder CMXLRN f[13]='1'
 15a. CMXUMS Storno-Flag f[22]='1' wird akzeptiert, erzeugt aber KEINE ACCDOC-Einträge!
 15b. CMXUMS steuerfreie Felder (f[11]/f[14]) mit 8400 als Gegenkonto → Auto-USt! Betrag wird als brutto gesplittet
-16. ACCDOC_GET Feld 3 = Geschäftsjahr (z.B. "2026"), NICHT Firma — häufige Fehlerquelle!
+16. ACCDOC_GET Feld 3 = Geschäftsjahr (z.B. "2026"), NICHT Firma (häufige Fehlerquelle!)
 17. Sachkonten-Anlage nur per Web-UI möglich (POST an acch-Seite)
 14. CMXLRN Gegenkonto (Feld 12) muss Sachkonto sein (1600), NICHT Personenkonto (70001)
-15. CMXLRN Aufwandskonto (Feld 16): Default 3200 — NICHT aus Lieferantenstamm! Immer explizit setzen.
-16. ACCBAL_GET funktioniert NICHT für Personenkonten (70001) — nur Sachkonten
+15. CMXLRN Aufwandskonto (Feld 16): Default 3200, NICHT aus Lieferantenstamm! Immer explizit setzen.
+16. ACCBAL_GET funktioniert NICHT für Personenkonten (70001), nur für Sachkonten
 17. OPEN_ITEM Feld 7 = Personenkonto-Nr (Kreditor/Debitor), Feld 8 = Name + Ort
 18. Kreditoren starten bei 70001 (auto-vergeben bei CMXLIF mit leerem Feld 1)
 19. Lieferanten-Nr = Personenkonto-Nr (70001 = Kreditor 70001)

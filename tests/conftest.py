@@ -66,13 +66,13 @@ def mock_api_client() -> MagicMock:
     client.customer = "999999"
     client.company = 1
 
-    # request() — generischer Erfolg
+    # request(): generischer Erfolg
     client.request.return_value = _success_response()
 
-    # status() — Verbindung OK
+    # status(): Verbindung OK
     client.status.return_value = True
 
-    # post_booking() — Buchung erfolgreich mit neuer ID
+    # post_booking(): Buchung erfolgreich mit neuer ID
     client.post_booking.return_value = BookingResult(
         success=True,
         booking_id="100001",
@@ -80,13 +80,13 @@ def mock_api_client() -> MagicMock:
         raw_response="MESSAGE;S;0;Datenimport erfolgreich. 1 Sätze verarbeitet.\nNEW_OBJECT_ID;100001\n",
     )
 
-    # get_balances() — Beispielsalden
+    # get_balances(): Beispielsalden
     client.get_balances.return_value = [
         ["ACCBAL", "1", "2026", "1", "1200", "Bank", "10000,00", "0,00", "10000,00"],
         ["ACCBAL", "1", "2026", "1", "4400", "Bürobedarf", "500,00", "0,00", "500,00"],
     ]
 
-    # get_bookings() — Beispielbuchung
+    # get_bookings(): Beispielbuchung
     client.get_bookings.return_value = [
         [
             "ACCDOC",
@@ -138,10 +138,10 @@ def mock_api_client() -> MagicMock:
         ],
     ]
 
-    # query() — generische Abfrage (default: leere Liste)
+    # query(): generische Abfrage (default: leere Liste)
     client.query.return_value = []
 
-    # get_open_items() — Beispiel-OP
+    # get_open_items(): Beispiel-OP
     client.get_open_items.return_value = [
         [
             "OPEN_ITEM",

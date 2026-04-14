@@ -1,4 +1,4 @@
-"""Tests für collmex.dunning — DunningEngine.
+"""Tests für collmex.dunning: DunningEngine.
 
 Alle Tests mocken den API-Client, keine echten API-Calls.
 """

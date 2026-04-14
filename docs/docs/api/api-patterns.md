@@ -38,7 +38,7 @@ r2 = client.request([
 ])
 ```
 
-**WICHTIG:** Schritt 2 ERSETZT alle Positionen — nicht ergänzen!
+**WICHTIG:** Schritt 2 ERSETZT alle Positionen, nicht ergänzt sie!
 Immer ALLE Positionen mitsenden, auch die bestehenden.
 
 Gilt für: CMXORD-2, CMXINV, CMXQTN, CMXDLV (alle Belege mit Positionen).
@@ -89,7 +89,7 @@ Den Beleg mit allen Pflichtfeldern + Gelöscht=1 erneut senden.
 
 CMXINV Feld 5 (Index 5) = Auftragsnummer verknüpft die Rechnung
 mit dem Kundenauftrag. Die Positionen müssen trotzdem manuell
-übernommen werden — es gibt kein "konvertiere Auftrag zu Rechnung".
+übernommen werden. Ein "konvertiere Auftrag zu Rechnung" gibt es nicht.
 
 ## Pattern: Rechnung per E-Mail versenden
 
@@ -128,7 +128,7 @@ f = [''] * 15
 f[0]  = 'CMXPRD'
 f[1]  = 'WEB-DESIGN'              # Produktnummer (alphanumerisch!)
 f[2]  = 'Website-Erstellung'      # Bezeichnung
-f[4]  = 'PCE'                     # Mengeneinheit — ISO-Code!
+f[4]  = 'PCE'                     # Mengeneinheit (ISO-Code!)
 f[6]  = '1'                       # Firma Nr
 f[7]  = '0'                       # Steuerklassifikation (0=voll)
 f[11] = '1'                       # Produktart (1=Dienstleistung)
@@ -187,13 +187,13 @@ oder enthält keine lieferrelevanten Positionen".
 Getestet und verifiziert am 2026-03-04:
 
 1. **Kunde anlegen** (CMXKND) → Kunden-Nr zurück
-2. **Produkte anlegen** (CMXPRD) — Mengeneinheit=PCE, Produktart=1 für DL
-3. **Angebot erstellen** (CMXQTN) — 2-Schritt, gleiche Indizes wie CMXORD-2
-4. **Kundenauftrag** (CMXORD-2) — 2-Schritt, Lieferrelevant=1 (Idx 98) für DL!
-5. **Projekt** (CMXPRJ) — Import geht, aber im Basic-Tarif nicht abrufbar
-6. **Lieferung** (CMXDLV) — 2-Schritt, verknüpft mit Auftrag (Idx 6)
-7. **Rechnung** (CMXINV) — 2-Schritt, Auftrag Nr in Idx 5
-8. **Rechnungsversand** (INVOICE_OUTPUT) — braucht Steuernr + SMTP
+2. **Produkte anlegen** (CMXPRD): Mengeneinheit=PCE, Produktart=1 für DL
+3. **Angebot erstellen** (CMXQTN): 2-Schritt, gleiche Indizes wie CMXORD-2
+4. **Kundenauftrag** (CMXORD-2): 2-Schritt, Lieferrelevant=1 (Idx 98) für DL!
+5. **Projekt** (CMXPRJ): Import geht, aber im Basic-Tarif nicht abrufbar
+6. **Lieferung** (CMXDLV): 2-Schritt, verknüpft mit Auftrag (Idx 6)
+7. **Rechnung** (CMXINV): 2-Schritt, Auftrag Nr in Idx 5
+8. **Rechnungsversand** (INVOICE_OUTPUT): braucht Steuernr + SMTP
 
 Jeder Schritt mit Positionen braucht das 2-Schritt-Verfahren!
 
@@ -230,7 +230,7 @@ f[5]  = '2800,00'                  # Netto voller Satz (19%)
 f[6]  = '532,00'                   # USt 19% (auto wenn leer)
 f[11] = 'EUR'                      # Währung
 f[14] = 'Logo + Corporate Design'  # Buchungstext
-f[16] = '4900'                     # Aufwandskonto — IMMER explizit!
+f[16] = '4900'                     # Aufwandskonto, IMMER explizit!
 ```
 
 **Ergibt Buchung:**
@@ -246,17 +246,17 @@ Default ist 3200 (Wareneingang), NICHT das Konto aus dem Lieferantenstamm.
 Getestet und verifiziert am 2026-03-04:
 
 1. **Lieferant anlegen** (CMXLIF) → Lieferant-Nr zurück (ab 70001)
-2. **Eingangsrechnung** (CMXLRN) — Aufwandskonto explizit setzen!
-3. **Buchung verifizieren** (ACCDOC_GET) — Soll=Haben prüfen
-4. **Offene Posten** (OPEN_ITEMS_GET) — Feld 7 = Personenkonto
+2. **Eingangsrechnung** (CMXLRN): Aufwandskonto explizit setzen!
+3. **Buchung verifizieren** (ACCDOC_GET): Soll=Haben prüfen
+4. **Offene Posten** (OPEN_ITEMS_GET): Feld 7 = Personenkonto
 
-Kein 2-Schritt-Verfahren nötig — CMXLRN hat keine Positionen!
+Kein 2-Schritt-Verfahren nötig, da CMXLRN keine Positionen hat.
 
 ## Pattern: Personenkonten (Kreditoren/Debitoren)
 
 Collmex bucht auf Sammelkonten (SKR03):
-- **1400** Forderungen (Debitoren-Sammelkonto) — für Ausgangsrechnungen
-- **1600** Verbindlichkeiten (Kreditoren-Sammelkonto) — für Eingangsrechnungen
+- **1400** Forderungen (Debitoren-Sammelkonto): für Ausgangsrechnungen
+- **1600** Verbindlichkeiten (Kreditoren-Sammelkonto): für Eingangsrechnungen
 
 Die Personenkontozuordnung läuft automatisch:
 - Debitor 10001 → über Kundennummer in CMXINV/CMXUMS
@@ -270,7 +270,7 @@ Personenkonten sind KEIN Sachkonto im Kontenrahmen:
 
 ### request() erwartet list[str], nicht str
 ```python
-# FALSCH — iteriert zeichenweise, "Datentyp C ist ungültig"
+# FALSCH: iteriert zeichenweise, "Datentyp C ist ungültig"
 client.request(csv_string)
 
 # RICHTIG
@@ -281,7 +281,7 @@ client.request([zeile1, zeile2])
 - SALES_ORDER_GET: `Satzart;AuftragsNr;FirmaNr;...`
 - INVOICE_GET: `Satzart;RechnungsNr;FirmaNr;...`
 - CUSTOMER_GET: `Satzart;KundenNr;FirmaNr`
-- Immer in der Doku nachschlagen — Reihenfolge ist NICHT konsistent!
+- Immer in der Doku nachschlagen, die Reihenfolge ist NICHT konsistent!
 
 ### Firmenstammdaten nicht per API änderbar
 Steuernummer, USt-IdNr, SMTP-Einstellungen → nur Web-UI.
@@ -301,7 +301,7 @@ Ohne Firma-Steuernummer geht NICHTS raus.
 | 100 | Keine Ausgabe |
 
 ### Beträge immer deutsches Format
-`1500,00` nicht `1500.00` — Collmex erwartet Komma als Dezimaltrenner.
+`1500,00` nicht `1500.00`. Collmex erwartet Komma als Dezimaltrenner.
 
 ### Mengeneinheiten sind ISO-Codes
 `PCE` (Stück), NICHT "Stk", "Stck" oder "Stueck".
@@ -390,7 +390,7 @@ f[14] = '868'    # Soll: Ausstehende Einlagen
 **Problem:** CMXUMS akzeptiert keine negativen Beträge. Storno-Flag
 (f[22]='1') wird akzeptiert, erzeugt aber KEINE ACCDOC-Einträge!
 
-**Lösung A: Steuerfreie Konten — Soll/Haben tauschen:**
+**Lösung A: Steuerfreie Konten, Soll/Haben tauschen:**
 
 ```python
 # Nur für Konten OHNE Steuerklassifikation (0xxx, 1200, etc.)!
@@ -401,7 +401,7 @@ f[11] = '800';  f[14] = '860';  f[12] = '12500,00'
 f[11] = '860';  f[14] = '800';  f[12] = '12500,00'
 ```
 
-**Lösung B: Erlöskonto (8400) stornieren — CMXUMS Gutschrift:**
+**Lösung B: Erlöskonto (8400) stornieren per CMXUMS Gutschrift:**
 
 ```python
 # ACHTUNG: Steuerfreie Felder (f[11]/f[14]) mit 8400 als Gegenkonto
@@ -423,13 +423,13 @@ f[18] = '8400'           # Konto voller Satz
 Ergibt: Soll 8400 1000 / Soll 1776 190 / Haben Gegenkonto 1190
 (exakt umgekehrt zum Original)
 
-**Lösung C: Eingangsrechnung (CMXLRN) stornieren — Gutschrift-Flag:**
+**Lösung C: Eingangsrechnung (CMXLRN) stornieren per Gutschrift-Flag:**
 
 ```python
-f[13] = '1'  # Gutschrift — dreht Soll/Haben der Eingangsrechnung
+f[13] = '1'  # Gutschrift, dreht Soll/Haben der Eingangsrechnung
 ```
 
-**WICHTIG — Steuerfreie Felder + steuerpflichtige Gegenkonten:**
+**WICHTIG: Steuerfreie Felder + steuerpflichtige Gegenkonten:**
 Die "steuerfreien Erlöse"-Felder (f[11]/f[12]/f[14]) sind NICHT wirklich
 steuerfrei wenn das Gegenkonto (f[14]) eine Steuerklassifikation hat!
 8400 als Gegenkonto → Betrag wird als brutto behandelt und in netto+USt
@@ -438,7 +438,7 @@ aufgespalten. Nur verwenden mit Konten OHNE Steuerklassifikation
 
 ## Pattern: Sachkonto anlegen per Web-UI
 
-Collmex SKR03 hat einen reduzierten Kontenrahmen — viele Standard-Konten
+Collmex SKR03 hat einen reduzierten Kontenrahmen. Viele Standard-Konten
 (z.B. 0868 Ausstehende Einlagen) fehlen und müssen manuell erstellt werden.
 
 ```python
@@ -479,8 +479,8 @@ einfach nochmal mit korrekten Daten senden statt manuell stornieren.
 Alle Zeilen in einem API-Request = eine DB-Transaktion. Wenn EINE Zeile
 einen Fehler hat, wird ALLES zurückgerollt. Keine Teilimporte.
 
-**Konsequenz:** Bei Split-Buchungen (mehrere CMXLRN-Zeilen) ist das gut —
-entweder geht der ganze Split durch oder gar nichts.
+**Konsequenz:** Bei Split-Buchungen (mehrere CMXLRN-Zeilen) ist das gut:
+Entweder geht der ganze Split durch oder gar nichts.
 
 ### Steuer wird automatisch berechnet
 
@@ -499,7 +499,7 @@ CMXLRN Feld 12 (Gegenkonto) akzeptiert NUR Konten der Gruppe "Finanzkonto"
 Personenkonten (70001). Personenkontozuordnung geht NUR über
 Lieferantennummer (Feld 1).
 
-**Korrektur** zu früherer Doku: "Sachkonto" war zu ungenau — es muss ein
+**Korrektur** zu früherer Doku: "Sachkonto" war zu ungenau, es muss ein
 Finanzkonto sein. Wenn Lieferantennummer gesetzt ist, wird 1600 automatisch
 verwendet und Gegenkonto kann leer bleiben.
 
@@ -511,7 +511,7 @@ verwendet und Gegenkonto kann leer bleiben.
 | 1 | Gutschrift | Ja (Soll/Haben umgekehrt) |
 | 2 | Abschlagsrechnung | **NEIN!** Kein ACCDOC-Eintrag |
 
-### CMXUMS Erlösart (Feld 25) — Kontenmapping
+### CMXUMS Erlösart (Feld 25): Kontenmapping
 
 | Code | Bedeutung | SKR03 | SKR04 |
 |------|-----------|-------|-------|

@@ -28,15 +28,15 @@ pytest --cov=collmex            # mit Coverage
 ```
 
 Unit-Tests laufen ohne Collmex-Account. Live-Tests schreiben/lesen gegen
-die echte API — **nur gegen einen Test-Mandanten** laufen lassen.
+die echte API. **Nur gegen einen Test-Mandanten** laufen lassen.
 
 ## Eigenen Test-Mandanten bei Collmex anlegen
 
 1. Account auf [collmex.de](https://www.collmex.de) registrieren. Für
    API-Zugriff mindestens Tarif "buchhaltung basic".
-2. In Collmex: **Verwaltung → Benutzer** — einen neuen Benutzer `apiuser`
+2. In Collmex: **Verwaltung → Benutzer**, einen neuen Benutzer `apiuser`
    anlegen. Dieser User ist der API-Zugang.
-3. In Collmex: **Verwaltung → Einstellungen → API** — API aktivieren,
+3. In Collmex: **Verwaltung → Einstellungen → API**, API aktivieren,
    die Kundennummer notieren.
 4. `.env` ausfüllen:
    ```
@@ -71,9 +71,9 @@ die echte API — **nur gegen einen Test-Mandanten** laufen lassen.
 Wenn du beim Testen auf undokumentiertes API-Verhalten stößt: bitte
 dokumentieren in:
 
-- `docs/docs/api/api-fields.md` — verifizierte Feldstrukturen
-- `docs/docs/api/api-patterns.md` — Gotchas und Workarounds
-- `collmex/api_reference.py` — wenn eine neue Satzart hinzukommt
+- `docs/docs/api/api-fields.md`: verifizierte Feldstrukturen
+- `docs/docs/api/api-patterns.md`: Gotchas und Workarounds
+- `collmex/api_reference.py`: wenn eine neue Satzart hinzukommt
 
 ## Pull Requests
 

@@ -49,7 +49,6 @@ SKR04 ist nur gemappt, nicht live getestet. Tests: 583 grün.
 - Wer keine Buchhaltungs-Grundlagen hat. Das Tool bucht, was du ihm sagst, nicht was richtig ist.
 - Wer lieber klickt als tippt
 - Wer ein GUI braucht (gibt es nicht und wird es auch nicht geben)
-- Wer garantierten Support erwartet (es gibt keinen, siehe *Lizenz*)
 
 ## Was es besser macht als die Web-UI
 

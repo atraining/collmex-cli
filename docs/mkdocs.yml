@@ -1,0 +1,44 @@
+site_name: collmex Dokumentation
+site_description: LLM-gesteuerte Finanzbuchhaltung
+site_url: https://atraining.github.io/collmex-cli/
+
+theme:
+  name: material
+  language: de
+  palette:
+    primary: indigo
+    accent: amber
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - search.highlight
+
+plugins:
+  - search:
+      lang: de
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Start: index.md
+  - Schnelleinstieg: quickstart.md
+  - Installation: installation.md
+  - CLI-Referenz: cli-referenz.md
+  - API:
+    - Uebersicht: api/index.md
+  - Buchhaltung:
+    - Finanzbuchhaltung: buchhaltung/index.md
+  - Controlling:
+    - Auswertungen: controlling/index.md
+  - Compliance:
+    - GoBD & Recht: compliance/index.md
+  - Entwicklung:
+    - Beitragen: entwicklung/index.md

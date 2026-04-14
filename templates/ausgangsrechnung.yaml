@@ -1,0 +1,80 @@
+# Buchungsvorlage: Ausgangsrechnung
+# Kundenrechnung mit Umsatzsteuer buchen
+
+name: Ausgangsrechnung
+beschreibung: >
+  Bucht eine Ausgangsrechnung (Kundenrechnung) mit automatischer
+  Umsatzsteuerberechnung. Erloes wird auf das passende Erloeskonto gebucht.
+
+parameter:
+  - name: netto_betrag
+    typ: decimal
+    pflicht: true
+    beschreibung: Nettobetrag der Rechnung in EUR
+
+  - name: steuersatz
+    typ: enum
+    pflicht: true
+    werte: [19, 7, 0]
+    default: 19
+    beschreibung: USt-Satz in Prozent
+
+  - name: erloeskonto
+    typ: integer
+    pflicht: false
+    default: 8400
+    beschreibung: "SKR03-Erloeskonto (8400 = 19%, 8300 = 7%)"
+
+  - name: belegdatum
+    typ: date
+    pflicht: true
+    format: YYYYMMDD
+    beschreibung: Datum des Belegs
+
+  - name: buchungstext
+    typ: string
+    pflicht: true
+    max_laenge: 80
+    beschreibung: Beschreibung des Geschaeftsvorfalls
+
+  - name: gegenkonto
+    typ: integer
+    pflicht: false
+    default: 1400
+    beschreibung: "Gegenkonto: 1400 = Forderungen, 1200 = Bank"
+
+  - name: kundennummer
+    typ: integer
+    pflicht: false
+    beschreibung: Collmex-Kundennummer (bei Personenkonten)
+
+positionen:
+  - name: Forderung
+    konto: "{gegenkonto}"
+    seite: S
+    betrag_formel: "round({netto_betrag} * (1 + {steuersatz} / 100), 2)"
+
+  - name: Erloes
+    konto: "{erloeskonto}"
+    seite: H
+    betrag_formel: "{netto_betrag}"
+    bu_schluessel: "{steuersatz}"
+
+  - name: Umsatzsteuer
+    konto: "{ust_konto}"
+    seite: H
+    betrag_formel: "round({netto_betrag} * {steuersatz} / 100, 2)"
+    bedingung: "{steuersatz} > 0"
+
+validierung:
+  - regel: soll_gleich_haben
+    beschreibung: Summe Soll muss gleich Summe Haben sein
+
+  - regel: betrag_positiv
+    beschreibung: Alle Betraege muessen positiv sein
+
+  - regel: konto_existiert
+    beschreibung: Alle Konten muessen im SKR03 existieren
+
+  - regel: datum_im_geschaeftsjahr
+    beschreibung: Belegdatum muss im aktuellen oder vorherigen Geschaeftsjahr liegen

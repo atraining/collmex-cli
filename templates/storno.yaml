@@ -1,0 +1,56 @@
+# Buchungsvorlage: Stornobuchung
+# GoBD-konforme Stornierung einer bestehenden Buchung
+
+name: Stornobuchung
+beschreibung: >
+  Storniert eine bestehende Buchung GoBD-konform durch eine Gegenbuchung.
+  Die Originalbuchung bleibt unveraendert bestehen. Alle Positionen werden
+  mit umgekehrter Soll/Haben-Seite gebucht.
+
+parameter:
+  - name: original_belegnr
+    typ: string
+    pflicht: true
+    beschreibung: Belegnummer der zu stornierenden Buchung
+
+  - name: original_positionen
+    typ: list
+    pflicht: true
+    beschreibung: >
+      Liste der Originalpositionen mit konto, seite, betrag.
+      Wird automatisch aus ACCDOC_GET geladen.
+
+  - name: belegdatum
+    typ: date
+    pflicht: true
+    format: YYYYMMDD
+    beschreibung: Datum der Stornobuchung (heute oder Originaldatum)
+
+  - name: storno_grund
+    typ: string
+    pflicht: true
+    max_laenge: 80
+    beschreibung: Begruendung fuer die Stornierung
+
+positionen:
+  - name: Storno-Gegenbuchung
+    konto: "{original_position.konto}"
+    seite: "{umkehr(original_position.seite)}"
+    betrag_formel: "{original_position.betrag}"
+    iteration: "fuer jede Position in original_positionen"
+
+validierung:
+  - regel: soll_gleich_haben
+    beschreibung: Summe Soll muss gleich Summe Haben sein
+
+  - regel: original_existiert
+    beschreibung: Originalbuchung muss in Collmex existieren (ACCDOC_GET)
+
+  - regel: nicht_bereits_storniert
+    beschreibung: Originalbuchung darf nicht bereits storniert sein
+
+  - regel: buchungstext_referenz
+    beschreibung: "Buchungstext muss 'STORNO' und die Original-Belegnr enthalten"
+
+  - regel: betrag_identisch
+    beschreibung: Stornobetraege muessen exakt den Originalbetraegen entsprechen

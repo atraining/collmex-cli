@@ -1,0 +1,85 @@
+# Buchungsvorlage: Gehaltsbuchung
+# Monatliche Lohn-/Gehaltsbuchung mit Nebenkosten
+
+name: Gehaltsbuchung
+beschreibung: >
+  Bucht eine monatliche Gehaltszahlung inklusive Arbeitnehmer-Anteile
+  (Lohnsteuer, Sozialversicherung) und Arbeitgeber-Anteile. Vereinfachte
+  Vorlage fuer die gaengigsten Gehaltsbestandteile.
+
+parameter:
+  - name: brutto_gehalt
+    typ: decimal
+    pflicht: true
+    beschreibung: Bruttolohn des Mitarbeiters in EUR
+
+  - name: lohnsteuer
+    typ: decimal
+    pflicht: true
+    beschreibung: Einbehaltene Lohnsteuer (inkl. SolZ, ggf. KiSt)
+
+  - name: an_sozialversicherung
+    typ: decimal
+    pflicht: true
+    beschreibung: Arbeitnehmer-Anteil Sozialversicherung gesamt
+
+  - name: ag_sozialversicherung
+    typ: decimal
+    pflicht: true
+    beschreibung: Arbeitgeber-Anteil Sozialversicherung gesamt
+
+  - name: netto_gehalt
+    typ: decimal
+    pflicht: true
+    beschreibung: Auszahlungsbetrag an Mitarbeiter
+
+  - name: belegdatum
+    typ: date
+    pflicht: true
+    format: YYYYMMDD
+    beschreibung: Buchungsdatum (letzter Werktag des Monats)
+
+  - name: buchungstext
+    typ: string
+    pflicht: true
+    max_laenge: 80
+    beschreibung: "z.B. 'Gehalt 03/2026 Mustermann'"
+
+positionen:
+  - name: Loehne und Gehaelter
+    konto: 4100
+    seite: S
+    betrag_formel: "{brutto_gehalt}"
+
+  - name: AG-Anteil Sozialversicherung
+    konto: 4130
+    seite: S
+    betrag_formel: "{ag_sozialversicherung}"
+
+  - name: Verbindlichkeiten Lohnsteuer
+    konto: 1741
+    seite: H
+    betrag_formel: "{lohnsteuer}"
+
+  - name: Verbindlichkeiten Sozialversicherung
+    konto: 1742
+    seite: H
+    betrag_formel: "{an_sozialversicherung} + {ag_sozialversicherung}"
+
+  - name: Bank (Nettoauszahlung)
+    konto: 1200
+    seite: H
+    betrag_formel: "{netto_gehalt}"
+
+validierung:
+  - regel: soll_gleich_haben
+    beschreibung: Summe Soll muss gleich Summe Haben sein
+
+  - regel: brutto_plausibel
+    beschreibung: "brutto_gehalt = netto_gehalt + lohnsteuer + an_sozialversicherung"
+
+  - regel: betrag_positiv
+    beschreibung: Alle Betraege muessen positiv sein
+
+  - regel: datum_im_geschaeftsjahr
+    beschreibung: Belegdatum muss im aktuellen Geschaeftsjahr liegen

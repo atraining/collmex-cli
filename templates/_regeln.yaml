@@ -1,0 +1,106 @@
+# Kontierungsregeln fuer die automatische Buchungserkennung
+# Keyword-zu-Konto Mapping nach SKR03
+
+kontierung:
+  # Buerobedarf (4400)
+  bueromaterial: 4400
+  buero: 4400
+  papier: 4400
+  toner: 4400
+
+  # EDV / Software (4830)
+  software: 4830
+  lizenz: 4830
+  saas: 4830
+  cloud: 4830
+  hosting: 4830
+  domain: 4830
+
+  # Beratung / Freiberufler (4800)
+  beratung: 4800
+  steuerberater: 4800
+  anwalt: 4800
+  rechtsanwalt: 4800
+  wirtschaftspruefer: 4800
+
+  # Miete / Raumkosten (4210)
+  miete: 4210
+  pacht: 4210
+
+  # Energie (4220)
+  strom: 4220
+  heizung: 4220
+  gas: 4220
+  wasser: 4220
+
+  # Telekommunikation (4420)
+  telefon: 4420
+  internet: 4420
+  mobilfunk: 4420
+  handy: 4420
+
+  # Porto / Versand (4410)
+  porto: 4410
+  versand: 4410
+  dhl: 4410
+
+  # Kfz-Kosten (4510)
+  benzin: 4510
+  tanken: 4510
+  kfz: 4510
+  autowaesche: 4510
+  parkgebuehr: 4510
+
+  # Reisekosten (4600)
+  hotel: 4600
+  flug: 4600
+  bahn: 4600
+  taxi: 4600
+  reise: 4600
+
+  # Bewirtung (4630)
+  essen: 4630
+  bewirtung: 4630
+  restaurant: 4630
+
+  # Werbung (4730)
+  werbung: 4730
+  google_ads: 4730
+  anzeige: 4730
+  flyer: 4730
+
+  # Versicherungen (4430)
+  versicherung: 4430
+  haftpflicht: 4430
+
+  # Beitraege (4440)
+  ihk: 4440
+  beitrag: 4440
+  mitgliedschaft: 4440
+
+  # Bankgebuehren (4810)
+  bank: 4810
+  kontofuehrung: 4810
+
+  # Auffang (4900)
+  sonstiges: 4900
+
+steuersaetze:
+  standard: 19
+  ermaessigt: 7
+  steuerfrei: 0
+
+bu_schluessel:
+  19: "3"
+  7: "2"
+  0: ""
+  reverse_charge: "9"
+
+vorsteuer_konten:
+  19: 1576
+  7: 1571
+  reverse_charge: 1580
+
+ust_konten:
+  19: 1776
+  7: 1771

@@ -1,0 +1,42 @@
+# Environment
+.env
+.env.local
+
+# Mandant-spezifische Profile (lokal, nicht im Public-Repo)
+# Ausnahme: mandant/beispiel/ ist die committete Vorlage.
+mandant/*
+!mandant/beispiel
+!mandant/beispiel/**
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+.Python
+
+# Testing / Coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*~
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

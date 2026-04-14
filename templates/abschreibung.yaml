@@ -1,0 +1,78 @@
+# Buchungsvorlage: Abschreibung
+# Planmaessige Abschreibung auf Anlagevermoegen
+
+name: Abschreibung
+beschreibung: >
+  Bucht die planmaessige lineare Abschreibung auf einen Vermoegenswert
+  des Anlagevermoegens. Monatliche oder jaehrliche Abschreibungsrate.
+
+parameter:
+  - name: anlagekonto
+    typ: integer
+    pflicht: true
+    beschreibung: "SKR03-Anlagekonto (z.B. 0420 = Maschinen, 0650 = EDV)"
+
+  - name: abschreibungsbetrag
+    typ: decimal
+    pflicht: true
+    beschreibung: Abschreibungsbetrag fuer die aktuelle Periode in EUR
+
+  - name: abschreibungskonto
+    typ: integer
+    pflicht: false
+    default: 4830
+    beschreibung: >
+      SKR03-Abschreibungskonto. Defaults:
+      4822 = Abschr. auf Sachanlagen, 4830 = Abschr. auf immaterielle VG
+
+  - name: belegdatum
+    typ: date
+    pflicht: true
+    format: YYYYMMDD
+    beschreibung: Buchungsdatum (Monatsende oder Jahresende)
+
+  - name: buchungstext
+    typ: string
+    pflicht: true
+    max_laenge: 80
+    beschreibung: "z.B. 'AfA 03/2026 Laptop ThinkPad X1'"
+
+  - name: nutzungsdauer_jahre
+    typ: integer
+    pflicht: false
+    beschreibung: Geplante Nutzungsdauer in Jahren (fuer Plausibilitaetspruefung)
+
+  - name: anschaffungskosten
+    typ: decimal
+    pflicht: false
+    beschreibung: Urspruengliche Anschaffungskosten (fuer Plausibilitaetspruefung)
+
+positionen:
+  - name: Abschreibungsaufwand
+    konto: "{abschreibungskonto}"
+    seite: S
+    betrag_formel: "{abschreibungsbetrag}"
+
+  - name: Wertminderung Anlage
+    konto: "{anlagekonto}"
+    seite: H
+    betrag_formel: "{abschreibungsbetrag}"
+
+validierung:
+  - regel: soll_gleich_haben
+    beschreibung: Summe Soll muss gleich Summe Haben sein
+
+  - regel: betrag_positiv
+    beschreibung: Abschreibungsbetrag muss positiv sein
+
+  - regel: afa_plausibel
+    beschreibung: >
+      Falls anschaffungskosten und nutzungsdauer_jahre angegeben:
+      abschreibungsbetrag <= anschaffungskosten / nutzungsdauer_jahre (jaehrlich)
+      bzw. <= anschaffungskosten / nutzungsdauer_jahre / 12 (monatlich)
+
+  - regel: konto_ist_anlage
+    beschreibung: anlagekonto muss im Bereich 0001-0999 liegen (Anlagevermoegen)
+
+  - regel: datum_im_geschaeftsjahr
+    beschreibung: Belegdatum muss im aktuellen Geschaeftsjahr liegen
